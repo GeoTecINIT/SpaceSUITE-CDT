@@ -1,20 +1,23 @@
 import { CurriculumNode } from "./curriculumNode";
+import { DomainError } from "./domainError";
 
-export class Course extends CurriculumNode {
+export class Lecture extends CurriculumNode {
   public isPractical: boolean;
-
-  // Common Module/Course/Lecture
-  public ects: number;
 
   // Common to Course/Lecture
   public bibliography: string[];
 
-  // TODO - fix children to avoid childrens of the same class, StudyProgram and Module
-
-  protected constructor(currentNode: Partial<Course> | undefined) {
-    super(currentNode);
+  protected constructor(currentNode?: Partial<Lecture>, id?: string) {
+    super(currentNode, id);
+    this.children = [];
     this.isPractical = currentNode?.isPractical || false;
-    this.ects = currentNode?.ects || 0;
     this.bibliography = currentNode?.bibliography || [];
+  }
+
+  public override validateChildCandidate(_: CurriculumNode): void {
+    throw new DomainError(
+      'LECTURE_HAS_CHILDREN', 
+      `Lectures are leaf nodes and cannot have children. Move content up to a Course or Module.`
+    );
   }
 }

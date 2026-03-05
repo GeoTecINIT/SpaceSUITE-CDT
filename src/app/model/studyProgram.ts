@@ -1,26 +1,28 @@
 import { Affiliation } from "./affiliation";
 import { CurriculumNode } from "./curriculumNode";
+import { DomainError } from "./domainError";
 import { ISCEDFArea } from "./iscedfArea";
 
 export class StudyProgram extends CurriculumNode {
   public affiliation: Affiliation;
-  public eqf: number;
   public studyAreas: ISCEDFArea[];
-
-  //Common StudyProgramm/Module/Course
-  public numSemesters: number;
-
-  // TODO - fix children to avoid childrens of the same class
 
   // fits better on Courses; Can be linked to the TCT;
   public trainingMaterialUrl: string;
 
-  protected constructor(currentNode: Partial<StudyProgram> | undefined) {
-    super(currentNode);
+  constructor(currentNode?: Partial<StudyProgram>, id?: string) {
+    super(currentNode, id);
     this.affiliation = currentNode?.affiliation || new Affiliation();
-    this.eqf = currentNode?.eqf || 0;
     this.studyAreas = currentNode?.studyAreas || [];
-    this.numSemesters = currentNode?.numSemesters || 0;
     this.trainingMaterialUrl = currentNode?.trainingMaterialUrl || "";
+  }
+
+  protected validateChildCandidate(child: CurriculumNode): void {
+    if (child instanceof StudyProgram) {
+      throw new DomainError(
+        'HIERARCHY_INVALID', 
+        `Cannot add a StudyProgram as child of StudyProgram. Use lower-level nodes (StudyProgram > Module > Course > Lecture).`
+      );
+    }
   }
 }

@@ -1,30 +1,32 @@
-import { CourseType } from "./courseType";
 import { CurriculumNode } from "./curriculumNode";
+import { DomainError } from "./domainError";
+import { Lecture } from "./lecture";
+
+export enum CourseType {
+  Common,
+  Specialization,
+  Elective
+}
 
 export class Course extends CurriculumNode {
   public assesment: string;
   public courseType?: CourseType;
 
-  // Common Module/Course/Lecture
-  public ects: number;
-
-  //Common StudyProgramm/Module/Course
-  public numSemesters: number;
-
-  // Common to Module/Course
-  public prerequisites: string[];
-
   // Common to Course/Lecture
   public bibliography: string[];
 
-  // TODO - fix children to avoid childrens of the same class, StudyProgram and Module
-
-  protected constructor(currentNode: Partial<Course> | undefined) {
-    super(currentNode);
+  protected constructor(currentNode?: Partial<Course>, id?: string) {
+    super(currentNode, id);
     this.assesment = currentNode?.assesment || "";
-    this.ects = currentNode?.ects || 0;
-    this.numSemesters = currentNode?.numSemesters || 0;
-    this.prerequisites = currentNode?.prerequisites || [];
     this.bibliography = currentNode?.bibliography || [];
+  }
+
+  protected override validateChildCandidate(child: CurriculumNode): void {
+    if (!(child instanceof Lecture)) {
+      throw new DomainError(
+        'HIERARCHY_INVALID', 
+        `Cannot add a StudyProgram, Module or Course as child of Course. Use lower-level nodes (StudyProgram > Module > Course > Lecture).`
+      );
+    }
   }
 }

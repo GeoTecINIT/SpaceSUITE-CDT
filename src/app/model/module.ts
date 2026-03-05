@@ -1,21 +1,15 @@
 import { CurriculumNode } from "./curriculumNode";
+import { DomainError } from "./domainError";
+import { StudyProgram } from "./studyProgram";
 
 export class Module extends CurriculumNode {
-  // Common Module/Course/Lecture
-  public ects: number;
 
-  //Common StudyProgramm/Module/Course
-  public numSemesters: number;
-
-  // Common Module/Course
-  public prerequisites: string[];
-
-  // TODO - fix children to avoid childrens of the same class and StudyProgram
-
-  protected constructor(currentNode: Partial<Module> | undefined) {
-    super(currentNode);
-    this.ects = currentNode?.ects || 0;
-    this.numSemesters = currentNode?.numSemesters || 0;
-    this.prerequisites = currentNode?.prerequisites || [];
+  protected override validateChildCandidate(child: CurriculumNode): void {
+    if (child instanceof Module || child instanceof StudyProgram) {
+      throw new DomainError(
+        'HIERARCHY_INVALID', 
+        `Cannot add a StudyProgram or Module as child of Module. Use lower-level nodes (StudyProgram > Module > Course > Lecture).`
+      );
+    }
   }
 }
