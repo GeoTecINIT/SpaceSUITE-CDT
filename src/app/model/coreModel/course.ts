@@ -1,6 +1,7 @@
 import { CurriculumNode } from "./curriculumNode";
 import { DomainError } from "./domainError";
 import { Lecture } from "./lecture";
+import { Module, ModuleType } from "./module";
 
 export enum CourseType {
   Common,
@@ -19,10 +20,10 @@ export class Course extends CurriculumNode {
   }
 
   protected override validateChildCandidate(child: CurriculumNode): void {
-    if (!(child instanceof Lecture)) {
+    if (!(child instanceof Lecture || (child instanceof Module && child.moduleType === ModuleType.Lecture))) {
       throw new DomainError(
         'HIERARCHY_INVALID', 
-        `Cannot add a StudyProgram, Module or Course as child of Course. Use lower-level nodes (StudyProgram > Module > Course > Lecture).`
+        `Cannot add a StudyProgram, Module or Course as child of Course. Use lower-level nodes (StudyProgram > Course > Lecture).`
       );
     }
   }
