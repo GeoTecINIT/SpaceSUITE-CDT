@@ -1,3 +1,4 @@
+import { Affiliation } from "./affiliation";
 import { CurriculumNode } from "./curriculumNode";
 import { DomainError } from "./domainError";
 
@@ -6,6 +7,7 @@ export class EducationalOffer {
   private root: CurriculumNode;
   private nodesById: Map<string, CurriculumNode>;
 
+	public affiliations: Affiliation[];
   public isPublic: boolean;
   public createdAt: Date;
   public updatedAt?: Date;
@@ -19,6 +21,7 @@ export class EducationalOffer {
     this.id = partialOffer?.id || '';
     this.root = rootNode;
     this.nodesById = new Map<string, CurriculumNode>();
+		this.affiliations = partialOffer?.affiliations || [];
     this.isPublic = partialOffer?.isPublic ?? false;
     this.createdAt = partialOffer?.createdAt || new Date();
     this.updatedAt = partialOffer?.updatedAt;  

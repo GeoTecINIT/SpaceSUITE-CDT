@@ -4,14 +4,10 @@ import { DomainError } from "./domainError";
 export class Lecture extends CurriculumNode {
   public isPractical: boolean;
 
-  // Common to Course/Lecture
-  public bibliography: string[];
-
   protected constructor(currentNode?: Partial<Lecture>, id?: string) {
     super(currentNode, id);
     this.children = [];
     this.isPractical = currentNode?.isPractical || false;
-    this.bibliography = currentNode?.bibliography || [];
   }
 
   public override validateChildCandidate(_: CurriculumNode): void {

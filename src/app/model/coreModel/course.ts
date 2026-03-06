@@ -12,13 +12,10 @@ export class Course extends CurriculumNode {
   public assesment: string;
   public courseType?: CourseType;
 
-  // Common to Course/Lecture
-  public bibliography: string[];
-
   protected constructor(currentNode?: Partial<Course>, id?: string) {
     super(currentNode, id);
     this.assesment = currentNode?.assesment || "";
-    this.bibliography = currentNode?.bibliography || [];
+    this.courseType = currentNode?.courseType;
   }
 
   protected override validateChildCandidate(child: CurriculumNode): void {

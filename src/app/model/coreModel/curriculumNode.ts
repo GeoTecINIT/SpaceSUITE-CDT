@@ -1,6 +1,9 @@
 import { ESCOSkill } from "./escoSkill";
 import { DomainError } from "./domainError";
 import { Duration } from "./duration";
+import { ISCEDFArea } from "./iscedfArea";
+import { TrainingMaterial } from "./trainingMaterial";
+import { Affiliation } from "./affiliation";
 
 export abstract class CurriculumNode {
   public readonly id: string;
@@ -12,9 +15,13 @@ export abstract class CurriculumNode {
   public eqf: number;
   public ects: number;
   public timeRequired: Duration;
+  public studyAreas: ISCEDFArea[];
   public transversalSkills: ESCOSkill[];
   public customTransversalSkills: string[];
   public learningObjectives: string[];
+  public trainingMaterials: TrainingMaterial[];
+  public bibliography: string[];
+  public affiliations: Affiliation[];
 
   constructor(currentNode?: Partial<CurriculumNode>, id?: string) {
     this.id = id || currentNode?.id || '';
@@ -26,9 +33,13 @@ export abstract class CurriculumNode {
     this.eqf = currentNode?.eqf || 0;
     this.ects = currentNode?.ects || 0;
     this.timeRequired = currentNode?.timeRequired || new Duration();
+    this.studyAreas = currentNode?.studyAreas || [];
     this.transversalSkills = currentNode?.transversalSkills || [];
     this.customTransversalSkills = currentNode?.customTransversalSkills || [];
     this.learningObjectives = currentNode?.learningObjectives || [];
+    this.trainingMaterials = currentNode?.trainingMaterials || [];
+    this.bibliography = currentNode?.bibliography || [];
+    this.affiliations = currentNode?.affiliations || [];
   }
 
   protected abstract validateChildCandidate(child: CurriculumNode): void;
