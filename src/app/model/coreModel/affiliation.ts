@@ -6,4 +6,11 @@ export class Affiliation {
     this.name = affiliation?.name || "";
     this.url = affiliation?.url;
   }
+
+  public toPlainObject(): any {
+    return {
+      name: this.name,
+      url: this.url,
+    };
+  }
 }

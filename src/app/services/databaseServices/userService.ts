@@ -2,7 +2,7 @@ import { inject, Injectable } from "@angular/core";
 import { Auth, authState } from "@angular/fire/auth";
 import { collection, CollectionReference, doc, docData, Firestore } from "@angular/fire/firestore";
 import { BehaviorSubject, Observable, of, switchMap } from "rxjs";
-import { User } from "../model/userModel/user";
+import { User } from "../../model/userModel/user";
 
 @Injectable({
     providedIn: 'root',

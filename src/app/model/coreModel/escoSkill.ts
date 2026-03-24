@@ -14,4 +14,15 @@ export class ESCOSkill {
     this.description = escoSkill?.description || "";
     this.altLabels = escoSkill?.altLabels || [];
   }
+
+  public toPlainObject(): any {
+    return {
+      uri: this.uri,
+      skillType: this.skillType,
+      reuseLevel: this.reuseLevel,
+      preferredLabel: this.preferredLabel,
+      description: this.description,
+      altLabels: this.altLabels,
+    };
+  }
 }

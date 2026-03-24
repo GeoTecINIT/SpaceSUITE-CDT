@@ -27,4 +27,12 @@ export class Course extends CurriculumNode {
       );
     }
   }
+
+  public override toPlainObject(): any {
+    return {
+      ...super.toPlainObject(),
+      assesment: this.assesment,
+      courseType: this.courseType,
+    };
+  }
 }

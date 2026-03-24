@@ -6,7 +6,7 @@ import { TrainingMaterial } from "./trainingMaterial";
 import { Affiliation } from "./affiliation";
 
 export abstract class CurriculumNode {
-  public readonly id: string;
+  public id: string;
   public name: string;
   public description: string;
   protected children: CurriculumNode[];
@@ -62,5 +62,26 @@ export abstract class CurriculumNode {
 
   public getChildren(): CurriculumNode[] {
     return this.children;
+  }
+
+  public toPlainObject(): any {
+    return {
+      id: this.id,
+      name: this.name,
+      description: this.description,
+      children: this.children.map(child => child.id), // Store only child IDs to avoid circular references
+      bokConcepts: this.bokConcepts,
+      prerequisites: this.prerequisites,
+      eqf: this.eqf,
+      ects: this.ects,
+      timeRequired: this.timeRequired.toPlainObject(),
+      studyAreas: this.studyAreas.map(area => area.toPlainObject()),
+      transversalSkills: this.transversalSkills.map(skill => skill.toPlainObject()),
+      customTransversalSkills: this.customTransversalSkills,
+      learningObjectives: this.learningObjectives,
+      trainingMaterials: this.trainingMaterials.map(material => material.toPlainObject()),
+      bibliography: this.bibliography,
+      affiliations: this.affiliations.map(affiliation => affiliation.toPlainObject())
+    };
   }
 }

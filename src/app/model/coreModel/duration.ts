@@ -17,4 +17,11 @@ export class Duration {
     this.value = currentNode?.value || 0;
     this.unit = currentNode?.unit || DurationUnit.Semesters;
   }
+
+  public toPlainObject(): any {
+    return {
+      value: this.value,
+      unit: this.unit,
+    };
+  }
 }

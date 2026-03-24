@@ -16,4 +16,14 @@ export class ISCEDFArea {
   public getCompleteName(): string {
     return `${this.name} (${this.grandparent})`;
   }
+
+  public toPlainObject(): any {
+    return {
+      name: this.name,
+      code: this.code,
+      parent: this.parent,
+      grandparent: this.grandparent,
+      greatgrandparent: this.greatgrandparent,
+    };
+  }
 }

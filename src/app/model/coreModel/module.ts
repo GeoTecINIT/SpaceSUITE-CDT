@@ -23,4 +23,11 @@ export class Module extends CurriculumNode {
       );
     }
   }
+
+  public override toPlainObject(): any {
+    return {
+      ...super.toPlainObject(),
+      moduleType: this.moduleType,
+    };
+  }
 }
