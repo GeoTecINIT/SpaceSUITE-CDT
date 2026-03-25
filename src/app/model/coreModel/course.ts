@@ -1,5 +1,5 @@
 import { CurriculumNode } from "./curriculumNode";
-import { DomainError } from "./domainError";
+import { DomainError } from "../domainError";
 import { Lecture } from "./lecture";
 import { Module, ModuleType } from "./module";
 
@@ -13,7 +13,7 @@ export class Course extends CurriculumNode {
   public assesment: string;
   public courseType?: CourseType;
 
-  protected constructor(currentNode?: Partial<Course>, id?: string) {
+  constructor(currentNode?: Partial<Course>, id?: string) {
     super(currentNode, id);
     this.assesment = currentNode?.assesment || "";
     this.courseType = currentNode?.courseType;
@@ -26,13 +26,5 @@ export class Course extends CurriculumNode {
         `Cannot add a StudyProgram, Module or Course as child of Course. Use lower-level nodes (StudyProgram > Course > Lecture).`
       );
     }
-  }
-
-  public override toPlainObject(): any {
-    return {
-      ...super.toPlainObject(),
-      assesment: this.assesment,
-      courseType: this.courseType,
-    };
   }
 }

@@ -1,6 +1,6 @@
 import { Affiliation } from "./affiliation";
 import { CurriculumNode } from "./curriculumNode";
-import { DomainError } from "./domainError";
+import { DomainError } from "../domainError";
 
 /**
  * EducationalOffer class:
@@ -15,8 +15,8 @@ import { DomainError } from "./domainError";
  * When a node is removed, all of its children are also removed from the curriculum, ensuring that the tree structure remains consistent and valid.
  */
 export class EducationalOffer {
-  public readonly id: string;
-  private root: CurriculumNode;
+  public id: string;
+  public root: CurriculumNode;
 
   public affiliations: Affiliation[];
   public isPublic: boolean;
@@ -112,20 +112,5 @@ export class EducationalOffer {
       stack.push(...currentNode.getChildren());
     }
     return nodes;
-  }
-
-  public toPlainObject(): any {
-    return {
-      id: this.id,
-      root: this.root.id, // Store only root ID to avoid circular reference
-      affiliations: this.affiliations.map(affiliation => affiliation.toPlainObject()),
-      isPublic: this.isPublic,
-      createdAt: this.createdAt.toISOString(),
-      updatedAt: this.updatedAt ? this.updatedAt.toISOString() : undefined,
-      userId: this.userId,
-      orgId: this.orgId,
-      orgName: this.orgName,
-      division: this.division,
-    };
   }
 }

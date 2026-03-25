@@ -1,5 +1,5 @@
 import { CurriculumNode } from "./curriculumNode";
-import { DomainError } from "./domainError";
+import { DomainError } from "../domainError";
 
 export class StudyProgram extends CurriculumNode {
 

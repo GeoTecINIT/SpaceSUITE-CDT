@@ -1,15 +1,14 @@
-import { ESCOSkill } from "./escoSkill";
-import { DomainError } from "../domainError";
-import { Duration } from "./duration";
-import { ISCEDFArea } from "./iscedfArea";
-import { TrainingMaterial } from "./trainingMaterial";
-import { Affiliation } from "./affiliation";
+import { Affiliation } from "../coreModel/affiliation";
+import { Duration } from "../coreModel/duration";
+import { ESCOSkill } from "../coreModel/escoSkill";
+import { ISCEDFArea } from "../coreModel/iscedfArea";
+import { TrainingMaterial } from "../coreModel/trainingMaterial";
 
-export abstract class CurriculumNode {
+export abstract class CurriculumNodeDB {
   public id: string;
   public name: string;
   public description: string;
-  protected children: CurriculumNode[];
+  public children: string[];
   public bokConcepts: string[];
   public prerequisites: string[];
   public eqf: number;
@@ -23,11 +22,11 @@ export abstract class CurriculumNode {
   public bibliography: string[];
   public affiliations: Affiliation[];
 
-  constructor(currentNode?: Partial<CurriculumNode>, id?: string) {
+  constructor(currentNode?: Partial<CurriculumNodeDB>, id?: string) {
     this.id = id || currentNode?.id || '';
     this.name = currentNode?.name || '';
     this.description = currentNode?.description || '';
-    this.children = currentNode?.getChildren?.() || [];
+    this.children = currentNode?.children || [];
     this.bokConcepts = currentNode?.bokConcepts || [];
     this.prerequisites = currentNode?.prerequisites || [];
     this.eqf = currentNode?.eqf || 0;
@@ -42,25 +41,24 @@ export abstract class CurriculumNode {
     this.affiliations = currentNode?.affiliations || [];
   }
 
-  protected abstract validateChildCandidate(child: CurriculumNode): void;
-
-  public addChild(child: CurriculumNode): void {
-    this.validateChildCandidate(child);
-    this.children.push(child);
-  }
-
-  public removeChild(childId: string): void {
-    const index = this.children.findIndex(child => child.id === childId);
-    if (index === -1) {
-      throw new DomainError(
-        'CHILD_NODE_NOT_FOUND', 
-        `No child with id ${childId} found among children of node ${this.id}`
-      );
-    }
-    this.children.splice(index, 1);
-  }
-
-  public getChildren(): CurriculumNode[] {
-    return this.children;
+  public toPlainObject(): any {
+    return {
+      id: this.id,
+      name: this.name,
+      description: this.description,
+      children: this.children,
+      bokConcepts: this.bokConcepts,
+      prerequisites: this.prerequisites,
+      eqf: this.eqf,
+      ects: this.ects,
+      timeRequired: this.timeRequired.toPlainObject(),
+      studyAreas: this.studyAreas.map(area => area.toPlainObject()),
+      transversalSkills: this.transversalSkills.map(skill => skill.toPlainObject()),
+      customTransversalSkills: this.customTransversalSkills,
+      learningObjectives: this.learningObjectives,
+      trainingMaterials: this.trainingMaterials.map(material => material.toPlainObject()),
+      bibliography: this.bibliography,
+      affiliations: this.affiliations.map(affiliation => affiliation.toPlainObject())
+    };
   }
 }

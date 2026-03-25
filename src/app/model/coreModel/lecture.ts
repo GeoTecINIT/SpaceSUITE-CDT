@@ -1,10 +1,10 @@
 import { CurriculumNode } from "./curriculumNode";
-import { DomainError } from "./domainError";
+import { DomainError } from "../domainError";
 
 export class Lecture extends CurriculumNode {
   public isPractical: boolean;
 
-  protected constructor(currentNode?: Partial<Lecture>, id?: string) {
+  constructor(currentNode?: Partial<Lecture>, id?: string) {
     super(currentNode, id);
     this.children = [];
     this.isPractical = currentNode?.isPractical || false;
@@ -15,12 +15,5 @@ export class Lecture extends CurriculumNode {
       'LECTURE_HAS_CHILDREN', 
       `Lectures are leaf nodes and cannot have children. Move content up to a Course or Module.`
     );
-  }
-
-  public override toPlainObject(): any {
-    return {
-      ...super.toPlainObject(),
-      isPractical: this.isPractical,
-    };
   }
 }
