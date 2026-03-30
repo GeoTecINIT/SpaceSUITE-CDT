@@ -1,3 +1,4 @@
+import { FieldValue, Timestamp } from "@angular/fire/firestore";
 import { Affiliation } from "../coreModel/affiliation";
 
 export class EducationalOfferDB {
@@ -6,8 +7,8 @@ export class EducationalOfferDB {
 
   public affiliations: Affiliation[];
   public isPublic: boolean;
-  public createdAt: Date;
-  public updatedAt?: Date;
+  public createdAt: Timestamp;
+  public updatedAt?: Timestamp;
 
   public userId: string;
   public orgId: string;
@@ -19,7 +20,7 @@ export class EducationalOfferDB {
     this.root = partialOffer?.root || '';
 		this.affiliations = partialOffer?.affiliations || [];
     this.isPublic = partialOffer?.isPublic ?? false;
-    this.createdAt = partialOffer?.createdAt || new Date();
+    this.createdAt = partialOffer?.createdAt || Timestamp.fromDate(new Date());
     this.updatedAt = partialOffer?.updatedAt;  
     this.userId = partialOffer?.userId || '';
     this.orgId = partialOffer?.orgId || '';
@@ -33,8 +34,8 @@ export class EducationalOfferDB {
       root: this.root,
       affiliations: this.affiliations.map(affiliation => affiliation.toPlainObject()),
       isPublic: this.isPublic,
-      createdAt: this.createdAt.toISOString(),
-      updatedAt: this.updatedAt ? this.updatedAt.toISOString() : undefined,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt ? this.updatedAt : undefined,
       userId: this.userId,
       orgId: this.orgId,
       orgName: this.orgName,
