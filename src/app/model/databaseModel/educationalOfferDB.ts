@@ -1,4 +1,4 @@
-import { FieldValue, Timestamp } from "@angular/fire/firestore";
+import { Timestamp } from "@angular/fire/firestore";
 import { Affiliation } from "../coreModel/affiliation";
 
 export class EducationalOfferDB {

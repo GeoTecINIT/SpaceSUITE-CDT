@@ -13,7 +13,7 @@ import { CurriculumNode } from "../../model/coreModel/curriculumNode";
 import { EducationalOffer } from "../../model/coreModel/educationalOffer";
 import { EducationalOfferDB } from "../../model/databaseModel/educationalOfferDB";
 import { concatMap, forkJoin, map, Observable, of, take } from "rxjs";
-import { EducationalOfferDBService } from "./educationalOfferDBService";
+import { EducationalOfferDBService } from "./educationalOfferDB.service";
 import { Timestamp } from "@angular/fire/firestore";
 import { BokInformationService } from "@eo4geo/ngx-bok-visualization";
 

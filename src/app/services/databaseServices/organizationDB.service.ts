@@ -6,7 +6,7 @@ import { map, Observable } from "rxjs";
 @Injectable({
     providedIn: 'root',
 })
-export class OrganizationService {
+export class OrganizationDBService {
   private db: Firestore;
   private organizationCollection: CollectionReference;
 

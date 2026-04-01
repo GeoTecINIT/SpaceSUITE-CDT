@@ -18,7 +18,7 @@ export class EducationalOfferDBService {
 
   constructor() {
     this.firestore = inject(Firestore);
-    this.educationalOfferCollection = collection(this.firestore, 'educationalOffers');
+    this.educationalOfferCollection = collection(this.firestore, 'EducationalOffers');
   }
 
   public createEducationalOffer(educationalOffer: EducationalOfferDB, curriculumNodes: CurriculumNodeDB[]): Observable<void> {

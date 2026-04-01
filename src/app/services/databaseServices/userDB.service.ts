@@ -7,7 +7,7 @@ import { User } from "../../model/userModel/user";
 @Injectable({
     providedIn: 'root',
 })
-export class UserService {
+export class UserDBService {
   private auth: Auth;
   private db: Firestore;
   private userCollection: CollectionReference;
