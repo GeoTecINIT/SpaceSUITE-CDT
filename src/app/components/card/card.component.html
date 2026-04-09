@@ -1,0 +1,188 @@
+<p-card class="custom-card">
+  <div #card class="flex justify-content-between align-items-center gap-6">
+    <div class="flex flex-column flex-1">
+      <div>
+        <a
+          class="p-card-title card-title"
+          href="{{ educationalOffer.id }}"
+          target="_self"
+          (click)="onClickTitle($event)"
+        >
+          {{ educationalOffer.root.name }}
+        </a>
+
+        <span class="p-card-subtitle text-sm ml-2">
+          {{ educationalOffer.orgName }}
+
+          @if (educationalOffer.division !== "") {
+            - {{ educationalOffer.division }}
+          }
+        </span>
+      </div>
+
+      <div class="flex flex-column gap-2">
+        <div class="flex flex-wrap align-items-center gap-2 text-sm">
+          <span class="white-space-nowrap">
+            <strong>EQF level:</strong>
+
+            {{ educationalOffer.root.eqf }}
+          </span>
+          |
+          <span class="white-space-nowrap">
+            <strong>Last updated:</strong>
+
+            {{ educationalOffer.updatedAt?.toLocaleDateString() }}
+          </span>
+        </div>
+
+        <div class="text-truncate">
+          {{ educationalOffer.root.description }}
+        </div>
+
+        @if (showSkeleton) {
+          <div class="mt-2 h-4rem overflow-hidden">
+            <div class="flex align-items-center gap-2 flex-wrap">
+              @for (i of skeletonElements; track $index) {
+                <p-skeleton
+                  height="1.5rem"
+                  width="8rem"
+                  class="mb-2"
+                  borderRadius="16px"
+                />
+              }
+            </div>
+          </div>
+        } @else {
+          <div
+            #container
+            class="mt-2 {{
+              limitTagsHeight ? 'max-h-8rem' : ''
+            }} overflow-hidden"
+          >
+            <div #subjects class="flex align-items-center">
+              <skill-tags
+                [tags]="concepts"
+                [compactThreshold]="
+                  overflow ? maxOverflowWidth : minOverflowWidth
+                "
+                (layoutUpdated)="compactConceptsChanged()"
+                class="min-w-full"
+              >
+                @if (compactConcepts) {
+                  <i
+                    class="pi pi-info-circle more-tag align-self-center"
+                    (click)="conceptsOp.toggle($event)"
+                  ></i>
+                }
+              </skill-tags>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="hidden xl:flex gap-2">
+      <p-button
+        class="custom-button"
+        icon="pi pi-share-alt"
+        [rounded]="true"
+        variant="text"
+        pTooltip="Share"
+        tooltipPosition="top"
+        (onClick)="copyLink()"
+      />
+
+      <div>
+        <p-button
+          class="custom-button"
+          icon="pi pi-download"
+          [rounded]="true"
+          variant="text"
+          pTooltip="Download"
+          tooltipPosition="top"
+          (onClick)="op.toggle($event)"
+        />
+
+        <p-popover #op>
+          <div style="color: var(--primary-color)">
+            <strong>Choose Format</strong>
+          <!--
+            <ul class="flex flex-column p-0 m-0">
+              <li class="flex p-2 popover-element" (click)="downloadPDF()">
+                PDF
+              </li>
+
+              <li
+                class="flex p-2 popover-element"
+                (click)="downloadRDF('rdfa')"
+              >
+                RDFa
+              </li>
+
+              <li class="flex p-2 popover-element" (click)="downloadRDF('xml')">
+                RDF/XML
+              </li>
+
+              <li class="flex p-2 popover-element" (click)="downloadRDF('ttl')">
+                Turtle
+              </li>
+            </ul>
+          -->
+          </div>
+        </p-popover>
+      </div>
+
+      <p-button
+        class="custom-button"
+        icon="pi pi-clone"
+        [rounded]="true"
+        variant="text"
+        [pTooltip]="logged ? 'Duplicate' : 'Login to be able to duplicate.'"
+        tooltipPosition="top"
+        [disabled]="!logged"
+        (onClick)="duplicateJob()"
+      />
+
+      <p-button
+        class="custom-button"
+        icon="pi pi-pencil"
+        [rounded]="true"
+        variant="text"
+        [pTooltip]="
+          logged
+            ? checkUser()
+              ? 'Edit'
+              : 'You can only edit jobs from your organization.'
+            : 'Login to be able to edit.'
+        "
+        tooltipPosition="top"
+        [disabled]="!logged || !checkUser()"
+        (onClick)="editJob()"
+      />
+
+      <p-button
+        class="custom-button-danger"
+        icon="pi pi-trash"
+        [rounded]="true"
+        variant="text"
+        [pTooltip]="
+          logged
+            ? checkUser()
+              ? 'Delete'
+              : 'You can only delete jobs from your organization.'
+            : 'Login to be able to delete.'
+        "
+        tooltipPosition="top"
+        [tooltipStyleClass]="logged && checkUser() ? 'danger-tooltip' : ''"
+        [disabled]="!logged || !checkUser()"
+        (onClick)="deleteModal($event)"
+      />
+    </div>
+  </div>
+</p-card>
+
+<p-popover #conceptsOp>
+  <div class="flex align-items-center gap-2 my-2 flex-wrap max-w-19rem">
+    <skill-tags [tags]="concepts" [compactBoKTags]="false"></skill-tags>
+  </div>
+</p-popover>

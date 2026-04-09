@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { DomainError } from "../../model/domainError";
 import { StudyProgram } from "../../model/coreModel/studyProgram";
 import { StudyProgramDB } from "../../model/databaseModel/studyProgramDB";
@@ -21,13 +21,8 @@ import { BokInformationService } from "@eo4geo/ngx-bok-visualization";
     providedIn: 'root',
 })
 export class EducationalOfferAdapterService {
-  private educationalOfferDBService: EducationalOfferDBService;
-  private bokInformationService: BokInformationService;
-
-  constructor() {
-    this.educationalOfferDBService = Inject(EducationalOfferDBService);
-    this.bokInformationService = Inject(BokInformationService);
-  }
+  private educationalOfferDBService = inject(EducationalOfferDBService);
+  private bokInformationService = inject(BokInformationService);
 
   public createEducationalOffer(educationalOffer: EducationalOffer): Observable<void> {
     const educationalOfferDB = this.parseEducationalOffer(educationalOffer);

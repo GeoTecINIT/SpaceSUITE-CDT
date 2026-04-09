@@ -1,0 +1,45 @@
+<p-toast class="custom-toast" position="bottom-right"/>
+<div #container class="flex flex-column xl:flex-row gap-4 m-2">
+    <filters [(multiSelectOptions)]="filterOptions" [loading]="loadingFilters" 
+        (multiSelectOptionsChange)="filterPipeline()" (advancedMultiSelectOptionsChange)="filterPipeline()" [filterUserItemOptions]="filterUserItemOptions"
+        [searchValue]="searchValue" (searchValueChange)="setSearchValue($event)" [selectedOption]="searchOption" (selectedOptionChange)="setSearchOption($event)"
+        [bokConcepts]="bokConcepts" (bokConceptsChange)="setBoKConcepts($event)" [filterUserItem]="filterByUserItem" (filterUserItemChange)="setFilterByUserMaterial($event)" 
+        [logged]="(isLogged() | async) ?? false" class="flex justify-content-center"></filters>
+    <div class="flex flex-column w-full">
+        <p-buttongroup class="ml-auto mt-2 align-self-center">
+            <p-button severity="secondary" (click)="switchSortOrientation()" [icon]="sortAsc ? 'pi pi-sort-amount-up' : 'pi pi-sort-amount-down'" size="small" [label]="'Order By ' + selectedSortOption" class="custom-secondary-button"/>
+            <p-button severity="secondary" (click)="menu.toggle($event)" icon="pi pi-chevron-down" class="flex custom-secondary-button" size="small"/>
+        </p-buttongroup>
+        <p-divider></p-divider>
+        <div *ngIf="filteredEducationalItems.length != 0 || loadingCards" class="flex flex-column mt-2">
+            <div class="flex gap-5 flex-wrap align-content-start justify-content-center mb-4">
+                <ng-container *ngIf="!loadingCards else cardSkeleton">
+                    <ng-container *ngFor="let item of paginationEducationalItems; trackBy: trackById">
+                        <card [educationalOffer]="item"></card>
+                    </ng-container>
+                </ng-container>
+            </div>
+            <p-paginator *ngIf="filteredEducationalItems.length != 0 && !loadingCards" (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="filteredEducationalItems.length" class="custom-paginator"/>
+        </div>
+        <p *ngIf="filteredEducationalItems.length == 0 && !loadingCards" class="font-italic flex mx-auto justify-content-center">No offer found</p>
+    </div>
+</div>
+<div class="floating-container flex flex-column gap-2 align-items-end" [ngStyle]="{ bottom: buttonBottom + 'px' }">
+    <p-button *ngIf="isLogged() && showButton" (click)="createTrainingItem()" icon="pi pi-plus" label="Add offer" class="custom-button floating-button"/>
+</div>
+
+<p-menu #menu [model]="sortOptions" popup styleClass="!min-w-fit" class="custom-menu">
+    <ng-template #item let-item>
+        <a pRipple class="flex items-center p-menu-item-link" (click)="setSortOption(item.label)">
+            <i class="w-1rem" [ngClass]="item.label == selectedSortOption ? 'pi pi-check' : ''"></i>
+            <span class="ml-2">{{ item.label }}</span>
+        </a>
+    </ng-template>
+</p-menu>
+
+<ng-template #cardSkeleton>
+    <ng-content *ngFor="let i of skeletonElements">
+        <p-skeleton width="19rem" height="27.5rem" class="custom-skeleton" />
+    </ng-content>
+</ng-template>
+

@@ -1,8 +1,7 @@
-import { Inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { EducationalOffer } from '../../model/coreModel/educationalOffer';
 import { EducationalOfferAdapterService } from '../databaseServices/educationalOfferAdapter.service';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
-import { error } from 'console';
 
 @Injectable({
   providedIn: 'root',
@@ -10,11 +9,9 @@ import { error } from 'console';
 export class EducationalOfferService {
   private offerMap: BehaviorSubject<Map<string, EducationalOffer> | undefined>;
 
-  private educationalOfferAdapterService: EducationalOfferAdapterService;
+  private educationalOfferAdapterService: EducationalOfferAdapterService = inject(EducationalOfferAdapterService);
 
   constructor() {
-    this.educationalOfferAdapterService = Inject(EducationalOfferAdapterService);
-
     this.offerMap = new BehaviorSubject<Map<string, EducationalOffer> | undefined>(undefined);
   }
 
@@ -39,9 +36,25 @@ export class EducationalOfferService {
     return this.educationalOfferAdapterService.getEducationalOffer(educationalOfferId);
   }
 
+  deleteEducationalOffer(educationalOfferId: string): Observable<void> {
+    return this.educationalOfferAdapterService.deleteEducationalOffer(educationalOfferId);
+  }
+
   submitEducationalOffer(newOffer: EducationalOffer, oldOffer?: EducationalOffer): Observable<void> {
     // TODO
     throw new Error('NOT IMPLEMENTED');
+  }
+
+    public getOffersOrganizations(): Observable<string[]> {
+    return this.offerMap.asObservable().pipe(
+      map(offers => {
+        if (offers == undefined || offers.size == 0) return [];
+        const orgs = Array.from(offers.values())
+          .filter((m: EducationalOffer) => !!m.orgName)
+          .map(m => m.orgName!);
+        return [...new Set(orgs)];
+      })
+    )
   }
 
   private loadOfferMap(): void {
@@ -52,6 +65,6 @@ export class EducationalOfferService {
           newMap.set(value.id, value);
         });
       }),
-    );
+    ).subscribe();
   }
 }

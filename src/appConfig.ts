@@ -11,10 +11,10 @@ import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { Auth, getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { provideStorage, getStorage } from '@angular/fire/storage';
-import { MainPageComponent } from './app/components/mainPage/mainPage.component';
+import { ItemExplorerComponent } from './app/components/itemExplorer/itemExplorer.component';
 
 const routes: Routes = [
-    { path: '', component: MainPageComponent },
+    { path: '', component: ItemExplorerComponent },
     { path: 'profile', component: UserPageComponent, canMatch: [AuthGuard]},
     { path: 'organizations', component: OrganizationPageComponent, canMatch: [AuthGuard]},
     { path: '**', component: NotFoundPageComponent}

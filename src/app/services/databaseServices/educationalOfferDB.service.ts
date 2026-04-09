@@ -14,10 +14,9 @@ import { StudyProgramDB } from "../../model/databaseModel/studyProgramDB";
 })
 export class EducationalOfferDBService {
   private educationalOfferCollection: CollectionReference;
-  private firestore: Firestore;
+  private firestore: Firestore = inject(Firestore);
 
   constructor() {
-    this.firestore = inject(Firestore);
     this.educationalOfferCollection = collection(this.firestore, 'EducationalOffers');
   }
 
