@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, ViewChild } from "@angular/core";
+import { Component, ElementRef, inject, NgZone, ViewChild } from "@angular/core";
 import { SkeletonModule } from 'primeng/skeleton';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { CommonModule } from "@angular/common";
@@ -77,6 +77,7 @@ export class ItemExplorerComponent {
   private router = inject(Router);
   private messageService = inject(MessageService);
   private route = inject(ActivatedRoute);
+  private ngZone: NgZone = inject(NgZone);
 
   constructor() {
     this.skeletonElements = Array(16).fill(null);
@@ -116,6 +117,9 @@ export class ItemExplorerComponent {
         this.onPageChange(this.filterService.paginatorState);
       }
       this.loadingCards = false;
+      this.ngZone.onStable.pipe(take(1)).subscribe(() => {
+        this.updateButtonPosition();
+      });
     });
   }
 
