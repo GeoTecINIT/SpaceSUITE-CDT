@@ -101,7 +101,7 @@ export class ItemExplorerComponent {
     this.sortAsc = this.sortingService.sortAsc;
     this.selectedSortOption = this.sortingService.sortOption;
 
-    // Load Training Items & User orgs
+    // Load Items & User orgs
     this.educationalOffersSubscription = combineLatest([
       this.educationalOfferService.getEducationalOffers().pipe(
         filter(value => value !== undefined),

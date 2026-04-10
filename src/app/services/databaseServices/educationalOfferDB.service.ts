@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
-import { collection, collectionData, CollectionReference, deleteDoc, doc, docData, DocumentReference, Firestore, setDoc, updateDoc } from "@angular/fire/firestore";
-import { concatMap, defaultIfEmpty, filter, forkJoin, from, map, Observable, of } from "rxjs";
+import { collection, collectionData, CollectionReference, deleteDoc, doc, docData, DocumentData, DocumentReference, Firestore, setDoc, updateDoc } from "@angular/fire/firestore";
+import { combineLatest, concatMap, defaultIfEmpty, filter, forkJoin, from, map, Observable, of } from "rxjs";
 import { CurriculumNodeDB } from "../../model/databaseModel/curriculumNodeDB";
 import { EducationalOfferDB } from "../../model/databaseModel/educationalOfferDB";
 import { LectureDB } from "../../model/databaseModel/lectureDB";
@@ -59,7 +59,7 @@ export class EducationalOfferDBService {
             return this.getEducationalOfferNodes(offerDocRef).pipe(filter(offer => offer !== undefined))
           }
         );
-        return forkJoin(educationalOffers$).pipe(map(offers => {
+        return combineLatest(educationalOffers$).pipe(map(offers => {
           return offers.map((curriculumNodes, index) => {
             return { educationalOffer: educationalOffersDB[index], curriculumNodes: curriculumNodes as CurriculumNodeDB[] };
           });
@@ -203,12 +203,12 @@ export class EducationalOfferDBService {
     const moduleCollection = collection(educationalOfferDocRef, 'modules');
     const studyProgramCollection = collection(educationalOfferDocRef, 'studyPrograms');
 
-    const lectures$ = collectionData(lectureCollection).pipe(map(items => items as LectureDB[]));
-    const courses$ = collectionData(courseCollection).pipe(map(items => items as CourseDB[]));
-    const modules$ = collectionData(moduleCollection).pipe(map(items => items as ModuleDB[]));
-    const studyPrograms$ = collectionData(studyProgramCollection).pipe(map(items => items as StudyProgramDB[]));
+    const lectures$ = collectionData(lectureCollection).pipe(this.mapToClass(LectureDB));
+    const courses$ = collectionData(courseCollection).pipe(this.mapToClass(CourseDB));
+    const modules$ = collectionData(moduleCollection).pipe(this.mapToClass(ModuleDB));
+    const studyPrograms$ = collectionData(studyProgramCollection).pipe(this.mapToClass(StudyProgramDB));
 
-    return forkJoin([lectures$, courses$, modules$, studyPrograms$]).pipe(defaultIfEmpty([]), map(([lectures, courses, modules, studyPrograms]) => {
+    return combineLatest([lectures$, courses$, modules$, studyPrograms$]).pipe(defaultIfEmpty([]), map(([lectures, courses, modules, studyPrograms]) => {
       return [...lectures, ...courses, ...modules, ...studyPrograms];
     }));
   }
@@ -287,5 +287,12 @@ export class EducationalOfferDBService {
       }
     }
     return updateObject;
+  }
+
+  private mapToClass<T extends object>(cls: new () => T) {
+    return (source$: Observable<DocumentData[]>) =>
+      source$.pipe(
+        map(items => items.map(item => Object.assign(new cls(), item) as T))
+      );
   }
 }

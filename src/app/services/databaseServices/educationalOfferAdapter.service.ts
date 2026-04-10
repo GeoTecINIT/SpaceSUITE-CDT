@@ -190,7 +190,7 @@ export class EducationalOfferAdapterService {
 
   private parseEducationalOfferDB(educationalOfferDB: EducationalOfferDB, curriculumNodesDB: CurriculumNodeDB[]): EducationalOffer {
     const nodeMap = new Map<string, CurriculumNode>();
-    curriculumNodesDB.forEach(nodeDB => {
+    curriculumNodesDB.forEach((nodeDB: CurriculumNodeDB) => {
       const nodeType = nodeDB.constructor.name;
       const node = this.parseCurriculumNodeDB(nodeDB, nodeType);
       nodeMap.set(node.id, node);

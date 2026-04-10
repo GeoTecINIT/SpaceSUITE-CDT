@@ -12,7 +12,7 @@
         </p-buttongroup>
         <p-divider></p-divider>
         <div *ngIf="filteredEducationalItems.length != 0 || loadingCards" class="flex flex-column mt-2">
-            <div class="flex gap-5 flex-wrap align-content-start justify-content-center mb-4">
+            <div class="flex gap-3 flex-column align-content-start justify-content-center mb-4">
                 <ng-container *ngIf="!loadingCards else cardSkeleton">
                     <ng-container *ngFor="let item of paginationEducationalItems; trackBy: trackById">
                         <card [educationalOffer]="item"></card>

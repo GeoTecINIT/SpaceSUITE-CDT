@@ -38,6 +38,7 @@ import { EducationalOffer } from '../../model/coreModel/educationalOffer';
     SkeletonModule,
     SkillTagComponent,
   ],
+  providers: [ConfirmationService]
 })
 export class CardComponent implements OnInit {
   @Input() educationalOffer!: EducationalOffer;

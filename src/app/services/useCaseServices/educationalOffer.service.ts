@@ -64,6 +64,7 @@ export class EducationalOfferService {
         newValues.forEach((value) => {
           newMap.set(value.id, value);
         });
+        this.offerMap.next(newMap);
       }),
     ).subscribe();
   }
