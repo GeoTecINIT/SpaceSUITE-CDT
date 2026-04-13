@@ -23,6 +23,12 @@
       <div class="flex flex-column gap-2">
         <div class="flex flex-wrap align-items-center gap-2 text-sm">
           <span class="white-space-nowrap">
+            <strong>Type:</strong>
+
+            {{ getOfferType() }}
+          </span>
+          |
+          <span class="white-space-nowrap">
             <strong>EQF level:</strong>
 
             {{ educationalOffer.root.eqf }}

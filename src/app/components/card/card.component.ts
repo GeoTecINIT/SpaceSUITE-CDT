@@ -205,6 +205,12 @@ export class CardComponent implements OnInit {
     });
   }
 
+  getOfferType() {
+    const constructorName = this.educationalOffer.root.constructor.name;
+    const formattedName = constructorName.match(/[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+/g)?.join(' ');
+    return formattedName;
+  }
+
   /*
   downloadPDF(): void {
     document.body.style.cursor = 'wait';
