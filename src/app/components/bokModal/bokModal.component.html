@@ -13,14 +13,14 @@
 </div>
 
 <p-dialog header="Explore Body of Knowledge" [modal]="true" [(visible)]="visible" [style]="{width: '45rem', height: '52rem', color: 'var(--primary-color)'}" (onShow)="loadComponent()">
-    <p-progress-spinner class="flex custom-spinner" ariaLabel="loading" *ngIf="currentConcept == ''" />
+    <p-progress-spinner class="flex custom-spinner" ariaLabel="loading" *ngIf="currentConcept() == ''" />
     <ng-template #dynamicContainer></ng-template>
-    <div *ngIf="currentConcept != ''" class="flex justify-content-between align-items-center">
-        <div *ngIf="!invalidConcept" class="mx-4">{{currentConcept}} : {{currentConceptName}}</div>
-        <div *ngIf="invalidConcept" [style.color]="'var(--danger-color)'" class="mx-4 text-sm">
+    <div *ngIf="currentConcept() != ''" class="flex justify-content-between align-items-center">
+        <div *ngIf="!invalidConcept()" class="mx-4">{{currentConcept()}} : {{currentConceptName()}}</div>
+        <div *ngIf="invalidConcept()" [style.color]="'var(--danger-color)'" class="mx-4 text-sm">
             <div>You cannot add top-level concepts.</div>
             <div>Please navigate down and select more specific concepts.</div>
         </div>
-        <p-button (click)="addConcept()" [disabled]="invalidConcept" label="Add" class="custom-button"/>
+        <p-button (click)="addConcept()" [disabled]="invalidConcept()" label="Add" class="custom-button"/>
     </div>
 </p-dialog>

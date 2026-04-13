@@ -11,21 +11,21 @@
             <p-button severity="secondary" (click)="menu.toggle($event)" icon="pi pi-chevron-down" class="flex custom-secondary-button" size="small"/>
         </p-buttongroup>
         <p-divider></p-divider>
-        <div *ngIf="filteredEducationalItems.length != 0 || loadingCards" class="flex flex-column mt-2">
+        <div *ngIf="filteredEducationalItems().length != 0 || loadingCards()" class="flex flex-column mt-2">
             <div class="flex gap-3 flex-column align-content-start justify-content-center mb-4">
-                <ng-container *ngIf="!loadingCards else cardSkeleton">
+                <ng-container *ngIf="!loadingCards() else cardSkeleton">
                     <ng-container *ngFor="let item of paginationEducationalItems; trackBy: trackById">
                         <card [educationalOffer]="item"></card>
                     </ng-container>
                 </ng-container>
             </div>
-            <p-paginator *ngIf="filteredEducationalItems.length != 0 && !loadingCards" (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="filteredEducationalItems.length" class="custom-paginator"/>
+            <p-paginator *ngIf="filteredEducationalItems().length != 0 && !loadingCards()" (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="filteredEducationalItems().length" class="custom-paginator"/>
         </div>
-        <p *ngIf="filteredEducationalItems.length == 0 && !loadingCards" class="font-italic flex mx-auto justify-content-center">No offer found</p>
+        <p *ngIf="filteredEducationalItems().length == 0 && !loadingCards()" class="font-italic flex mx-auto justify-content-center">No offer found</p>
     </div>
 </div>
 <div class="floating-container flex flex-column gap-2 align-items-end" [ngStyle]="{ bottom: buttonBottom + 'px' }">
-    <p-button *ngIf="isLogged() && showButton" (click)="createTrainingItem()" icon="pi pi-plus" label="Add offer" class="custom-button floating-button"/>
+    <p-button *ngIf="isLogged()" (click)="createTrainingItem()" icon="pi pi-plus" label="Add offer" class="custom-button floating-button"/>
 </div>
 
 <p-menu #menu [model]="sortOptions" popup styleClass="!min-w-fit" class="custom-menu">
@@ -39,7 +39,7 @@
 
 <ng-template #cardSkeleton>
     <ng-content *ngFor="let i of skeletonElements">
-        <p-skeleton width="19rem" height="27.5rem" class="custom-skeleton" />
+        <p-skeleton height="10rem" class="custom-skeleton" />
     </ng-content>
 </ng-template>
 

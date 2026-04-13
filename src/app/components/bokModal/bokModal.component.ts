@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, ComponentRef, EventEmitter, inject, Input, Output, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, EventEmitter, inject, Input, Output, signal, ViewChild, ViewContainerRef } from '@angular/core';
 import { BokComponent, BokInformationService } from '@eo4geo/ngx-bok-visualization';
 import { ButtonModule } from "primeng/button";
 import { DialogModule } from 'primeng/dialog';
@@ -24,8 +24,8 @@ export class BokModalComponent {
   @Input() label: string = 'BoK Concepts';
   @Input() disabled: boolean = false;
 
-  currentConcept = '';
-  currentConceptName = '';
+  currentConcept = signal('');
+  currentConceptName = signal('');
 
   @Input() selectedConcepts: string[] = [];
   selectedConceptsColor: Map<string, string> = new Map();
@@ -37,11 +37,10 @@ export class BokModalComponent {
   private componentRef: ComponentRef<BokComponent> | null = null;
 
   @Input() allowKnowledgeAreas: boolean = true;
-  invalidConcept: boolean = false;
+  invalidConcept = signal(false);
 
   private bokInfo = inject(BokInformationService);
   private utilsService = inject(UtilsService);
-  private cdr = inject(ChangeDetectorRef);
   private messageService = inject(MessageService);
 
   ngOnInit() {
@@ -71,20 +70,18 @@ export class BokModalComponent {
     this.componentRef.setInput('showVersions', false);
     this.componentRef.setInput('showSearchEngine', true);
     this.componentRef.instance.codSelectedChange.subscribe((newCode: string) => {
-      this.currentConcept = newCode;
-      if (!this.allowKnowledgeAreas && (this.utilsService.codeToKnowledgeArea.has(this.currentConcept) || this.currentConcept == 'GIST')) {
-        this.invalidConcept = true;
-        this.cdr.detectChanges();
+      this.currentConcept.set(newCode);
+      if (!this.allowKnowledgeAreas && (this.utilsService.codeToKnowledgeArea.has(this.currentConcept()) || this.currentConcept() == 'GIST')) {
+        this.invalidConcept.set(true);
         return
       }
-      this.invalidConcept = false;
-      this.bokInfo.getConceptName(newCode).subscribe(name => this.currentConceptName = name);
-      this.cdr.detectChanges();
+      this.invalidConcept.set(false);
+      this.bokInfo.getConceptName(newCode).subscribe(name => this.currentConceptName.set(name));
     })
   }
 
   addConcept() {
-    this.addConceptWithName(this.currentConcept);
+    this.addConceptWithName(this.currentConcept());
   }
 
   addConceptWithName(concept: string) {

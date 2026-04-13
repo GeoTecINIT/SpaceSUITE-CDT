@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import {
-  ChangeDetectorRef,
   Component,
   ElementRef,
   inject,
   Input,
   OnInit,
+  signal,
   ViewChild,
+  WritableSignal,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { SkillTagComponent, Tag } from '@eo4geo/ngx-bok-utils';
@@ -54,14 +55,14 @@ export class CardComponent implements OnInit {
   @ViewChild('conceptsOp') conceptsOp!: Popover;
 
   @ViewChild('card') cardComponent!: ElementRef;
-  maxOverflowWidth: number = 2000;
-  minOverflowWidth: number = 500;
+  maxOverflowWidth: WritableSignal<number> = signal(2000);
+  minOverflowWidth: WritableSignal<number> = signal(500);
 
-  concepts: Tag[] = [];
-  conceptsLoaded: boolean = false;
-  overflow: boolean = false;
-  compactConcepts: boolean = false;
-  limitTagsHeight: boolean = true;
+  concepts: WritableSignal<Tag[]> = signal([]);
+  private conceptsLoaded: boolean = false;
+  overflow: WritableSignal<boolean> = signal(false);
+  compactConcepts: WritableSignal<boolean> = signal(false);
+  limitTagsHeight: WritableSignal<boolean> = signal(true);
 
   skeletonElements: number[] = [];
   showSkeleton: boolean = true;
@@ -74,7 +75,6 @@ export class CardComponent implements OnInit {
   private messageService = inject(MessageService);
   //private pdfService = inject(PdfService);
   //private rdfService = inject(RdfService);
-  private cdr = inject(ChangeDetectorRef);
 
   constructor() {
     this.skeletonElements = Array(10).fill(null);
@@ -89,8 +89,7 @@ export class CardComponent implements OnInit {
       .stringToTag(this.educationalOffer.root.bokConcepts, 'bok')
       .pipe(defaultIfEmpty([]))
       .subscribe((results) => {
-        this.concepts = [...this.concepts, ...results];
-        this.concepts.sort((a, b) => a.label.localeCompare(b.label));
+        this.concepts.set([...this.concepts(), ...results].sort((a, b) => a.label.localeCompare(b.label)));
         this.conceptsLoaded = true;
         this.showSkeleton = false;
       });
@@ -99,15 +98,14 @@ export class CardComponent implements OnInit {
   ngAfterViewChecked() {
     if (this.conceptsLoaded && this.limitTagsHeight) {
       const currentWidth = this.cardComponent.nativeElement.clientWidth;
-      this.maxOverflowWidth = currentWidth * 1.4;
-      this.minOverflowWidth = currentWidth * 0.6;
-      this.overflow = this.checkOverflow();
-      this.limitTagsHeight = false;
-      this.cdr.detectChanges();
+      this.maxOverflowWidth.set(currentWidth * 1.4);
+      this.minOverflowWidth.set(currentWidth * 0.6);
+      this.overflow.set(this.checkOverflow());
+      this.limitTagsHeight.set(false);
     }
   }
 
-  compactConceptsChanged = () => (this.compactConcepts = !this.compactConcepts);
+  compactConceptsChanged = () => (this.compactConcepts.set(!this.compactConcepts()));
 
   checkOverflow(): boolean {
     const containerHeight = this.containerElement.nativeElement.clientHeight;

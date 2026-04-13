@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, NgZone, ViewChild } from "@angular/core";
+import { Component, ElementRef, inject, NgZone, signal, ViewChild, WritableSignal } from "@angular/core";
 import { SkeletonModule } from 'primeng/skeleton';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { CommonModule } from "@angular/common";
@@ -35,16 +35,17 @@ import { DividerModule } from 'primeng/divider';
 })
 export class ItemExplorerComponent {
   educationalOffers: EducationalOffer[] = [];
-  filteredEducationalItems: EducationalOffer[] = [];
+  filteredEducationalItems: WritableSignal<EducationalOffer[]> = signal([]);
 
+  // Filter fields - no signal (child input)
   filterOptions: FilterOption[] = [];
   advancedFilterOptions: FilterOption[] = [];
-  showAdvancedFilters: boolean = false;
   searchValue: string = '';
   searchOption: string = "Title";
   bokConcepts: string[] = [];
   loadingFilters: boolean = true;
-  loadingCards: boolean = true;
+
+  loadingCards = signal(true);
 
   filterUserItemOptions: any[] = [];
   filterByUserItem: boolean = false;
@@ -56,7 +57,6 @@ export class ItemExplorerComponent {
   paginationEducationalItems: EducationalOffer[] = [];
 
   @ViewChild('container') containerRef!: ElementRef;
-  showButton = true;
   buttonBottom = 32;
 
   sortOptions: MenuItem[] | undefined;
@@ -116,7 +116,7 @@ export class ItemExplorerComponent {
       if(this.filterService.paginatorState.rows && this.filterService.paginatorState.first) {
         this.onPageChange(this.filterService.paginatorState);
       }
-      this.loadingCards = false;
+      this.loadingCards.set(false);
       this.ngZone.onStable.pipe(take(1)).subscribe(() => {
         this.updateButtonPosition();
       });
@@ -201,8 +201,8 @@ export class ItemExplorerComponent {
     const sortedItems = this.sortItems(this.educationalOffers);
     const searchedItems = this.searchItems(sortedItems);
     const filteredItems = this.filterItems(searchedItems);
-    this.filteredEducationalItems = this.filterByBoKConcept(filteredItems);
-    this.paginationEducationalItems = this.filteredEducationalItems.slice(this.first, this.first + this.rows)
+    this.filteredEducationalItems.set(this.filterByBoKConcept(filteredItems));
+    this.paginationEducationalItems = this.filteredEducationalItems().slice(this.first, this.first + this.rows)
   }
 
   sortItems(inputItems: EducationalOffer[]): EducationalOffer[] {
@@ -289,7 +289,7 @@ export class ItemExplorerComponent {
       this.first = event.first ?? 0;
       this.rows = event.rows ?? 16;
       this.filterService.paginatorState = event;
-      this.paginationEducationalItems = this.filteredEducationalItems.slice(this.first, this.first + this.rows)
+      this.paginationEducationalItems = this.filteredEducationalItems().slice(this.first, this.first + this.rows)
   }
 
   createTrainingItem() {

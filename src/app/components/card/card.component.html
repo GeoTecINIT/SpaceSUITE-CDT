@@ -56,19 +56,19 @@
           <div
             #container
             class="mt-2 {{
-              limitTagsHeight ? 'max-h-8rem' : ''
+              limitTagsHeight() ? 'max-h-8rem' : ''
             }} overflow-hidden"
           >
             <div #subjects class="flex align-items-center">
               <skill-tags
-                [tags]="concepts"
+                [tags]="concepts()"
                 [compactThreshold]="
-                  overflow ? maxOverflowWidth : minOverflowWidth
+                  overflow() ? maxOverflowWidth() : minOverflowWidth()
                 "
                 (layoutUpdated)="compactConceptsChanged()"
                 class="min-w-full"
               >
-                @if (compactConcepts) {
+                @if (compactConcepts()) {
                   <i
                     class="pi pi-info-circle more-tag align-self-center"
                     (click)="conceptsOp.toggle($event)"
@@ -183,6 +183,6 @@
 
 <p-popover #conceptsOp>
   <div class="flex align-items-center gap-2 my-2 flex-wrap max-w-19rem">
-    <skill-tags [tags]="concepts" [compactBoKTags]="false"></skill-tags>
+    <skill-tags [tags]="concepts()" [compactBoKTags]="false"></skill-tags>
   </div>
 </p-popover>
