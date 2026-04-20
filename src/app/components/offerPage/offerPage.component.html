@@ -1,0 +1,121 @@
+<p-toast class="custom-toast" position="bottom-right"/>
+<p-confirmdialog />
+<div *ngIf="offer(); else spinner" class="flex flex-column md:flex-row justify-content-between md:gap-4">
+    <div class="flex flex-column overflow-auto flex-auto">
+        <h1 class="mb-2">
+            {{offer()?.root?.name}} 
+            <a class="icon-link text-sm align-items-center mx-1 cursor-pointer font-normal" (click)="copyURIToClipboard()">
+                Permalink
+                <i class="pi pi-clone text-sm mx-1"></i>
+            </a>
+        </h1>
+        <div class="flex align-items-center gap-2 flex-wrap white-space-nowrap mb-2">
+            <div class="text-sm"><strong>Type:</strong> {{getOfferType()}}</div>
+            |
+            <div class="text-sm"><strong>EQF Level:</strong> {{offer()?.root?.eqf}}</div>
+            |
+            <div class="text-sm"><strong>Workload:</strong> {{offer()?.root?.ects}} ECTS</div>
+            |
+            <div class="text-sm"><strong>Created:</strong> {{offer()?.createdAt?.toLocaleDateString()}}</div>
+            |
+            <div class="text-sm"><strong>Visibility:</strong> {{offer()?.isPublic ? 'Public' : 'Private'}}</div>
+            |
+            <a class="icon-link text-sm align-items-center mx-1 cursor-pointer" (click)="toggle($event)">
+                Download Metadata
+                <i class="pi pi-download text-sm mx-1"></i>
+            </a>
+            <p-popover #op>
+                <div style="color: var(--primary-color)">
+                    <span class="font-medium block mb-2"><strong>Metadata Format</strong></span>
+                    <ul class="p-0 m-0 flex flex-column">
+                    <!--
+                        <li class="flex items-center gap-2 px-2 py-2 cursor-pointer popover-element" (click)="downloadMaterialRDFa()">
+                            <span class="font-medium">RDFa</span>
+                        </li>
+                        <li class="flex items-center gap-2 px-2 py-2 cursor-pointer popover-element" (click)="downloadMaterialXML()">
+                            <span class="font-medium">RDF/XML</span>
+                        </li>
+                        <li class="flex items-center gap-2 px-2 py-2 cursor-pointer popover-element" (click)="downloadMaterialTTL()">
+                            <span class="font-medium">Turtle</span>
+                        </li>
+                    -->
+                    </ul>
+                </div>
+            </p-popover>
+        </div>
+        <div style="color: var(--primary-color);" class="my-2 font-italic">{{offer()?.orgName + ((' - ' + offer()?.division) || "")}}</div>
+        <p-tabs value="0" scrollable class="custom-tabs mb-2">
+            <p-tablist>
+                <p-tab value="0">Description</p-tab>
+                <p-tab value="1">Table of Contents</p-tab>
+                <p-tab value="2">Selected Node Detail</p-tab>
+            </p-tablist>
+            <p-tabpanels>
+                <p-tabpanel value="0">
+                    <div class="mb-2 text-justify">
+                        {{offer()?.root?.description}}
+                    </div>
+                </p-tabpanel>
+                <p-tabpanel value="1">
+                    <ul class="m-0 mb-2">
+                        <li *ngFor="let content of offer()?.getAllNodes()">
+                            {{content.name}}
+                        </li>
+                    </ul>
+                </p-tabpanel>
+                <p-tabpanel value="2">
+                    <div class="mb-2">
+                        <strong>Prerequisites:</strong>
+                        <ul *ngIf="(selectedNode()?.prerequisites?.length || 0) || 0 > 0">
+                            <li *ngFor="let requisite of selectedNode()?.prerequisites">
+                                {{requisite}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Learning Outcomes:</strong>
+                        <ul *ngIf="(selectedNode()?.learningObjectives?.length || 0) || 0 > 0">
+                            <li *ngFor="let outcome of selectedNode()?.learningObjectives">
+                                {{outcome}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="flex flex-column gap-1">
+                        <p-panel #subjectsPanel [header]="'Study Areas (' + studyAreas().length + ')'" class="my-2 custom-panel">
+                            <skill-tags [tags]="studyAreas()" [compactBoKTags]="false"></skill-tags>
+                        </p-panel>
+                        <p-panel #conceptsPanel [header]="'Knowledge (' + bokConcepts().length + ')'" toggleable="true" collapsed="true" class="my-2 custom-panel">
+                            <ng-template #headericons>
+                                <p-button *ngIf="!conceptsPanel.collapsed" icon="pi pi-chevron-up" severity="secondary" rounded text/>
+                                <p-button *ngIf="conceptsPanel.collapsed" icon="pi pi-chevron-down" severity="secondary" rounded text/>
+                            </ng-template>      
+                            <skill-tags [tags]="bokConcepts()" [compactBoKTags]="false"></skill-tags>
+                        </p-panel>
+                    </div>
+                </p-tabpanel>
+            </p-tabpanels>
+        </p-tabs>
+        <div class="hidden md:flex justify-content-between mb-2 mt-auto">
+            <p-button label="Return to Homepage" severity="secondary" icon="pi pi-arrow-left" class="custom-secondary-button" (onClick)="goToMainPage()"></p-button>
+            <div class="flex flex-wrap gap-2">
+                <p-button label="Edit Material" icon="pi pi-pencil" class="custom-button" (onClick)="editMaterial()" *ngIf="checkUser() || checkOrganizations()"></p-button>
+                <p-button label="Delete Material" icon="pi pi-trash" class="delete-button" (onClick)="deleteModal($event)" *ngIf="checkUser() || checkOrganizations()"></p-button>
+            </div>
+        </div>
+    </div>
+    <div class="flex flex-column">
+
+        <!--TODO-->
+        <p-skeleton class="mt-5 mb-5" width="50rem" height="45rem"></p-skeleton>
+        
+        <p-button label="Edit Material" icon="pi pi-pencil" class="md:hidden flex justify-content-center custom-button my-2" (onClick)="editMaterial()" *ngIf="checkUser() || checkOrganizations()"></p-button>
+        <p-button label="Delete Material" icon="pi pi-trash" class="flex md:hidden justify-content-center delete-button my-2" (onClick)="deleteModal($event)" *ngIf="checkUser() || checkOrganizations()"></p-button>
+        <p-button label="Return to Homepage" severity="secondary" icon="pi pi-arrow-left" class="flex md:hidden justify-content-center custom-secondary-button my-2" (onClick)="goToMainPage()"></p-button>
+    </div>
+</div>
+
+<ng-template #spinner>
+    <div class="flex justify-content-center align-content-center" style="height: 65vh;">
+        <p-progress-spinner strokeWidth="2" ariaLabel="loading" class="flex align-items-center justify-content-center" />
+    </div>
+</ng-template>
