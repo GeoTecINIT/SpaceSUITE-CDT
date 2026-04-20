@@ -15,14 +15,13 @@ export class EducationalOfferService {
     this.offerMap = new BehaviorSubject<Map<string, EducationalOffer> | undefined>(undefined);
   }
 
-  getEducationalOffers(): Observable<EducationalOffer[]> {
+  getEducationalOffers(): Observable<EducationalOffer[] | undefined> {
     if (this.offerMap.getValue() == undefined) {
       this.loadOfferMap();
     }
     return this.offerMap.asObservable().pipe(
       map((mapValue) => {
-        if (mapValue == undefined) return [];
-        return Array.from(mapValue.values());
+        return mapValue != undefined ? Array.from(mapValue.values()) : undefined;
       }),
     );
   }
