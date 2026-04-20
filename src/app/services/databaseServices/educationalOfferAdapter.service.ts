@@ -71,7 +71,6 @@ export class EducationalOfferAdapterService {
     return new EducationalOfferDB({
       id: educationalOffer.id,
       root: educationalOffer.root.id,
-      affiliations: educationalOffer.affiliations,
       isPublic: educationalOffer.isPublic,
       createdAt: Timestamp.fromDate(educationalOffer.createdAt),
       updatedAt: educationalOffer.updatedAt ? Timestamp.fromDate(educationalOffer.updatedAt) : undefined,
@@ -223,7 +222,6 @@ export class EducationalOfferAdapterService {
       rootNode,
       {
         id: educationalOfferDB.id,
-        affiliations: educationalOfferDB.affiliations,
         isPublic: educationalOfferDB.isPublic,
         createdAt: educationalOfferDB.createdAt.toDate(),
         updatedAt: educationalOfferDB.updatedAt ? educationalOfferDB.updatedAt.toDate() : undefined,

@@ -5,7 +5,6 @@ export class EducationalOfferDB {
   public readonly id: string;
   public root: string;
 
-  public affiliations: Affiliation[];
   public isPublic: boolean;
   public createdAt: Timestamp;
   public updatedAt?: Timestamp;
@@ -18,7 +17,6 @@ export class EducationalOfferDB {
   constructor(partialOffer?: Partial<EducationalOfferDB>) {
     this.id = partialOffer?.id || '';
     this.root = partialOffer?.root || '';
-		this.affiliations = partialOffer?.affiliations || [];
     this.isPublic = partialOffer?.isPublic ?? false;
     this.createdAt = partialOffer?.createdAt || Timestamp.fromDate(new Date());
     this.updatedAt = partialOffer?.updatedAt;  
@@ -32,7 +30,6 @@ export class EducationalOfferDB {
     return {
       id: this.id,
       root: this.root,
-      affiliations: this.affiliations.map(affiliation => affiliation.toPlainObject()),
       isPublic: this.isPublic,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt ? this.updatedAt : undefined,

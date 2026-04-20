@@ -18,7 +18,6 @@ export class EducationalOffer {
   public id: string;
   public root: CurriculumNode;
 
-  public affiliations: Affiliation[];
   public isPublic: boolean;
   public createdAt: Date;
   public updatedAt?: Date;
@@ -31,7 +30,6 @@ export class EducationalOffer {
   constructor(rootNode: CurriculumNode, partialOffer?: Partial<EducationalOffer>) {
     this.id = partialOffer?.id || '';
     this.root = rootNode;
-		this.affiliations = partialOffer?.affiliations || [];
     this.isPublic = partialOffer?.isPublic ?? false;
     this.createdAt = partialOffer?.createdAt || new Date();
     this.updatedAt = partialOffer?.updatedAt;  
