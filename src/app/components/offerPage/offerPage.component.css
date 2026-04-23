@@ -25,13 +25,6 @@
     --p-button-primary-active-border-color: color-mix(in srgb, var(--danger-color) 80%, black 20%);
 }
 
-.custom-tag {
-    font-size: .8rem;
-    --p-tag-primary-color: white;
-    cursor: default;
-    text-decoration: none;
-}
-
 .bok-tag {
     font-size: .8rem;
     --p-tag-primary-color: var(--primary-color);

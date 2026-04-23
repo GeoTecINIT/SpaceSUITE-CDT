@@ -23,14 +23,6 @@
   overflow: hidden;
 }
 
-.custom-tag {
-  --p-tag-primary-color: var(--primary-color);
-}
-
-.custom-tag:hover {
-  --p-tag-primary-color: white;
-}
-
 .custom-button {
   --p-button-text-primary-color: var(--secondary-color);
   --p-button-text-primary-hover-background: color-mix(

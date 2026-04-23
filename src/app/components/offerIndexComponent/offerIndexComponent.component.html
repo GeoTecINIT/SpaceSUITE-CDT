@@ -31,7 +31,9 @@
 </p-panel>
 
 <ng-template #nodeTemplate let-node>
-    <li><a (click)="onMenuItemSelection(node.id!)" [class]="node.id !== selectedMenuItemId() ? 'custom-panel-element' : 'font-bold'">{{node.label}}</a></li>
+    <li>
+        <a (click)="onMenuItemSelection(node.id!)" [class]="node.id !== selectedMenuItemId() ? 'custom-panel-element' : 'font-bold'">{{node.label}}</a>
+    </li>
     @if (node.items && node.items.length > 0) {
         <ul>
             @for (node of node.items; track node.id) {

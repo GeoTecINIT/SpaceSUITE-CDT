@@ -58,12 +58,15 @@ export class OfferIndexComponent {
   private buildTreeNode(node: CurriculumNode): TreeNode[] {
     const children = node.getChildren().map(child => this.buildTreeNode(child)).flat();
     const leaf: boolean = children.length === 0;
+    const constructorName = node.constructor.name;
+    const formattedName = constructorName.match(/[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+/g)?.join(' ');
     return ([{
       key: node.id,
       label: node.name,
       children: children,
       leaf: leaf,
       expanded: !leaf,
+      data: formattedName
     }]);
   }
 

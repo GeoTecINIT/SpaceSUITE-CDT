@@ -236,12 +236,6 @@ export class OfferPageComponent {
     });
   }
 
-  getOfferType() {
-    const constructorName = this.offer()?.root.constructor.name;
-    const formattedName = constructorName?.match(/[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+/g)?.join(' ');
-    return formattedName;
-  }
-
   goToMainPage() {
     this.router.navigate(['']);
   }
