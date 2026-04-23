@@ -101,10 +101,10 @@ export class AppComponent {
   constructor(private router: Router) {}
 
   redirectToProfile() {
-    this.router.navigate(['profile'], { replaceUrl: true });
+    this.router.navigate(['profile']);
   }
 
   redirectToOrganizations() {
-    this.router.navigate(['organizations'], { replaceUrl: true });
+    this.router.navigate(['organizations']);
   }
 }
