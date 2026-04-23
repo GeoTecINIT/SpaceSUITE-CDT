@@ -1,0 +1,44 @@
+<p-panel class="my-2 custom-panel">
+    <ng-template #header>
+        <div class="flex flex-column">
+            <div class="font-italic">Educational Offer</div>
+            <div class="font-bold text-xl">
+                {{offer.root.name}}
+            </div>
+        </div>
+    </ng-template> 
+    <p-tabs class="w-full custom-tabs" value="0">
+        <p-tablist>
+            <p-tab value="0">Index</p-tab>
+            <p-tab value="1">Tree</p-tab>
+        </p-tablist>
+        <p-tabpanels class="p-0 overflow-auto">
+            <p-tabpanel value="0">
+                @if (menuItemsRoot()) {
+                    <ul class="my-1">
+                        <ng-container
+                            *ngTemplateOutlet="nodeTemplate; context: { $implicit: menuItemsRoot() }">
+                        </ng-container>
+                    </ul>
+                }
+            </p-tabpanel>
+            <p-tabpanel value="1">
+                <br>
+                <p-organization-chart class="custom-org-chart" [value]="treeNodeRoot()" [collapsible]="true" selectionMode="single" [selection]="selectedTreeNode()" (selectionChange)="onTreeNodeSelection($event)"/>
+            </p-tabpanel>
+        </p-tabpanels>
+    </p-tabs>
+</p-panel>
+
+<ng-template #nodeTemplate let-node>
+    <li><a (click)="onMenuItemSelection(node.id!)" [class]="node.id !== selectedMenuItemId() ? 'custom-panel-element' : 'font-bold'">{{node.label}}</a></li>
+    @if (node.items && node.items.length > 0) {
+        <ul>
+            @for (node of node.items; track node.id) {
+                <ng-container
+                    *ngTemplateOutlet="nodeTemplate; context: { $implicit: node }">
+                </ng-container>
+            }
+        </ul>
+    }
+</ng-template>

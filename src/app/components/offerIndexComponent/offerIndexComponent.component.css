@@ -1,0 +1,48 @@
+.custom-panel {
+    --p-panel-header-color: var(--primary-color);
+    --p-panel-color: var(--primary-color);
+}
+
+::ng-deep .p-panel-header {
+    padding-bottom: 0 !important;
+}
+
+.custom-panel-element {
+    cursor: pointer;
+    color: var(--secondary-color);
+}
+
+.custom-panel-element:hover {
+    color: var(--hover-color);
+}
+
+.custom-panel li {
+    margin-top: 1rem;
+    list-style-type: disc;
+}
+
+.icon-link {
+    text-decoration: none;
+    color: var(--secondary-color)
+}
+
+.icon-link:hover {
+    color: var(--hover-color)
+}
+
+.custom-tabs {
+    --p-tabs-tab-active-color: var(--hover-color);
+    --p-tabs-active-bar-background: var(--hover-color);
+    --p-tabs-tab-hover-color: var(--primary-color);
+    --p-tabs-tab-color: color-mix(in srgb, var(--primary-color) 60%, rgba(255, 255, 255, 0) 40%);
+    --p-tabs-tabpanel-color: var(--primary-color);
+}
+
+.custom-org-chart {
+    --p-organizationchart-node-selected-background: color-mix(in srgb, var(--secondary-color) 10%, rgba(255, 255, 255, 0.9) 90%);
+    --p-organizationchart-node-hover-background: color-mix(in srgb, var(--primary-color) 10%, rgba(255, 255, 255, 0.9) 90%);
+    --p-organizationchart-node-selected-color: var(--primary-color);
+    --p-organizationchart-node-hover-color: var(--primary-color);
+    --p-organizationchart-node-color: color-mix(in srgb, var(--primary-color) 70%, white 30%);
+
+}

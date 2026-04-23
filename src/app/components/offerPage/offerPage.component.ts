@@ -7,7 +7,7 @@ import { PanelModule } from 'primeng/panel';
 import { TabsModule } from 'primeng/tabs';
 import { DividerModule } from 'primeng/divider';
 import { catchError, combineLatest, concatMap, finalize, forkJoin, map, of, retry, skip, Subscription, take, tap } from "rxjs";
-import { ConfirmationService, MessageService } from "primeng/api";
+import { ConfirmationService, MenuItem, MessageService } from "primeng/api";
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { Popover, PopoverModule } from 'primeng/popover';
@@ -17,24 +17,29 @@ import { EducationalOffer } from "../../model/coreModel/educationalOffer";
 import { EducationalOfferService } from "../../services/useCaseServices/educationalOffer.service";
 import { OrganizationDBService } from "../../services/databaseServices/organizationDB.service";
 import { CurriculumNode } from "../../model/coreModel/curriculumNode";
-import { Skeleton, SkeletonModule } from "primeng/skeleton";
+import { SkeletonModule } from "primeng/skeleton";
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { OfferIndexComponent } from "../offerIndexComponent/offerIndexComponent.component";
 
 @Component({
   standalone: true,
   selector: 'offer-page',
   templateUrl: './offerPage.component.html',
   styleUrls: ['./offerPage.component.css'],
-  imports: [CommonModule, ProgressSpinnerModule, ButtonModule, PanelModule, TabsModule, DividerModule, ConfirmDialogModule, ToastModule, PopoverModule, SkillTagComponent, SkeletonModule],
-  providers: [ConfirmationService, MessageService]
+  imports: [CommonModule, ProgressSpinnerModule, ButtonModule, PanelModule, TabsModule, DividerModule, BreadcrumbModule,
+            ConfirmDialogModule, ToastModule, PopoverModule, SkillTagComponent, SkeletonModule, DividerModule, OfferIndexComponent],
 })
 export class OfferPageComponent {
   offer: WritableSignal<EducationalOffer | undefined> = signal<EducationalOffer | undefined>(undefined);
   selectedNode: WritableSignal<CurriculumNode | undefined> = signal<CurriculumNode | undefined>(undefined);
+  selectedNodeType: WritableSignal<string> = signal<string>("");
 
   bokConcepts: WritableSignal<Tag[]> = signal<Tag[]>([]);
   studyAreas: WritableSignal<Tag[]> = signal<Tag[]>([]);
   transversalSkills: WritableSignal<Tag[]> = signal<Tag[]>([]);
   customTransversalSkills: WritableSignal<Tag[]> = signal<Tag[]>([]);
+
+  breadcrumbItems: WritableSignal<MenuItem[]> = signal([]);
 
   private userOrgIdsSubscription!: Subscription;
   private userOrgIds: string[] = [];
@@ -147,12 +152,19 @@ export class OfferPageComponent {
     this.loadNode(newOffer.root);
   }
 
-  loadNode(selectedNode: CurriculumNode) {
+  private loadNode(selectedNode: CurriculumNode) {
+    if (selectedNode.id === this.selectedNode()?.id) return;
+
+    const constructorName = selectedNode.constructor.name;
+    const formattedName = constructorName.match(/[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+/g)?.join(' ');
+    this.selectedNodeType.set(formattedName ?? "");
     this.selectedNode.set(selectedNode);
     this.bokConcepts.set([]);
     this.studyAreas.set([]);
     this.transversalSkills.set([]);
     this.customTransversalSkills.set([]);
+
+    this.breadcrumbItems.set(this.buildBreadCrumb(selectedNode));
 
     this.utilsService
       .stringToTag(selectedNode.bokConcepts.sort(), 'bok')
@@ -163,12 +175,57 @@ export class OfferPageComponent {
       .subscribe(tags => (this.studyAreas.set(tags)));
     
     this.utilsService
-      .stringToTag(selectedNode.transversalSkills.map(value => value.preferredLabel).sort(), 'primary')
+      .stringToTag(selectedNode.transversalSkills.map(value => value.preferredLabel).sort(), 'secondary')
       .subscribe(tags => (this.transversalSkills.set(tags)));
     
     this.utilsService
       .stringToTag(selectedNode.customTransversalSkills.sort())
       .subscribe(tags => (this.customTransversalSkills.set(tags)));
+  }
+
+  changeSelectedNode(nodeId: string) {
+    const newNode = this.offer()!.getNodeById(nodeId);
+    if (newNode == undefined) return;
+    this.loadNode(newNode);
+  }
+
+  buildBreadCrumb(child: CurriculumNode): MenuItem[] {
+    const findPath = (
+      current: CurriculumNode,
+      target: CurriculumNode,
+      path: CurriculumNode[]
+    ): CurriculumNode[] | null => {
+      const newPath = [...path, current];
+
+      if (current.id === target.id) return newPath;
+
+      for (const c of current.getChildren()) {
+        const result = findPath(c, target, newPath);
+        if (result) return result;
+      }
+
+      return null;
+    };
+
+    const path = findPath(this.offer()!.root, child, []) ?? [];
+
+    return path.map((node, index) => {
+      if (index != path.length - 1) {
+          return ({
+          id: node.id,
+          label: node.name,
+          command: (event) => this.loadNode(this.offer()!.getNodeById(event.item!.id!)!),
+          style: { cursor: 'pointer' }
+        })
+      }
+      return  ({
+          id: node.id,
+          label: node.name,
+          styleClass: 'font-bold',
+          link: false,
+          style: { cursor: 'default', pointerEvents: 'none', color: 'var(--primary-color)'}
+        })
+    });
   }
 
   getOfferType() {

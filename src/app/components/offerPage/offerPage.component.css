@@ -103,3 +103,10 @@
 .popover-element:hover {
     color: var(--hover-color);
 }
+
+.custom-breadcrumb {
+    --p-breadcrumb-padding: 0;
+    --p-breadcrumb-separator-color: color-mix(in srgb, var(--primary-color) 70%, white 30%);
+    --p-breadcrumb-item-color: color-mix(in srgb, var(--primary-color) 70%, white 30%);
+    --p-breadcrumb-item-hover-color: var(--primary-color);
+}
