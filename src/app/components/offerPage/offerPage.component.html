@@ -82,8 +82,8 @@
         <div class="hidden md:flex justify-content-between mb-2 mt-auto">
             <p-button label="Return to Homepage" severity="secondary" icon="pi pi-arrow-left" class="custom-secondary-button" (onClick)="goToMainPage()"></p-button>
             <div class="flex flex-wrap gap-2">
-                <p-button label="Edit Material" icon="pi pi-pencil" class="custom-button" (onClick)="editMaterial()" *ngIf="checkUser() || checkOrganizations()"></p-button>
-                <p-button label="Delete Material" icon="pi pi-trash" class="delete-button" (onClick)="deleteModal($event)" *ngIf="checkUser() || checkOrganizations()"></p-button>
+                <p-button disabled label="Edit Material" icon="pi pi-pencil" class="custom-button" (onClick)="editMaterial()" *ngIf="checkUser() || checkOrganizations()"></p-button>
+                <p-button disabled label="Delete Material" icon="pi pi-trash" class="delete-button" (onClick)="deleteModal($event)" *ngIf="checkUser() || checkOrganizations()"></p-button>
             </div>
         </div>
     </div>
@@ -115,8 +115,8 @@
             </p-panel>
         </div>
 
-        <p-button label="Edit Material" icon="pi pi-pencil" class="md:hidden flex justify-content-center custom-button my-2" (onClick)="editMaterial()" *ngIf="checkUser() || checkOrganizations()"></p-button>
-        <p-button label="Delete Material" icon="pi pi-trash" class="flex md:hidden justify-content-center delete-button my-2" (onClick)="deleteModal($event)" *ngIf="checkUser() || checkOrganizations()"></p-button>
+        <p-button disabled label="Edit Material" icon="pi pi-pencil" class="md:hidden flex justify-content-center custom-button my-2" (onClick)="editMaterial()" *ngIf="checkUser() || checkOrganizations()"></p-button>
+        <p-button disabled label="Delete Material" icon="pi pi-trash" class="flex md:hidden justify-content-center delete-button my-2" (onClick)="deleteModal($event)" *ngIf="checkUser() || checkOrganizations()"></p-button>
         <p-button label="Return to Homepage" severity="secondary" icon="pi pi-arrow-left" class="flex md:hidden justify-content-center custom-secondary-button my-2" (onClick)="goToMainPage()"></p-button>
     </div>
 </div>

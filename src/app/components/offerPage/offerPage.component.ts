@@ -68,7 +68,6 @@ export class OfferPageComponent {
       map(([paramMap, queryParams]) => {
         const offerId = paramMap.get('offerId') || '';
         nodeId = paramMap.get('nodeId') || '';
-        console.log(nodeId)
         const submited = queryParams['submited'] === 'true' || queryParams['submited'] === true;
         return { offerId, submited };
       }),
@@ -152,7 +151,6 @@ export class OfferPageComponent {
   }
 
   private loadOffer(newOffer: EducationalOffer, nodeId: string) {
-    console.log(nodeId)
     this.offer.set(newOffer);
     const nodeToLoad = newOffer.getNodeById(nodeId) || newOffer.root;
     this.loadNode(nodeToLoad);
