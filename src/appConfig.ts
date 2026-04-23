@@ -13,6 +13,7 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { provideStorage, getStorage } from '@angular/fire/storage';
 import { ItemExplorerComponent } from './app/components/itemExplorer/itemExplorer.component';
 import { OfferPageComponent } from './app/components/offerPage/offerPage.component';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 const routes: Routes = [
     { path: '', component: ItemExplorerComponent },
@@ -20,6 +21,7 @@ const routes: Routes = [
     { path: 'organizations', component: OrganizationPageComponent, canMatch: [AuthGuard]},
     //{ path: 'new', component: CreatePageComponent, canMatch: [AuthGuard], canDeactivate: [exitWithoutSavingGuard]},
     //{ path: 'edit/:dynamicValue', component: EditPageComponent, canMatch: [AuthGuard], canDeactivate: [exitWithoutSavingGuard]},
+    { path: 'not_found', component: NotFoundPageComponent},
     { path: ':dynamicValue', component: OfferPageComponent },
     { path: '**', component: NotFoundPageComponent}
 ];
@@ -43,6 +45,8 @@ export const appConfig: ApplicationConfig = {
                     cssLayer: false
                 }             
             }
-        })
+        }),
+        MessageService,
+        ConfirmationService
     ]
 };
