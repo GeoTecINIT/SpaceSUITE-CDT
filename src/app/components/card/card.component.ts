@@ -118,7 +118,7 @@ export class CardComponent implements OnInit {
 
   onClickTitle(event: MouseEvent): void {
     event.preventDefault();
-    this.router.navigate([`${this.educationalOffer.id}`]);
+    this.router.navigate([`offer/${this.educationalOffer.id}`]);
   }
 
   checkUser() {

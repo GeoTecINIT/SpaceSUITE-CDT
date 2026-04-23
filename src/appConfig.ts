@@ -22,7 +22,10 @@ const routes: Routes = [
     //{ path: 'new', component: CreatePageComponent, canMatch: [AuthGuard], canDeactivate: [exitWithoutSavingGuard]},
     //{ path: 'edit/:dynamicValue', component: EditPageComponent, canMatch: [AuthGuard], canDeactivate: [exitWithoutSavingGuard]},
     { path: 'not_found', component: NotFoundPageComponent},
-    { path: ':dynamicValue', component: OfferPageComponent },
+    { path: 'offer/:offerId', children: [
+        { path: '', component: OfferPageComponent},
+        { path: ':nodeId', component: OfferPageComponent}
+    ] },
     { path: '**', component: NotFoundPageComponent}
 ];
 

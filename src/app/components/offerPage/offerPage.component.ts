@@ -1,6 +1,6 @@
 import { Component, inject, signal, ViewChild, WritableSignal} from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { CommonModule } from "@angular/common";
+import { CommonModule, Location } from "@angular/common";
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
@@ -51,6 +51,7 @@ export class OfferPageComponent {
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private location = inject(Location);
   private authService = inject(AuthService);
   private utilsService = inject(UtilsService);
   private confirmationService = inject(ConfirmationService);
@@ -59,12 +60,15 @@ export class OfferPageComponent {
   private organizationService = inject(OrganizationDBService);
 
   ngOnInit() {
+    let nodeId: string = '';
     const routeData$ = combineLatest([
       this.route.paramMap,
       this.route.queryParams
     ]).pipe(
       map(([paramMap, queryParams]) => {
-        const offerId = paramMap.get('dynamicValue') || '';
+        const offerId = paramMap.get('offerId') || '';
+        nodeId = paramMap.get('nodeId') || '';
+        console.log(nodeId)
         const submited = queryParams['submited'] === 'true' || queryParams['submited'] === true;
         return { offerId, submited };
       }),
@@ -100,7 +104,7 @@ export class OfferPageComponent {
       if (isMaterialMissing || (isNotPublic && !(belongsToUserOrg || belongsToUser))) {
           this.router.navigate(['not_found']);
       }
-      else this.loadOffer(newOffer);
+      else this.loadOffer(newOffer, nodeId);
     });
 
     this.userOrgIdsSubscription = this.organizationService.getUserOrganizations().pipe(
@@ -147,13 +151,17 @@ export class OfferPageComponent {
     this.userOrgIdsSubscription.unsubscribe();
   }
 
-  private loadOffer(newOffer: EducationalOffer) {
+  private loadOffer(newOffer: EducationalOffer, nodeId: string) {
+    console.log(nodeId)
     this.offer.set(newOffer);
-    this.loadNode(newOffer.root);
+    const nodeToLoad = newOffer.getNodeById(nodeId) || newOffer.root;
+    this.loadNode(nodeToLoad);
   }
 
   private loadNode(selectedNode: CurriculumNode) {
     if (selectedNode.id === this.selectedNode()?.id) return;
+
+    this.location.replaceState('offer/' + this.offer()!.id + "/" + selectedNode.id);
 
     const constructorName = selectedNode.constructor.name;
     const formattedName = constructorName.match(/[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+/g)?.join(' ');
