@@ -39,7 +39,6 @@ import { EducationalOffer } from '../../model/coreModel/educationalOffer';
     SkeletonModule,
     SkillTagComponent,
   ],
-  providers: [ConfirmationService]
 })
 export class CardComponent implements OnInit {
   @Input() educationalOffer!: EducationalOffer;
@@ -205,7 +204,7 @@ export class CardComponent implements OnInit {
     });
   }
 
-  getOfferType() {
+  getOfferTypeString() {
     const constructorName = this.educationalOffer.root.constructor.name;
     const formattedName = constructorName.match(/[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+/g)?.join(' ');
     return formattedName;

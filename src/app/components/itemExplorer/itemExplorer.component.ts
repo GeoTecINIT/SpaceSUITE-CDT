@@ -31,7 +31,6 @@ import { DividerModule } from 'primeng/divider';
   imports: [CardComponent, FiltersComponent, SkeletonModule, CommonModule, 
             PaginatorModule, ToastModule, ButtonModule, MenuModule, ButtonGroupModule, 
             DividerModule, TabsModule],
-  providers: [MessageService]
 })
 export class ItemExplorerComponent {
   educationalOffers: EducationalOffer[] = [];

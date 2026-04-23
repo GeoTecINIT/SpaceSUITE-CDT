@@ -16,7 +16,6 @@ import { UtilsService } from '../../services/useCaseServices/utils.service';
   templateUrl: './bokModal.component.html',
   styleUrls: ['./bokModal.component.css'],
   imports: [DialogModule, ButtonModule, ChipModule, CommonModule, TooltipModule, ProgressSpinner, ToastModule],
-    providers: [MessageService]
 })
 export class BokModalComponent {
   visible = false;
