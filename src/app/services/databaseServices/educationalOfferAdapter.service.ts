@@ -16,6 +16,11 @@ import { concatMap, forkJoin, map, Observable, of, take } from "rxjs";
 import { EducationalOfferDBService } from "./educationalOfferDB.service";
 import { Timestamp } from "@angular/fire/firestore";
 import { BokInformationService } from "@eo4geo/ngx-bok-visualization";
+import { Duration } from "../../model/coreModel/duration";
+import { ISCEDFArea } from "../../model/coreModel/iscedfArea";
+import { ESCOSkill } from "../../model/coreModel/escoSkill";
+import { TrainingMaterial } from "../../model/coreModel/trainingMaterial";
+import { Affiliation } from "../../model/coreModel/affiliation";
 
 @Injectable({
     providedIn: 'root',
@@ -84,9 +89,8 @@ export class EducationalOfferAdapterService {
   private parseCurriculumNode(node: CurriculumNode): Observable<CurriculumNodeDB> {
     const parsedBokConcepts: Observable<string[]> = this.formatConceptsToFirestore(node.bokConcepts);
     return parsedBokConcepts.pipe(map(formatedBokConcepts => {
-      const nodeType = node.constructor.name;
-      switch (nodeType) {
-        case 'Lecture':
+      switch (true) {
+        case node instanceof Lecture:
           const lectureNode = node as Lecture;
           return new LectureDB(
             {
@@ -109,7 +113,7 @@ export class EducationalOfferAdapterService {
               isPractical: lectureNode.isPractical
             }
           );
-        case 'Course':
+        case node instanceof Course:
           const courseNode = node as Course;
           return new CourseDB(
             {
@@ -133,7 +137,7 @@ export class EducationalOfferAdapterService {
               courseType: courseNode.courseType
             }
           );
-        case 'Module':
+        case node instanceof Module:
           const moduleNode = node as Module;
           return new ModuleDB(
             {
@@ -156,7 +160,7 @@ export class EducationalOfferAdapterService {
               moduleType: moduleNode.moduleType
             }
           );
-        case 'StudyProgram':
+        case node instanceof StudyProgram:
           const studyProgramNode = node as StudyProgram;
           return new StudyProgramDB(
             {
@@ -181,7 +185,7 @@ export class EducationalOfferAdapterService {
         default:
           throw new DomainError(
           'NODE_TYPE_INVALID', 
-          `Unknown node type: ${nodeType}. Cannot parse curriculum node with id ${node.id} to database model.`
+          `Unknown node type: ${node.constructor.name}. Cannot parse curriculum node with id ${node.id} to database model.`
         );
       }
     }))
@@ -190,8 +194,7 @@ export class EducationalOfferAdapterService {
   private parseEducationalOfferDB(educationalOfferDB: EducationalOfferDB, curriculumNodesDB: CurriculumNodeDB[]): EducationalOffer {
     const nodeMap = new Map<string, CurriculumNode>();
     curriculumNodesDB.forEach((nodeDB: CurriculumNodeDB) => {
-      const nodeType = nodeDB.constructor.name;
-      const node = this.parseCurriculumNodeDB(nodeDB, nodeType);
+      const node = this.parseCurriculumNodeDB(nodeDB);
       nodeMap.set(node.id, node);
     });
 
@@ -233,9 +236,9 @@ export class EducationalOfferAdapterService {
     );
   }
 
-  private parseCurriculumNodeDB(nodeDB: CurriculumNodeDB, nodeType: string): CurriculumNode {
-    switch (nodeType) {
-      case 'LectureDB':
+  private parseCurriculumNodeDB(nodeDB: CurriculumNodeDB): CurriculumNode {
+    switch (true) {
+      case nodeDB instanceof LectureDB:
         const lectureDB = nodeDB as LectureDB;
         return new Lecture(
           {
@@ -246,18 +249,18 @@ export class EducationalOfferAdapterService {
             prerequisites: lectureDB.prerequisites,
             eqf: lectureDB.eqf,
             ects: lectureDB.ects,
-            transversalSkills: lectureDB.transversalSkills,
+            transversalSkills: lectureDB.transversalSkills.map(value => new ESCOSkill(value)),
             customTransversalSkills: lectureDB.customTransversalSkills,
             learningObjectives: lectureDB.learningObjectives,
             bibliography: lectureDB.bibliography,
-            affiliations: lectureDB.affiliations,
-            trainingMaterials: lectureDB.trainingMaterials,
-            timeRequired: lectureDB.timeRequired,
-            studyAreas: lectureDB.studyAreas,
+            affiliations: lectureDB.affiliations.map(value => new Affiliation(value)),
+            trainingMaterials: lectureDB.trainingMaterials.map(value => new TrainingMaterial(value)),
+            timeRequired: new Duration(lectureDB.timeRequired),
+            studyAreas: lectureDB.studyAreas.map(value => new ISCEDFArea(value)),
             isPractical: lectureDB.isPractical
           }
         );
-      case 'CourseDB':
+      case nodeDB instanceof CourseDB:
         const courseDB = nodeDB as CourseDB;
         return new Course(
           {
@@ -268,19 +271,19 @@ export class EducationalOfferAdapterService {
             prerequisites: courseDB.prerequisites,
             eqf: courseDB.eqf,
             ects: courseDB.ects,
-            transversalSkills: courseDB.transversalSkills,
+            transversalSkills: courseDB.transversalSkills.map(value => new ESCOSkill(value)),
             customTransversalSkills: courseDB.customTransversalSkills,
             learningObjectives: courseDB.learningObjectives,
             bibliography: courseDB.bibliography,
-            affiliations: courseDB.affiliations,
-            trainingMaterials: courseDB.trainingMaterials,
-            timeRequired: courseDB.timeRequired,
-            studyAreas: courseDB.studyAreas,
+            affiliations: courseDB.affiliations.map(value => new Affiliation(value)),
+            trainingMaterials: courseDB.trainingMaterials.map(value => new TrainingMaterial(value)),
+            timeRequired: new Duration(courseDB.timeRequired),
+            studyAreas: courseDB.studyAreas.map(value => new ISCEDFArea(value)),
             assesment: courseDB.assesment,
             courseType: courseDB.courseType
           }
         );
-      case 'ModuleDB':
+      case nodeDB instanceof ModuleDB:
         const moduleDB = nodeDB as ModuleDB;
         return new Module(
           {
@@ -291,18 +294,18 @@ export class EducationalOfferAdapterService {
             prerequisites: moduleDB.prerequisites,
             eqf: moduleDB.eqf,
             ects: moduleDB.ects,
-            transversalSkills: moduleDB.transversalSkills,
+            transversalSkills: moduleDB.transversalSkills.map(value => new ESCOSkill(value)),
             customTransversalSkills: moduleDB.customTransversalSkills,
             learningObjectives: moduleDB.learningObjectives,
             bibliography: moduleDB.bibliography,
-            affiliations: moduleDB.affiliations,
-            trainingMaterials: moduleDB.trainingMaterials,
-            timeRequired: moduleDB.timeRequired,
-            studyAreas: moduleDB.studyAreas,
+            affiliations: moduleDB.affiliations.map(value => new Affiliation(value)),
+            trainingMaterials: moduleDB.trainingMaterials.map(value => new TrainingMaterial(value)),
+            timeRequired: new Duration(moduleDB.timeRequired),
+            studyAreas: moduleDB.studyAreas.map(value => new ISCEDFArea(value)),
             moduleType: moduleDB.moduleType
           }
         );
-      case 'StudyProgramDB':
+      case nodeDB instanceof StudyProgramDB:
         const studyProgramDB = nodeDB as StudyProgramDB;
         return new StudyProgram(
           {
@@ -313,20 +316,20 @@ export class EducationalOfferAdapterService {
             prerequisites: studyProgramDB.prerequisites,
             eqf: studyProgramDB.eqf,
             ects: studyProgramDB.ects,
-            transversalSkills: studyProgramDB.transversalSkills,
+            transversalSkills: studyProgramDB.transversalSkills.map(value => new ESCOSkill(value)),
             customTransversalSkills: studyProgramDB.customTransversalSkills,
             learningObjectives: studyProgramDB.learningObjectives,
             bibliography: studyProgramDB.bibliography,
-            affiliations: studyProgramDB.affiliations,
-            trainingMaterials: studyProgramDB.trainingMaterials,
-            timeRequired: studyProgramDB.timeRequired,
-            studyAreas: studyProgramDB.studyAreas          
+            affiliations: studyProgramDB.affiliations.map(value => new Affiliation(value)),
+            trainingMaterials: studyProgramDB.trainingMaterials.map(value => new TrainingMaterial(value)),
+            timeRequired: new Duration(studyProgramDB.timeRequired),
+            studyAreas: studyProgramDB.studyAreas.map(value => new ISCEDFArea(value)),       
           }
         );
       default:
         throw new DomainError(
         'NODE_TYPE_INVALID',
-        `Unknown node type: ${nodeType}. Cannot parse curriculum database node with id ${nodeDB.id} to core model.`
+        `Unknown node type: ${nodeDB.constructor.name}. Cannot parse curriculum database node with id ${nodeDB.id} to core model.`
       );
     }
   }

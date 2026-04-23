@@ -35,16 +35,6 @@ export class OfferValidationService {
   }
 
   private validateOfferFields(offer: EducationalOffer, errors: Record<string, string[]>): void {
-    if (offer.affiliations.length === 0) {
-      this.addError(errors, 'affiliations', 'At least one affiliation is required.');
-    }
-
-    offer.affiliations.forEach((affiliation, index) => {
-      if (this.isBlank(affiliation.name)) {
-        this.addError(errors, `affiliations.${index}.name`, 'Affiliation name is required.');
-      }
-    });
-
     if (!this.isValidDate(offer.createdAt)) {
       this.addError(errors, 'createdAt', 'Creation date is invalid.');
     }
