@@ -6,13 +6,15 @@ import { CurriculumNode } from "../../model/coreModel/curriculumNode";
 import { PanelModule } from "primeng/panel";
 import { TabsModule } from 'primeng/tabs';
 import { OrganizationChartModule } from 'primeng/organizationchart';
+import { SliderModule } from 'primeng/slider';
+import { FormsModule } from "@angular/forms";
 
 @Component({
   standalone: true,
   selector: 'offer-index-component',
   templateUrl: './offerIndexComponent.component.html',
   styleUrls: ['./offerIndexComponent.component.css'],
-  imports: [CommonModule, PanelModule, TabsModule, OrganizationChartModule],
+  imports: [CommonModule, PanelModule, TabsModule, OrganizationChartModule, SliderModule, FormsModule],
 })
 export class OfferIndexComponent {
   @Input() offer!: EducationalOffer;
@@ -22,6 +24,9 @@ export class OfferIndexComponent {
   menuItemsRoot: WritableSignal<MenuItem | undefined> = signal<MenuItem | undefined>(undefined);
   treeNodeRoot: WritableSignal<TreeNode[]> = signal<TreeNode[]>([]);
   selectedTreeNode: WritableSignal<TreeNode | undefined> = signal<TreeNode | undefined>(undefined);
+
+  scale: WritableSignal<number> = signal(1);
+  updateScale = (newValue: number) => this.scale.set(newValue);
 
   onMenuItemSelection(nodeId: string) {
     this.selectedMenuItemId.set(nodeId);
@@ -48,18 +53,19 @@ export class OfferIndexComponent {
   }
   
   private buildMenuItem(node: CurriculumNode): MenuItem {
+    const formattedName = this.getFormattedName(node.constructor.name);
     return ({
       id: node.id,
       label: node.name,
-      items: node.getChildren().map(child => this.buildMenuItem(child))
+      items: node.getChildren().map(child => this.buildMenuItem(child)),
+      data: formattedName
     });
   }
 
   private buildTreeNode(node: CurriculumNode): TreeNode[] {
     const children = node.getChildren().map(child => this.buildTreeNode(child)).flat();
     const leaf: boolean = children.length === 0;
-    const constructorName = node.constructor.name;
-    const formattedName = constructorName.match(/[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+/g)?.join(' ');
+    const formattedName = this.getFormattedName(node.constructor.name);
     return ([{
       key: node.id,
       label: node.name,
@@ -84,60 +90,7 @@ export class OfferIndexComponent {
     return node;
   }
 
-  public mockTree: TreeNode[] = [
-    {
-      "key": "node-0",
-      "label": "Root (L0)",
-      "children": [
-        {
-          "key": "node-2",
-          "label": "Node 2 (L1)",
-          "children": [
-            {
-              "key": "node-3",
-              "label": "Node 3 (L2)",
-              "children": [
-                {
-                  "key": "node-4",
-                  "label": "Node 4 (L3)",
-                  "children": [
-                    { "key": "node-5", "label": "Node 5 (L4)", "children": [], "leaf": true, "expanded": true },
-                    { "key": "node-6", "label": "Node 6 (L4)", "children": [], "leaf": true, "expanded": true }
-                  ],
-                  "leaf": false,
-                  "expanded": true
-                },
-                {
-                  "key": "node-7",
-                  "label": "Node 7 (L3)",
-                  "children": [
-                    { "key": "node-8", "label": "Node 8 (L4)", "children": [], "leaf": true, "expanded": true },
-                    { "key": "node-9", "label": "Node 9 (L4)", "children": [], "leaf": true, "expanded": true }
-                  ],
-                  "leaf": false,
-                  "expanded": true
-                },
-                {
-                  "key": "node-10",
-                  "label": "Node 10 (L3)",
-                  "children": [
-                    { "key": "node-11", "label": "Node 11 (L4)", "children": [], "leaf": true, "expanded": true },
-                    { "key": "node-12", "label": "Node 12 (L4)", "children": [], "leaf": true, "expanded": true }
-                  ],
-                  "leaf": false,
-                  "expanded": true
-                }
-              ],
-              "leaf": false,
-              "expanded": true
-            }
-          ],
-          "leaf": false,
-          "expanded": true
-        }
-      ],
-      "leaf": false,
-      "expanded": true
-    }
-  ]
+  public getFormattedName(value: string): string {
+    return value.match(/[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+/g)?.join(' ') ?? "";
+  }
 }

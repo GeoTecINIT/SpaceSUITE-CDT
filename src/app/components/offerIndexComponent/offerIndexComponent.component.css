@@ -18,7 +18,20 @@
 
 .custom-panel li {
     margin-top: 1rem;
-    list-style-type: disc;
+}
+
+ul {
+  counter-reset: section;
+  list-style-type: none;
+}
+
+ul li {
+  counter-increment: section;
+}
+
+ul li::before {
+  content: counters(section, ".") ". ";
+  font-weight: bold;
 }
 
 .icon-link {
@@ -45,4 +58,21 @@
     --p-organizationchart-node-hover-color: var(--primary-color);
     --p-organizationchart-node-color: color-mix(in srgb, var(--primary-color) 70%, white 30%);
 
+}
+
+.zoom-wrapper {
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+}
+
+.zoom-content {
+  transform-origin: 0 0;  /* zoom from top-left corner */
+  transition: transform 0.2s ease;  /* smooth zoom animation */
+}
+
+.custom-slider {
+  --p-slider-range-background: var(--secondary-color);
+  width: 100%;
+  height: 100%;
 }

@@ -1,6 +1,6 @@
 <p-toast class="custom-toast" position="bottom-right"/>
 <p-confirmdialog />
-<div *ngIf="offer(); else spinner" class="flex flex-column md:flex-row justify-content-between md:gap-4">
+<div *ngIf="offer(); else spinner" class="flex flex-column lg:flex-row justify-content-between lg:gap-4">
     <div class="flex flex-column overflow-auto flex-auto">
         <p-breadcrumb [model]="breadcrumbItems()" class="custom-breadcrumb mt-3"></p-breadcrumb>
         <h1 class="mb-2 mt-1">
@@ -79,7 +79,7 @@
             </ul>
         </div>
 
-        <div class="hidden md:flex justify-content-between mb-2 mt-auto">
+        <div class="hidden lg:flex justify-content-between mb-2 mt-auto">
             <p-button label="Return to Homepage" severity="secondary" icon="pi pi-arrow-left" class="custom-secondary-button" (onClick)="goToMainPage()"></p-button>
             <div class="flex flex-wrap gap-2">
                 <p-button disabled label="Edit Material" icon="pi pi-pencil" class="custom-button" (onClick)="editMaterial()" *ngIf="checkUser() || checkOrganizations()"></p-button>
@@ -88,7 +88,7 @@
         </div>
     </div>
     <div class="flex flex-column">
-        <offer-index-component class="mt-3" style="min-width: 35vw;" [offer]="offer()!" [selectedNode]="selectedNode()?.id!" (selectedNodeChanged)="changeSelectedNode($event)"></offer-index-component>
+        <offer-index-component class="mt-3 offer-index" [offer]="offer()!" [selectedNode]="selectedNode()?.id!" (selectedNodeChanged)="changeSelectedNode($event)"></offer-index-component>
         
         <div class="flex flex-column gap-1">
             <p-panel #studyAreasPanel [header]="'Study Areas (' + studyAreas().length + ')'" toggleable="true" collapsed="false" class="my-2 custom-panel">
@@ -115,9 +115,9 @@
             </p-panel>
         </div>
 
-        <p-button disabled label="Edit Material" icon="pi pi-pencil" class="md:hidden flex justify-content-center custom-button my-2" (onClick)="editMaterial()" *ngIf="checkUser() || checkOrganizations()"></p-button>
-        <p-button disabled label="Delete Material" icon="pi pi-trash" class="flex md:hidden justify-content-center delete-button my-2" (onClick)="deleteModal($event)" *ngIf="checkUser() || checkOrganizations()"></p-button>
-        <p-button label="Return to Homepage" severity="secondary" icon="pi pi-arrow-left" class="flex md:hidden justify-content-center custom-secondary-button my-2" (onClick)="goToMainPage()"></p-button>
+        <p-button disabled label="Edit Material" icon="pi pi-pencil" class="lg:hidden flex justify-content-center custom-button my-2" (onClick)="editMaterial()" *ngIf="checkUser() || checkOrganizations()"></p-button>
+        <p-button disabled label="Delete Material" icon="pi pi-trash" class="flex lg:hidden justify-content-center delete-button my-2" (onClick)="deleteModal($event)" *ngIf="checkUser() || checkOrganizations()"></p-button>
+        <p-button label="Return to Homepage" severity="secondary" icon="pi pi-arrow-left" class="flex lg:hidden justify-content-center custom-secondary-button my-2" (onClick)="goToMainPage()"></p-button>
     </div>
 </div>
 

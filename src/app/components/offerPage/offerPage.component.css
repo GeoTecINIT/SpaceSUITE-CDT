@@ -103,3 +103,13 @@
     --p-breadcrumb-item-color: color-mix(in srgb, var(--primary-color) 70%, white 30%);
     --p-breadcrumb-item-hover-color: var(--primary-color);
 }
+
+.offer-index {
+  width: 100%;
+}
+
+@media screen and (min-width: 992px) {
+  .offer-index {
+    width: 35vw;
+  }
+}
