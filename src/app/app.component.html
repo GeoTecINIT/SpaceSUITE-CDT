@@ -1,5 +1,5 @@
 <div class="flex flex-column min-h-screen">
-    <header [toolName]="'Curriculum Design Tool'" [items]="headerItems" [login]="true" (profileClick)="redirectToProfile()" (organizationClick)="redirectToOrganizations()"></header>
+    <header toolName="Curriculum Design Tool" [items]="headerItems" [login]="true" (profileClick)="redirectToProfile()" (organizationClick)="redirectToOrganizations()"></header>
     <div class="mx-4 xl:mx-6 p-2">
         <router-outlet></router-outlet>
     </div>
