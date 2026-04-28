@@ -85,7 +85,7 @@ export class CardComponent implements OnInit {
     });
 
     this.utilsService
-      .stringToTag(this.educationalOffer.root.bokConcepts, 'bok')
+      .bokStringToTag(this.educationalOffer.root.bokConcepts)
       .pipe(defaultIfEmpty([]))
       .subscribe((results) => {
         this.concepts.set([...this.concepts(), ...results].sort((a, b) => a.label.localeCompare(b.label)));

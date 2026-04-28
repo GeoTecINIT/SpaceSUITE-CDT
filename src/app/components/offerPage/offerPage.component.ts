@@ -20,6 +20,9 @@ import { CurriculumNode } from "../../model/coreModel/curriculumNode";
 import { SkeletonModule } from "primeng/skeleton";
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { OfferIndexComponent } from "../offerIndexComponent/offerIndexComponent.component";
+import { Module } from "../../model/coreModel/module";
+import { Course } from "../../model/coreModel/course";
+import { Lecture } from "../../model/coreModel/lecture";
 
 @Component({
   standalone: true,
@@ -38,6 +41,7 @@ export class OfferPageComponent {
   studyAreas: WritableSignal<Tag[]> = signal<Tag[]>([]);
   transversalSkills: WritableSignal<Tag[]> = signal<Tag[]>([]);
   customTransversalSkills: WritableSignal<Tag[]> = signal<Tag[]>([]);
+  affiliations: WritableSignal<Tag[]> = signal<Tag[]>([]);
 
   breadcrumbItems: WritableSignal<MenuItem[]> = signal([]);
 
@@ -173,20 +177,52 @@ export class OfferPageComponent {
     this.breadcrumbItems.set(this.buildBreadCrumb(selectedNode));
 
     this.utilsService
-      .stringToTag(selectedNode.bokConcepts.sort(), 'bok')
+      .bokStringToTag(selectedNode.bokConcepts.sort())
       .subscribe(tags => (this.bokConcepts.set(tags)));
 
-    this.utilsService
-      .stringToTag(selectedNode.studyAreas.map(value => value.getCompleteName()).sort(), 'primary')
-      .subscribe(tags => (this.studyAreas.set(tags)));
+    this.studyAreas.set(selectedNode.studyAreas.map(value => new Tag(value.getCompleteName(), 'primary')));
     
-    this.utilsService
-      .stringToTag(selectedNode.transversalSkills.map(value => value.preferredLabel).sort(), 'secondary')
-      .subscribe(tags => (this.transversalSkills.set(tags)));
-    
-    this.utilsService
-      .stringToTag(selectedNode.customTransversalSkills.sort())
-      .subscribe(tags => (this.customTransversalSkills.set(tags)));
+    this.transversalSkills.set(selectedNode.transversalSkills.map(value => new Tag(value.preferredLabel, 'url', undefined, undefined, value.uri)));
+
+    this.affiliations.set(selectedNode.affiliations.map(value => {
+      if (value.url) return new Tag(value.name, 'url', undefined, undefined, value.url);
+      return new Tag(value.name, 'primary');
+    }));
+
+    this.customTransversalSkills.set(selectedNode.customTransversalSkills.map(value => new Tag(value, 'primary')));
+  }
+
+  getModuleType(): string {
+    const selectedNode = this.selectedNode();
+    if (selectedNode instanceof Module) {
+      return selectedNode.moduleType.toString();
+    }
+    return "";
+  }
+
+  getAssesment(): string {
+    const selectedNode = this.selectedNode();
+    if (selectedNode instanceof Course) {
+      return selectedNode.assesment;
+    }
+    return "";
+  }
+
+  getCourseType(): string | undefined {
+    const selectedNode = this.selectedNode();
+    if (selectedNode instanceof Course && selectedNode.courseType) {
+      return selectedNode.courseType.toString();
+    }
+    return undefined;
+  }
+
+  getIsPractical(): string {
+    const selectedNode = this.selectedNode();
+    if (selectedNode instanceof Lecture) {
+      const value = selectedNode.isPractical.toString();
+      return value.charAt(0).toUpperCase() + value.slice(1);
+    }
+    return 'False';
   }
 
   changeSelectedNode(nodeId: string) {

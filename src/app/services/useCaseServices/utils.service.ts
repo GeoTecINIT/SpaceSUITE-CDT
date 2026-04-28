@@ -59,20 +59,17 @@ export class UtilsService {
         return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
-    stringToTag(values: string[], variant?: Variant): Observable<Tag[]> {
-        if (variant !== 'bok') return of(values.map(skill => new Tag(skill, variant ?? undefined)))
-        else {
-            return forkJoin(
-                values.map(value =>
-                    combineLatest([
-                        this.bokInfo.getConceptName(value),
-                        this.bokInfo.getConceptColor(value),
-                    ]).pipe(
-                        take(1),
-                        map(([tooltip, color]) => new Tag(value, variant, tooltip, color))
-                    )
+    bokStringToTag(values: string[]): Observable<Tag[]> {
+        return forkJoin(
+            values.map(value =>
+                combineLatest([
+                    this.bokInfo.getConceptName(value),
+                    this.bokInfo.getConceptColor(value),
+                ]).pipe(
+                    take(1),
+                    map(([tooltip, color]) => new Tag(value, 'bok', tooltip, color))
                 )
-            );
-        }
+            )
+        );
     }
 }

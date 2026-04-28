@@ -13,6 +13,18 @@
         <div class="flex align-items-center gap-2 flex-wrap white-space-nowrap mb-2">
             <div class="text-sm"><strong>Type:</strong> {{selectedNodeType()}}</div>
             |
+            <div *ngIf="selectedNodeType() === 'Module'" class="flex align-items-center flex-wrap gap-2 white-space-nowrap">
+                <div class="text-sm"><strong>Module Type:</strong> {{getModuleType()}}</div>
+                |
+            </div>
+            <div *ngIf="selectedNodeType() === 'Course' && getCourseType() != undefined" class="flex align-items-center flex-wrap gap-2 white-space-nowrap">
+                <div class="text-sm"><strong>Course Type:</strong> {{getCourseType()}}</div>
+                |
+            </div>
+            <div *ngIf="selectedNodeType() === 'Lecture'" class="flex align-items-center flex-wrap gap-2 white-space-nowrap">
+                <div class="text-sm"><strong>Is Practical:</strong> {{getIsPractical()}}</div>
+                |
+            </div>
             <div class="text-sm"><strong>EQF Level:</strong> {{selectedNode()?.eqf}}</div>
             |
             <div class="text-sm"><strong>Workload:</strong> {{selectedNode()?.ects}} ECTS</div>
@@ -53,12 +65,28 @@
         <div class="mb-4 text-justify">
             {{offer()?.root?.description}}
         </div>
+
+        <div *ngIf="selectedNodeType() === 'Course'" class="mb-4">
+            <strong>Assesment:</strong>
+            <div class="text-justify mt-2">{{getAssesment()}}</div>
+        </div>
         
         <div class="mb-2">
             <strong>Prerequisites:</strong>
             <ul *ngIf="(selectedNode()?.prerequisites?.length || 0) || 0 > 0">
                 <li *ngFor="let requisite of selectedNode()?.prerequisites">
                     {{requisite}}
+                </li>
+            </ul>
+        </div>
+        <div class="mb-2">
+            <strong>Training Materials:</strong>
+            <ul *ngIf="(selectedNode()?.trainingMaterials?.length || 0) || 0 > 0">
+                <li *ngFor="let material of selectedNode()?.trainingMaterials">
+                    <a href="{{material.url}}">
+                        {{material.title}}
+                        <i class="pi pi-external-link text-sm mx-1"></i>
+                    </a>
                 </li>
             </ul>
         </div>
@@ -87,10 +115,16 @@
             </div>
         </div>
     </div>
-    <div class="flex flex-column">
-        <offer-index-component class="mt-3 offer-index" [offer]="offer()!" [selectedNode]="selectedNode()?.id!" (selectedNodeChanged)="changeSelectedNode($event)"></offer-index-component>
-        
+    <div class="flex flex-column">        
         <div class="flex flex-column gap-1">
+            <offer-index-component class="mt-3 mb-2 offer-index" [offer]="offer()!" [selectedNode]="selectedNode()?.id!" (selectedNodeChanged)="changeSelectedNode($event)"></offer-index-component>
+            <p-panel #affiliationsPanel [header]="'Affiliations (' + affiliations().length + ')'" toggleable="true" collapsed="false" class="my-2 custom-panel">
+                <ng-template #headericons>
+                    <p-button *ngIf="!conceptsPanel.collapsed" icon="pi pi-chevron-up" severity="secondary" rounded text/>
+                    <p-button *ngIf="conceptsPanel.collapsed" icon="pi pi-chevron-down" severity="secondary" rounded text/>
+                </ng-template>  
+                <skill-tags [tags]="affiliations()" [compactBoKTags]="false"></skill-tags>
+            </p-panel>
             <p-panel #studyAreasPanel [header]="'Study Areas (' + studyAreas().length + ')'" toggleable="true" collapsed="false" class="my-2 custom-panel">
                 <ng-template #headericons>
                     <p-button *ngIf="!conceptsPanel.collapsed" icon="pi pi-chevron-up" severity="secondary" rounded text/>
