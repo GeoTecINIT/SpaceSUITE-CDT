@@ -29,15 +29,17 @@ export class OfferIndexComponent {
   updateScale = (newValue: number) => this.scale.set(newValue);
 
   onMenuItemSelection(nodeId: string) {
-    this.selectedMenuItemId.set(nodeId);
-    this.selectedTreeNode.set(this.getTreeNodeById(nodeId));
     this.selectedNodeChanged.emit(nodeId);
   }
 
   onTreeNodeSelection(node: TreeNode) {
-    this.selectedTreeNode.set(node);
-    this.selectedMenuItemId.set(node.key!);
+    if (!node) return;
     this.selectedNodeChanged.emit(node.key!);
+  }
+
+  preventTreeNodeUnselect(event: { node: TreeNode }) {
+    setTimeout(() => this.selectedTreeNode.set(undefined));
+    setTimeout(() => this.selectedTreeNode.set(event.node));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
