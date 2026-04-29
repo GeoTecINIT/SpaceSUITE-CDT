@@ -14,13 +14,15 @@
         </p-tablist>
         <p-tabpanels class="p-0 overflow-auto">
             <p-tabpanel value="0">
-                @if (menuItemsRoot()) {
-                    <ul class="my-1">
-                        <ng-container
-                            *ngTemplateOutlet="nodeTemplate; context: { $implicit: menuItemsRoot() }">
-                        </ng-container>
-                    </ul>
-                }
+                <p-tree [value]="treeNodeRoot()" [selection]="selectedTreeNode()" selectionMode="single" class="w-full custom-tree" 
+                    (selectionChange)="onTreeNodeSelection($event)" (onNodeUnselect)="preventTreeNodeUnselect($event)">
+                    <ng-template let-node pTemplate="default">
+                        <div class="flex column-gap-2 justify-content-start flex-wrap align-items-end">
+                            {{node.label}}
+                            <div class="type-text text-xs font-italic">{{node.data}}</div>
+                        </div>
+                    </ng-template>
+                </p-tree>
             </p-tabpanel>
             <p-tabpanel value="1">
                 <br>
@@ -55,25 +57,3 @@
         </p-tabpanels>
     </p-tabs>
 </p-panel>
-
-<ng-template #nodeTemplate let-node>
-    <li class="flex align-items-start gap-2">
-        <div class="flex flex-column">
-            <a (click)="onMenuItemSelection(node.id!)" 
-                [ngClass]="{ 'font-bold': node.id === selectedMenuItemId(), 'custom-panel-element': node.id !== selectedMenuItemId() }"
-            >
-                {{ node.label }}       
-            </a>
-            <span class="block text-xs">{{node.data}}</span>
-        </div>
-    </li>
-    @if (node.items && node.items.length > 0) {
-        <ul>
-            @for (node of node.items; track node.id) {
-                <ng-container
-                    *ngTemplateOutlet="nodeTemplate; context: { $implicit: node }">
-                </ng-container>
-            }
-        </ul>
-    }
-</ng-template>

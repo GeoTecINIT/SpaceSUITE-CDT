@@ -63,7 +63,7 @@
         <p-divider></p-divider>
 
         <div class="mb-4 text-justify">
-            {{offer()?.root?.description}}
+            {{selectedNode()?.description}}
         </div>
 
         <div *ngIf="selectedNodeType() === 'Course'" class="mb-4">
@@ -116,8 +116,8 @@
         </div>
     </div>
     <div class="flex flex-column">        
-        <div class="flex flex-column gap-1">
-            <offer-index-component class="mt-3 mb-2 offer-index" [offer]="offer()!" [selectedNode]="selectedNode()?.id!" (selectedNodeChanged)="changeSelectedNode($event)"></offer-index-component>
+        <div class="flex flex-column gap-1 offer-index-column">
+            <offer-index-component class="mt-3 mb-2" [offer]="offer()!" [selectedNode]="selectedNode()?.id!" (selectedNodeChanged)="changeSelectedNode($event)"></offer-index-component>
             <p-panel #affiliationsPanel [header]="'Affiliations (' + affiliations().length + ')'" toggleable="true" collapsed="false" class="my-2 custom-panel">
                 <ng-template #headericons>
                     <p-button *ngIf="!conceptsPanel.collapsed" icon="pi pi-chevron-up" severity="secondary" rounded text/>

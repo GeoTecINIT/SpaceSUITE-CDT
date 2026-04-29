@@ -7,42 +7,6 @@
     padding-bottom: 0 !important;
 }
 
-.custom-panel-element {
-    cursor: pointer;
-    color: var(--secondary-color);
-}
-
-.custom-panel-element:hover {
-    color: var(--hover-color);
-}
-
-.custom-panel li {
-    margin-top: 1rem;
-}
-
-ul {
-  counter-reset: section;
-  list-style-type: none;
-}
-
-ul li {
-  counter-increment: section;
-}
-
-ul li::before {
-  content: counters(section, ".") ". ";
-  font-weight: bold;
-}
-
-.icon-link {
-    text-decoration: none;
-    color: var(--secondary-color)
-}
-
-.icon-link:hover {
-    color: var(--hover-color)
-}
-
 .custom-tabs {
     --p-tabs-tab-active-color: var(--hover-color);
     --p-tabs-active-bar-background: var(--hover-color);
@@ -76,4 +40,25 @@ ul li::before {
   --p-slider-range-background: var(--secondary-color);
   width: 100%;
   height: 100%;
+}
+
+.custom-tree {
+  --p-tree-node-selected-background: #ffffff00;
+  --p-tree-node-hover-background: #ffffff00;
+  --p-tree-node-color: var(--secondary-color);
+  --p-tree-node-selected-color: var(--primary-color);
+  --p-tree-node-hover-color: var(--hover-color);
+}
+
+::ng-deep .p-tree {
+  padding-bottom: 0rem;
+}
+
+::ng-deep .p-tree-node-content.p-tree-node-selected {
+  font-weight: 700;
+}
+
+.type-text {
+  color: var(--primary-color);
+  font-weight: 300;
 }

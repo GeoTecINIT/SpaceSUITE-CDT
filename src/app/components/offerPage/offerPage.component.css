@@ -104,12 +104,12 @@
     --p-breadcrumb-item-hover-color: var(--primary-color);
 }
 
-.offer-index {
+.offer-index-column {
   width: 100%;
 }
 
 @media screen and (min-width: 992px) {
-  .offer-index {
+  .offer-index-column {
     width: 35vw;
   }
 }
