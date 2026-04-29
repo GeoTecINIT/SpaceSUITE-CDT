@@ -51,6 +51,9 @@
   --p-tree-node-selected-color: var(--primary-color);
   --p-tree-node-hover-color: var(--hover-color);
   --p-tree-node-focus-ring-color: var(--primary-color);
+  --p-tree-node-icon-color: var(--secondary-color);
+  --p-tree-node-icon-hover-color: var(--hover-color);
+  --p-tree-node-icon-selected-color: var(--primary-color);
 }
 
 ::ng-deep .p-tree {

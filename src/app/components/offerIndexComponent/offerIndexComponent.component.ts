@@ -63,7 +63,8 @@ export class OfferIndexComponent {
       children: children,
       leaf: leaf,
       expanded: !leaf,
-      data: formattedName
+      data: formattedName,
+      icon: this.getTreeNodeIcon(formattedName)
     }]);
   }
 
@@ -83,5 +84,20 @@ export class OfferIndexComponent {
 
   public getFormattedName(value: string): string {
     return value.match(/[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+/g)?.join(' ') ?? "";
+  }
+
+  private getTreeNodeIcon(type: string): string | undefined {
+    switch(type) {
+      case 'Study Program':
+        return 'pi pi-building-columns';
+      case 'Module':
+        return 'pi pi-box';
+      case 'Course':
+        return 'pi pi-book';
+      case 'Lecture':
+        return 'pi pi-bookmark';
+      default:
+        return undefined;
+    }
   }
 }
