@@ -40,14 +40,6 @@
     --p-panel-header-color: var(--primary-color)
 }
 
-.custom-tabs {
-    --p-tabs-tab-active-color: var(--hover-color);
-    --p-tabs-active-bar-background: var(--hover-color);
-    --p-tabs-tab-hover-color: var(--primary-color);
-    --p-tabs-tab-color: color-mix(in srgb, var(--primary-color) 60%, rgba(255, 255, 255, 0) 40%);
-    --p-tabs-tabpanel-color: var(--primary-color);
-}
-
 .icon-link {
     text-decoration: none;
     color: var(--secondary-color)
@@ -102,6 +94,7 @@
     --p-breadcrumb-separator-color: color-mix(in srgb, var(--primary-color) 70%, white 30%);
     --p-breadcrumb-item-color: color-mix(in srgb, var(--primary-color) 70%, white 30%);
     --p-breadcrumb-item-hover-color: var(--primary-color);
+    --p-breadcrumb-item-focus-ring-color: var(--primary-color);
 }
 
 .offer-index-column {

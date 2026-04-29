@@ -8,20 +8,21 @@
 }
 
 .custom-tabs {
-    --p-tabs-tab-active-color: var(--hover-color);
-    --p-tabs-active-bar-background: var(--hover-color);
-    --p-tabs-tab-hover-color: var(--primary-color);
-    --p-tabs-tab-color: color-mix(in srgb, var(--primary-color) 60%, rgba(255, 255, 255, 0) 40%);
-    --p-tabs-tabpanel-color: var(--primary-color);
+  --p-tabs-tab-active-color: var(--hover-color);
+  --p-tabs-active-bar-background: var(--hover-color);
+  --p-tabs-tab-hover-color: var(--primary-color);
+  --p-tabs-tab-color: color-mix(in srgb, var(--primary-color) 60%, rgba(255, 255, 255, 0) 40%);
+  --p-tabs-tabpanel-color: var(--primary-color);
+  --p-tabs-tab-focus-ring-color: var(--primary-color);
 }
 
 .custom-org-chart {
-    --p-organizationchart-node-selected-background: color-mix(in srgb, var(--secondary-color) 10%, rgba(255, 255, 255, 0.9) 90%);
-    --p-organizationchart-node-hover-background: color-mix(in srgb, var(--primary-color) 10%, rgba(255, 255, 255, 0.9) 90%);
-    --p-organizationchart-node-selected-color: var(--primary-color);
-    --p-organizationchart-node-hover-color: var(--primary-color);
-    --p-organizationchart-node-color: color-mix(in srgb, var(--primary-color) 70%, white 30%);
-
+  --p-organizationchart-node-selected-background: color-mix(in srgb, var(--secondary-color) 10%, rgba(255, 255, 255, 0.9) 90%);
+  --p-organizationchart-node-hover-background: color-mix(in srgb, var(--primary-color) 10%, rgba(255, 255, 255, 0.9) 90%);
+  --p-organizationchart-node-selected-color: var(--primary-color);
+  --p-organizationchart-node-hover-color: var(--primary-color);
+  --p-organizationchart-node-color: color-mix(in srgb, var(--primary-color) 70%, white 30%);
+  --p-breadcrumb-item-focus-ring-color: var(--primary-color);
 }
 
 .zoom-wrapper {
@@ -38,6 +39,7 @@
 
 .custom-slider {
   --p-slider-range-background: var(--secondary-color);
+  --p-slider-handle-focus-ring-color: var(--primary-color);
   width: 100%;
   height: 100%;
 }
@@ -48,6 +50,7 @@
   --p-tree-node-color: var(--secondary-color);
   --p-tree-node-selected-color: var(--primary-color);
   --p-tree-node-hover-color: var(--hover-color);
+  --p-tree-node-focus-ring-color: var(--primary-color);
 }
 
 ::ng-deep .p-tree {
