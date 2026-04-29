@@ -83,7 +83,7 @@
             <strong>Training Materials:</strong>
             <ul *ngIf="(selectedNode()?.trainingMaterials?.length || 0) || 0 > 0">
                 <li *ngFor="let material of selectedNode()?.trainingMaterials">
-                    <a href="{{material.url}}">
+                    <a href="{{material.url}}" target="_blank" class="icon-link">
                         {{material.title}}
                         <i class="pi pi-external-link text-sm mx-1"></i>
                     </a>

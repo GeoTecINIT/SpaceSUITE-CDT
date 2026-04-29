@@ -106,3 +106,12 @@
     width: 35vw;
   }
 }
+
+.icon-link {
+    text-decoration: none;
+    color: var(--secondary-color)
+}
+
+.icon-link:hover {
+    color: var(--hover-color)
+}
