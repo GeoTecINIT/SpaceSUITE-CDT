@@ -9,13 +9,15 @@ import { OrganizationChartModule } from 'primeng/organizationchart';
 import { TreeModule } from 'primeng/tree';
 import { SliderModule } from 'primeng/slider';
 import { FormsModule } from "@angular/forms";
+import { ButtonModule } from "primeng/button";
+import { DialogModule } from "primeng/dialog";
 
 @Component({
   standalone: true,
   selector: 'offer-index-component',
   templateUrl: './offerIndexComponent.component.html',
   styleUrls: ['./offerIndexComponent.component.css'],
-  imports: [CommonModule, PanelModule, TabsModule, OrganizationChartModule, SliderModule, FormsModule, TreeModule],
+  imports: [CommonModule, PanelModule, TabsModule, OrganizationChartModule, SliderModule, FormsModule, TreeModule, ButtonModule, DialogModule],
 })
 export class OfferIndexComponent {
   @Input() offer!: EducationalOffer;
@@ -26,6 +28,12 @@ export class OfferIndexComponent {
 
   scale: WritableSignal<number> = signal(1);
   updateScale = (newValue: number) => this.scale.set(newValue);
+
+  showModal: boolean = false;
+  modalTreeNodeRoot: WritableSignal<TreeNode[]> = signal<TreeNode[]>([]);
+
+  modalScale: WritableSignal<number> = signal(1);
+  updateModalScale = (newValue: number) => this.modalScale.set(newValue);
 
   onMenuItemSelection(nodeId: string) {
     this.selectedNodeChanged.emit(nodeId);
@@ -45,6 +53,7 @@ export class OfferIndexComponent {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['offer'] && changes['offer'].currentValue?.root !== changes['offer'].previousValue?.root) {
       this.treeNodeRoot.set(this.buildTreeNode(changes['offer'].currentValue.root));
+      this.modalTreeNodeRoot.set(this.buildTreeNode(changes['offer'].currentValue.root));
     }
 
     if (changes['selectedNode'] && changes['selectedNode'].currentValue !== changes['selectedNode'].previousValue) {

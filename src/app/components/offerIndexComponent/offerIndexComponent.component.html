@@ -27,10 +27,11 @@
             <p-tabpanel value="1">
                 <br>
                 <div class="flex">
-                    <div class="flex flex-column justify-content-start gap-3 p-2 max-h-10rem">
-                        <i class="pi pi-search-plus" style="font-size: 1rem"></i>
+                    <div class="flex flex-column justify-content-start align-items-center gap-3 p-2">
+                        <i class="pi pi-search-plus align-content-center" style="font-size: 1rem"></i>
                         <p-slider [ngModel]="scale()" (ngModelChange)="updateScale($event)" orientation="vertical" min="0.25" max="1.5" step="0.05" class="flex justify-content-center custom-slider"/>
                         <i class="pi pi-search-minus" style="font-size: 1rem"></i>
+                        <p-button icon="pi pi-expand" size="small" variant="text" class="custom-button" (onClick)="showModal = !showModal"></p-button>
                     </div>
                     <div class="zoom-wrapper">
                         <div class="zoom-content" [style.zoom]="scale()">
@@ -57,3 +58,33 @@
         </p-tabpanels>
     </p-tabs>
 </p-panel>
+
+<p-dialog header="Tree View Detail" [modal]="true" [(visible)]="showModal" [style]="{'height': '80vh', 'width': '80vw'}">
+    @if(showModal) {
+        <div class="flex">
+            <div class="flex flex-column justify-content-start align-items-center gap-3 p-2">
+                <i class="pi pi-search-plus align-content-center" style="font-size: 1rem"></i>
+                <p-slider [ngModel]="modalScale()" (ngModelChange)="updateModalScale($event)" orientation="vertical" min="0.25" max="1.5" step="0.05" class="flex justify-content-center custom-slider"/>
+                <i class="pi pi-search-minus" style="font-size: 1rem"></i>
+            </div>
+            <div class="zoom-wrapper">
+                <div class="zoom-content" [style.zoom]="modalScale()">
+                    <p-organization-chart class="custom-org-chart" [value]="modalTreeNodeRoot()">
+                        <ng-template let-node pTemplate="default">
+                            <div>{{node.label}}</div>
+                            <div class="text-xs font-italic">{{node.data}}</div>
+                        </ng-template>
+                        <ng-template let-nodeTogler #togglericon>
+                            @if(nodeTogler) {
+                                <i class="pi pi-minus" style="font-size: 1rem"></i>
+                            }
+                            @else {
+                                <i class="pi pi-plus" style="font-size: 1rem"></i>
+                            }
+                        </ng-template>
+                    </p-organization-chart>
+                </div>
+            </div>
+        </div>
+    }
+</p-dialog>
