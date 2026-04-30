@@ -193,7 +193,7 @@ export class CardComponent implements OnInit {
   }
 
   copyLink(): void {
-    navigator.clipboard.writeText(window.location.href + `${this.educationalOffer.id}`);
+    navigator.clipboard.writeText(window.location.href + `/offer/${this.educationalOffer.id}`);
 
     this.messageService.add({
       severity: 'info',

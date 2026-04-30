@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { collection, collectionData, CollectionReference, deleteDoc, doc, docData, DocumentData, DocumentReference, Firestore, setDoc, updateDoc } from "@angular/fire/firestore";
-import { combineLatest, concatMap, defaultIfEmpty, filter, forkJoin, from, map, Observable, of } from "rxjs";
+import { combineLatest, concatMap, defaultIfEmpty, filter, forkJoin, from, map, Observable, of, switchMap } from "rxjs";
 import { CurriculumNodeDB } from "../../model/databaseModel/curriculumNodeDB";
 import { EducationalOfferDB } from "../../model/databaseModel/educationalOfferDB";
 import { LectureDB } from "../../model/databaseModel/lectureDB";
@@ -51,7 +51,7 @@ export class EducationalOfferDBService {
   public getEdcationalOffers(): Observable<{educationalOffer: EducationalOfferDB, curriculumNodes: CurriculumNodeDB[]}[]> {
     return collectionData(this.educationalOfferCollection).pipe(
       map(items => items as EducationalOfferDB[]),
-      concatMap(educationalOffersDB => {
+      switchMap(educationalOffersDB => {
         if (educationalOffersDB.length === 0) return of([]);
         const educationalOffers$ = educationalOffersDB.map(
           offerDB => {
@@ -71,7 +71,7 @@ export class EducationalOfferDBService {
   public getEducationalOffer(educationalOfferId: string): Observable<{educationalOffer: EducationalOfferDB, curriculumNodes: CurriculumNodeDB[]} | undefined> {
     const educationalOfferDocRef = doc(this.educationalOfferCollection, educationalOfferId);
     return docData(educationalOfferDocRef).pipe(
-      concatMap(educationalOfferData => {
+      switchMap(educationalOfferData => {
         if (!educationalOfferData) return of(undefined);
 
         return this.getEducationalOfferNodes(educationalOfferDocRef).pipe(map(curriculumNodes => {
