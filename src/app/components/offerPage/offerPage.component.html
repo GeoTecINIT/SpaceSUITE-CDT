@@ -33,6 +33,10 @@
             |
             <div class="text-sm"><strong>Created:</strong> {{offer()?.createdAt?.toLocaleDateString()}}</div>
             |
+            <div *ngIf="offer()?.updatedAt" class="flex align-items-center flex-wrap gap-2 white-space-nowrap">
+                <div class="text-sm"><strong>Updated:</strong> {{offer()?.updatedAt?.toLocaleDateString()}}</div>
+                |
+            </div>
             <div class="text-sm"><strong>Visibility:</strong> {{offer()?.isPublic ? 'Public' : 'Private'}}</div>
             |
             <a class="icon-link text-sm align-items-center mx-1 cursor-pointer" (click)="toggle($event)">
@@ -58,7 +62,7 @@
                 </div>
             </p-popover>
         </div>
-        <div style="color: var(--primary-color);" class="mb-2 font-italic">{{offer()?.orgName + ((' - ' + offer()?.division) || "")}}</div>
+        <div style="color: var(--primary-color);" class="mb-2 font-italic">{{offer()?.orgName + (offer()?.division != "" ? (' - ' + offer()?.division) : "")}}</div>
 
         <p-divider></p-divider>
 
