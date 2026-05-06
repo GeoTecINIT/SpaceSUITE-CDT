@@ -14,6 +14,7 @@ import { MenuItem } from 'primeng/api';
 import { ButtonModule } from "primeng/button";
 import { SkeletonModule } from "primeng/skeleton";
 import { FilterOption } from "../../model/viewModel/filterOption";
+import { CheckboxModule } from "primeng/checkbox";
 
 @Component({
   standalone: true,
@@ -21,7 +22,7 @@ import { FilterOption } from "../../model/viewModel/filterOption";
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.css'],
   imports: [CommonModule, FormsModule, DividerModule, InputTextModule, MultiSelectModule, BokModalComponent, SelectButtonModule, TooltipModule,
-            InputGroupModule, InputGroupAddonModule, MenuModule, ButtonModule, SkeletonModule],
+            InputGroupModule, InputGroupAddonModule, MenuModule, ButtonModule, SkeletonModule, CheckboxModule],
 })
 export class FiltersComponent {
   @Input() multiSelectOptions: FilterOption[] = [];
@@ -43,6 +44,9 @@ export class FiltersComponent {
   @Input() filterUserItem: boolean = false;
   @Output() filterUserItemChange: EventEmitter<boolean> = new EventEmitter();
 
+  @Input() showPrivate: boolean = false;
+  @Output() showPrivateChange: EventEmitter<boolean> = new EventEmitter();
+
   @Input() logged: boolean = false;
 
   skeletonElements: number[] = [];
@@ -54,6 +58,7 @@ export class FiltersComponent {
   ngOnChanges(changes: SimpleChanges) {
     if (changes["logged"] && !changes["logged"].isFirstChange() && changes['logged'].currentValue == false) { 
       this.filterUserItemChange.emit(false);
+      this.showPrivateChange.emit(false);
     }
   }
 
@@ -72,6 +77,10 @@ export class FiltersComponent {
   updateFilterUserItem(newValue: boolean) {
     this.filterUserItem = newValue;
     this.filterUserItemChange.emit(this.filterUserItem);
+  }
+
+  updateShowPrivate(): void {
+    this.showPrivateChange.emit(this.showPrivate);
   }
 
   clearOptions(label: string) {

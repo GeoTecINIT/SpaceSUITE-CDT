@@ -15,6 +15,17 @@
                     </ng-template>
                 </p-selectbutton>
             </div>
+            @if (logged) {
+                <div class="my-4 flex align-items-center gap-3">
+                    Show private profiles?
+                    <p-checkbox
+                        class="flex custom-checkbox"
+                        [(ngModel)]="showPrivate"
+                        (ngModelChange)="updateShowPrivate()"
+                        [binary]="true"
+                    />
+                </div>
+            }
             <div class="my-4">
                 Search by {{selectedOption}}
                 <p-inputgroup class="w-20rem">

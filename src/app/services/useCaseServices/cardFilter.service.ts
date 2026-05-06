@@ -17,6 +17,7 @@ export class CardFilterService {
   public bokConcepts: string[] = [];
   public userItemFilter: boolean = false;
   public paginatorState: PaginatorState = {}
+  public showPrivate: boolean = false;
 
   private educationalOfferService: EducationalOfferService = inject(EducationalOfferService);
   private http: HttpClient = inject(HttpClient);

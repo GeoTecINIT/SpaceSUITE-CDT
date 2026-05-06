@@ -43,6 +43,7 @@ export class ItemExplorerComponent {
   searchOption: string = "Title";
   bokConcepts: string[] = [];
   loadingFilters: boolean = true;
+  showPrivate: boolean = false;
 
   loadingCards = signal(true);
 
@@ -99,6 +100,7 @@ export class ItemExplorerComponent {
     this.bokConcepts = this.filterService.bokConcepts;
     this.sortAsc = this.sortingService.sortAsc;
     this.selectedSortOption = this.sortingService.sortOption;
+    this.showPrivate = this.filterService.showPrivate;
 
     // Load Items & User orgs
     this.educationalOffersSubscription = combineLatest([
@@ -196,12 +198,25 @@ export class ItemExplorerComponent {
     this.filterPipeline();
   }
 
+  setShowPrivate(showPrivate: boolean) {
+    this.showPrivate = showPrivate;
+    this.filterService.showPrivate = showPrivate;
+    this.filterPipeline();
+  }
+
   filterPipeline() {
-    const sortedItems = this.sortItems(this.educationalOffers);
+    const privateItems = this.handlePrivateItems(this.educationalOffers);
+    const sortedItems = this.sortItems(privateItems);
     const searchedItems = this.searchItems(sortedItems);
     const filteredItems = this.filterItems(searchedItems);
     this.filteredEducationalItems.set(this.filterByBoKConcept(filteredItems));
     this.paginationEducationalItems = this.filteredEducationalItems().slice(this.first, this.first + this.rows)
+  }
+
+  private handlePrivateItems(inputItems: EducationalOffer[]): EducationalOffer[] {
+    return this.showPrivate
+      ? inputItems
+      : inputItems.filter((offer) => offer.isPublic === true);
   }
 
   sortItems(inputItems: EducationalOffer[]): EducationalOffer[] {

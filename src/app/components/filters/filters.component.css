@@ -75,3 +75,11 @@
 ::ng-deep .p-togglebutton {
     flex: auto;
 }
+
+.custom-checkbox {
+  --p-checkbox-hover-border-color: var(--hover-color);
+  --p-checkbox-checked-border-color: var(--primary-color);
+  --p-checkbox-checked-background: var(--primary-color);
+  --p-checkbox-checked-hover-border-color: var(--hover-color);
+  --p-checkbox-checked-hover-background: var(--hover-color);
+}

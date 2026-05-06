@@ -4,7 +4,7 @@
         (multiSelectOptionsChange)="filterPipeline()" (advancedMultiSelectOptionsChange)="filterPipeline()" [filterUserItemOptions]="filterUserItemOptions"
         [searchValue]="searchValue" (searchValueChange)="setSearchValue($event)" [selectedOption]="searchOption" (selectedOptionChange)="setSearchOption($event)"
         [bokConcepts]="bokConcepts" (bokConceptsChange)="setBoKConcepts($event)" [filterUserItem]="filterByUserItem" (filterUserItemChange)="setFilterByUserMaterial($event)" 
-        [logged]="(isLogged() | async) ?? false" class="flex justify-content-center"></filters>
+        [logged]="(isLogged() | async) ?? false" [showPrivate]="showPrivate" (showPrivateChange)="setShowPrivate($event)" class="flex justify-content-center"></filters>
     <div class="flex flex-column w-full">
         <p-buttongroup class="ml-auto mt-2 align-self-center">
             <p-button severity="secondary" (click)="switchSortOrientation()" [icon]="sortAsc ? 'pi pi-sort-amount-up' : 'pi pi-sort-amount-down'" size="small" [label]="'Order By ' + selectedSortOption" class="custom-secondary-button"/>
