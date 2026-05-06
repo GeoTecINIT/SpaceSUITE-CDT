@@ -165,9 +165,8 @@ export class OfferPageComponent {
 
     this.location.replaceState('offer/' + this.offer()!.id + "/" + selectedNode.id);
 
-    const constructorName = selectedNode.constructor.name;
-    const formattedName = constructorName.match(/[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+/g)?.join(' ');
-    this.selectedNodeType.set(formattedName ?? "");
+    
+    this.selectedNodeType.set(this.utilsService.getNodeType(selectedNode));
     this.selectedNode.set(selectedNode);
     this.bokConcepts.set([]);
     this.studyAreas.set([]);

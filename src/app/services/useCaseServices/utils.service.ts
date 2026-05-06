@@ -2,6 +2,11 @@ import { inject, Injectable } from "@angular/core";
 import { Tag, Variant } from "@eo4geo/ngx-bok-utils";
 import { BokInformationService } from "@eo4geo/ngx-bok-visualization";
 import { combineLatest, forkJoin, map, Observable, of, take } from "rxjs";
+import { StudyProgram } from "../../model/coreModel/studyProgram";
+import { Course } from "../../model/coreModel/course";
+import { Lecture } from "../../model/coreModel/lecture";
+import { Module } from "../../model/coreModel/module";
+import { CurriculumNode } from "../../model/coreModel/curriculumNode";
 
 @Injectable({
     providedIn: 'root',
@@ -71,5 +76,24 @@ export class UtilsService {
                 )
             )
         );
+    }
+
+    getNodeType(node: CurriculumNode): string {
+        let formattedName: string = '';
+        switch (true) {
+            case node instanceof StudyProgram:
+                formattedName = 'Study Program'
+                break;
+            case node instanceof Course:
+                formattedName = 'Course'
+                break;
+            case node instanceof Lecture:
+                formattedName = 'Lecture'
+                break;
+            case node instanceof Module:
+                formattedName = 'Module'
+                break;
+        }
+        return formattedName;
     }
 }

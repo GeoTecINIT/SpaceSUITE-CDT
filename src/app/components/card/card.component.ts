@@ -205,9 +205,7 @@ export class CardComponent implements OnInit {
   }
 
   getOfferTypeString() {
-    const constructorName = this.educationalOffer.root.constructor.name;
-    const formattedName = constructorName.match(/[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+/g)?.join(' ');
-    return formattedName;
+    return this.utilsService.getNodeType(this.educationalOffer.root)
   }
 
   /*

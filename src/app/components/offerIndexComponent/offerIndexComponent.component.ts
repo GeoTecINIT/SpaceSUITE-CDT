@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, signal, SimpleChanges, WritableSignal} from "@angular/core";
+import { Component, EventEmitter, inject, Input, Output, signal, SimpleChanges, WritableSignal} from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { TreeNode } from "primeng/api";
 import { EducationalOffer } from "../../model/coreModel/educationalOffer";
@@ -11,6 +11,7 @@ import { SliderModule } from 'primeng/slider';
 import { FormsModule } from "@angular/forms";
 import { ButtonModule } from "primeng/button";
 import { DialogModule } from "primeng/dialog";
+import { UtilsService } from "../../services/useCaseServices/utils.service";
 
 @Component({
   standalone: true,
@@ -34,6 +35,8 @@ export class OfferIndexComponent {
 
   modalScale: WritableSignal<number> = signal(1);
   updateModalScale = (newValue: number) => this.modalScale.set(newValue);
+
+  private utilsService: UtilsService = inject(UtilsService);
 
   onMenuItemSelection(nodeId: string) {
     this.selectedNodeChanged.emit(nodeId);
@@ -65,7 +68,7 @@ export class OfferIndexComponent {
   private buildTreeNode(node: CurriculumNode): TreeNode[] {
     const children = node.getChildren().map(child => this.buildTreeNode(child)).flat();
     const leaf: boolean = children.length === 0;
-    const formattedName = this.getFormattedName(node.constructor.name);
+    const formattedName = this.utilsService.getNodeType(node);
     return ([{
       key: node.id,
       label: node.name,
@@ -91,8 +94,8 @@ export class OfferIndexComponent {
     return node;
   }
 
-  public getFormattedName(value: string): string {
-    return value.match(/[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+/g)?.join(' ') ?? "";
+  public getOfferType(): string {
+    return this.utilsService.getNodeType(this.offer.root)
   }
 
   private getTreeNodeIcon(type: string): string | undefined {
