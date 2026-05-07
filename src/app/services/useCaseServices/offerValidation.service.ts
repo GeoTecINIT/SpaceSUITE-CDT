@@ -53,7 +53,7 @@ export class OfferValidationService {
   }
 
   private validateNode(node: CurriculumNode, errors: Record<string, string[]>): void {
-    const base = `nodes.${node.id}`;
+    const base = `${node.id}`;
 
     if (this.isBlank(node.name)) {
       this.addError(errors, `${base}.name`, 'Name is required.');

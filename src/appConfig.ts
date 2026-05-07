@@ -14,12 +14,13 @@ import { provideStorage, getStorage } from '@angular/fire/storage';
 import { ItemExplorerComponent } from './app/components/itemExplorer/itemExplorer.component';
 import { OfferPageComponent } from './app/components/offerPage/offerPage.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { OfferFormComponent } from './app/components/offerForm/offerForm.component';
 
 const routes: Routes = [
     { path: '', component: ItemExplorerComponent },
     { path: 'profile', component: UserPageComponent, canMatch: [AuthGuard]},
     { path: 'organizations', component: OrganizationPageComponent, canMatch: [AuthGuard]},
-    //{ path: 'new', component: CreatePageComponent, canMatch: [AuthGuard], canDeactivate: [exitWithoutSavingGuard]},
+    { path: 'new', component: OfferFormComponent, canMatch: [AuthGuard], canDeactivate: [exitWithoutSavingGuard]},
     //{ path: 'edit/:dynamicValue', component: EditPageComponent, canMatch: [AuthGuard], canDeactivate: [exitWithoutSavingGuard]},
     { path: 'not_found', component: NotFoundPageComponent},
     { path: 'offer/:offerId', children: [

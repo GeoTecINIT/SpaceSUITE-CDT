@@ -1,10 +1,5 @@
+import { ModuleType } from "../coreModel/module";
 import { CurriculumNodeDB } from "./curriculumNodeDB";
-
-export enum ModuleType {
-  StudyProgram,
-  Course,
-  Lecture
-}
 
 export class ModuleDB extends CurriculumNodeDB {
   public moduleType: ModuleType;

@@ -1,0 +1,45 @@
+::ng-deep .p-tooltip {
+    --p-tooltip-background: var(--primary-color);
+    --p-tooltip-color: white;
+}
+
+::ng-deep .p-confirmdialog   {
+    color: var(--primary-color) !important;
+}
+
+::ng-deep .p-confirmdialog .p-confirmdialog-icon   {
+    color: var(--primary-color) !important;
+}
+
+::ng-deep .p-confirmdialog .p-button {
+    --p-button-primary-background: var(--danger-color);
+    --p-button-primary-border-color: var(--danger-color);
+    --p-button-primary-hover-background: color-mix(in srgb, var(--danger-color) 90%, black 10%);
+    --p-button-primary-hover-border-color: color-mix(in srgb, var(--danger-color) 90%, black 10%);
+    --p-button-primary-active-background: color-mix(in srgb, var(--danger-color) 70%, black 30%);
+    --p-button-primary-active-border-color: color-mix(in srgb, var(--danger-color) 80%, black 20%);
+}
+
+.offer-index-column {
+  width: 100%;
+}
+
+@media screen and (min-width: 992px) {
+  .offer-index-column {
+    width: 35vw;
+  }
+}
+
+.custom-stepper {
+    --p-stepper-step-number-active-color: var(--hover-color);
+    --p-stepper-step-title-active-color: var(--hover-color);
+    --p-stepper-separator-active-background: var(--hover-color);
+    width: 50vw;
+}
+
+.custom-border {
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(18, 18, 23, 0.05) 0px 1px 2px 0px;
+    transition: border-color 0.2s;
+}

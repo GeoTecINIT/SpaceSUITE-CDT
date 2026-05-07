@@ -5,9 +5,9 @@ import { Course } from "./course";
 import { Lecture } from "./lecture";
 
 export enum ModuleType {
-  StudyProgram,
-  Course,
-  Lecture
+  StudyProgram = 'Study Program',
+  Course = 'Course',
+  Lecture = 'Lecture'
 }
 
 export class Module extends CurriculumNode {
@@ -35,7 +35,7 @@ export class Module extends CurriculumNode {
         isValid = false;
     }
 
-    if (isValid) {
+    if (!isValid) {
       throw new DomainError(
         'HIERARCHY_INVALID', 
         `Cannot add a child of type ${child.constructor.name} to a Module of type ${this.moduleType}.`

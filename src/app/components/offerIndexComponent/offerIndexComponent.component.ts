@@ -54,7 +54,7 @@ export class OfferIndexComponent {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['offer'] && changes['offer'].currentValue?.root !== changes['offer'].previousValue?.root) {
+    if (changes['offer']) {
       this.treeNodeRoot.set(this.buildTreeNode(changes['offer'].currentValue.root));
       this.modalTreeNodeRoot.set(this.buildTreeNode(changes['offer'].currentValue.root));
     }

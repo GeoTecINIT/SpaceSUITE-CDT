@@ -1,0 +1,84 @@
+<p-toast class="custom-toast" position="bottom-right"/>
+<p-confirmdialog />
+<h2 class="flex justify-content-center">{{pageName}}</h2>
+<div class="flex flex-column lg:flex-row lg:justify-content-between align-items-center lg:align-items-start p-4">
+    <p-stepper [value]="1" class="custom-stepper">
+        <p-step-list>
+            <p-step [value]="1">General Information</p-step>
+            <p-step [value]="2">Skills</p-step>
+        </p-step-list>
+        <p-step-panels>
+            <p-step-panel [value]="1">
+               <ng-template #content let-activateCallback="activateCallback">
+                    <div class="flex flex-column gap-3">
+                        <div>
+                            <p-floatlabel variant="on" class="custom-floatlabel">
+                                <p-iconfield>
+                                    <input pInputText id="name" autocomplete="off" class="w-full custom-input" 
+                                        [class.ng-invalid]="errorMap.get(selectedNode().id + '.name') != undefined" [class.ng-dirty]="errorMap.get('name') != undefined" 
+                                        [ngModel]="selectedNode().name" (ngModelChange)="onNameChange(selectedNode(), $event)" pTooltip="A name given to the resource"
+                                        tooltipPosition="right" showDelay="200" hideDelay="200" maxlength="200"/>
+                                    <p-inputicon class="pi pi-pencil" [style]="errorMap.get('title') != undefined ? 'color: var(--danger-color)' : ''" />
+                                </p-iconfield>
+                                <label for="title">Title *</label>
+                            </p-floatlabel>
+                            @if(errorMap.get('title')) {
+                                <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get('title')}}</p>
+                            }
+                        </div>
+                        <div>
+                            
+                        </div>
+                    </div>
+               </ng-template>
+            </p-step-panel>
+        </p-step-panels>
+    </p-stepper>
+    <div class="offer-index-column">
+        <offer-index-component [offer]="offer()" [selectedNode]="selectedNode().id" (selectedNodeChanged)="changeSelectedNode($event)"></offer-index-component>
+        <div class="custom-border mt-3">
+            <div class="px-3 pt-3 font-bold">Add New Node</div>
+            <div class="flex gap-3 p-3">
+                <p-floatlabel variant="on" class="custom-floatlabel w-full">
+                    <p-select [inputId]="'newNodeType'" [options]="getValidChildTypes()" [(ngModel)]="newNodeType" class="w-full custom-select" [checkmark]="true"
+                        pTooltip="The new node type" tooltipPosition="bottom" showDelay="200" hideDelay="200"/>
+                    <label [for]="'newNodeType'">Node Type</label>
+                </p-floatlabel>
+                @if(newNodeType == 'Module') {
+                    <p-floatlabel variant="on" class="custom-floatlabel w-full">
+                        <p-select [inputId]="'newNodeModuleType'" [options]="getValidModuleTypes()" [(ngModel)]="newNodeModuleType"  class="w-full custom-select" 
+                            [checkmark]="true" pTooltip="The new module type" tooltipPosition="bottom" showDelay="200" hideDelay="200" 
+                            optionLabel="label" optionValue="value"/>
+                        <label [for]="'newNodeModuleType'">Module Type</label>
+                    </p-floatlabel>
+                }
+                <p-button icon="pi pi-plus" rounded [disabled]="newNodeType == undefined || (newNodeType == 'Module' && newNodeModuleType == undefined)" 
+                    class="custom-button" (onClick)="addNewChild()"></p-button>
+            </div>
+        </div>
+        <div class="mt-3 flex justify-content-end">
+            <p-button icon="pi pi-refresh" class="delete-button" label="Reset Root Node" (onClick)="resetRootNode()"></p-button>
+        </div>
+    </div>
+</div>
+
+<p-dialog [header]="rootNodeModalClosable ? 'Reset Root Node' : 'Add Root Node'" [modal]="true" [(visible)]="rootNodeModalVisible" 
+            [style]="{ width: '30rem', color: 'var(--primary-color)' }" [draggable]="false" [closable]="rootNodeModalClosable">
+    <div class="flex gap-3 p-3">
+        <p-floatlabel variant="on" class="custom-floatlabel w-full">
+            <p-select [inputId]="'newNodeType'" [options]="getRootNodeTypes()" [(ngModel)]="rootNodeType" class="w-full custom-select" [checkmark]="true"
+                pTooltip="The new node type" tooltipPosition="bottom" showDelay="200" hideDelay="200" appendTo="body"/>
+            <label [for]="'newNodeType'">Node Type</label>
+        </p-floatlabel>
+        @if(rootNodeType == 'Module') {
+            <p-floatlabel variant="on" class="custom-floatlabel w-full">
+                <p-select [inputId]="'newNodeModuleType'" [options]="getRootModuleTypes()" [(ngModel)]="rootNodeModuleType"  class="w-full custom-select" 
+                    [checkmark]="true" pTooltip="The new module type" tooltipPosition="bottom" showDelay="200" hideDelay="200" 
+                    optionLabel="label" optionValue="value" appendTo="body"/>
+                <label [for]="'newNodeModuleType'">Module Type</label>
+            </p-floatlabel>
+        }
+        <p-button icon="pi pi-plus" rounded [disabled]="rootNodeType == undefined || (rootNodeType == 'Module' && rootNodeModuleType == undefined)" 
+            class="custom-button" (onClick)="addRootNode()"></p-button>
+    </div>
+</p-dialog>
