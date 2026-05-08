@@ -76,7 +76,7 @@ export class OfferValidationService {
     }
 
     if (node.timeRequired.value <= 0) {
-      this.addError(errors, `${base}.timeRequired.value`, 'Time required must be greater than zero.');
+      this.addError(errors, `${base}.timeRequired`, 'Time required must be greater than zero.');
     }
 
     if (node.studyAreas.length === 0) {

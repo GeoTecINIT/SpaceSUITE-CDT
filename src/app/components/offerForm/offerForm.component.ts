@@ -20,17 +20,25 @@ import { UtilsService } from "../../services/useCaseServices/utils.service";
 import { Module, ModuleType } from "../../model/coreModel/module";
 import { TooltipModule } from "primeng/tooltip";
 import { ButtonModule } from "primeng/button";
+import { TextareaModule } from 'primeng/textarea';
 import { Course } from "../../model/coreModel/course";
 import { Lecture } from "../../model/coreModel/lecture";
 import { DialogModule } from "primeng/dialog";
+import { InputNumberModule } from 'primeng/inputnumber';
+import { BokModalComponent } from "../bokModal/bokModal.component";
+import { PanelModule } from "primeng/panel";
+import { TextChipsComponent } from "../textChips/textChips.component";
+import { CustomSelectComponent } from "../customSelect/customSelect.component";
+import { DurationUnit } from "../../model/coreModel/duration";
 
 @Component({
   standalone: true,
   selector: 'offer-form',
   templateUrl: './offerForm.component.html',
   styleUrls: ['./offerForm.component.css'],
-  imports: [ToastModule, ConfirmDialogModule, InputTextModule, FloatLabelModule, FormsModule, InputIconModule, IconFieldModule, 
-            OfferIndexComponent, StepperModule, SelectModule, TooltipModule, ButtonModule, DialogModule],
+  imports: [ToastModule, ConfirmDialogModule, InputTextModule, FloatLabelModule, FormsModule, InputIconModule, IconFieldModule, PanelModule, InputNumberModule,
+            OfferIndexComponent, StepperModule, SelectModule, TooltipModule, ButtonModule, DialogModule, TextareaModule, BokModalComponent, TextChipsComponent,
+            CustomSelectComponent],
 })
 export class OfferFormComponent {
   @Input() pageName: string = 'Create New Educational Offer';
@@ -93,6 +101,41 @@ export class OfferFormComponent {
     ],
     'Lecture': [],
   };
+
+  public readonly DURATION_UNIT: object[] = [
+    {
+      label: 'Years',
+      value: DurationUnit.Years
+    },
+    {
+      label: 'Semesters',
+      value: DurationUnit.Semesters
+    },
+    {
+      label: 'Trimesters',
+      value: DurationUnit.Trimesters
+    },
+    {
+      label: 'Months',
+      value: DurationUnit.Months
+    },
+    {
+      label: 'Weeks',
+      value: DurationUnit.Weeks
+    },
+    {
+      label: 'Days',
+      value: DurationUnit.Days
+    },
+    {
+      label: 'Hours',
+      value: DurationUnit.Hours
+    },
+    {
+      label: 'Minutes',
+      value: DurationUnit.Minutes
+    },
+  ]
 
   private sessionSubscription?: Subscription;
 
@@ -264,6 +307,20 @@ export class OfferFormComponent {
     this.offer.update(o =>
       Object.assign(Object.create(Object.getPrototypeOf(o)), o)
     );
+  }
+
+  selectedNodeEqf(): string | undefined {
+    if (this.selectedNode().eqf < 1 || this.selectedNode().eqf > 8) return undefined;
+    return 'EQF ' + this.selectedNode().eqf;
+  }
+
+  onEqfChange(value: string) {
+    const cleanedValue = value.replace('EQF', '').trim();
+    this.selectedNode().eqf = Number(cleanedValue);
+  }
+
+  getSelectedNodeType(): string {
+    return this.utilsService.getNodeType(this.selectedNode());
   }
 
   private generateTimeBasedID() {  
