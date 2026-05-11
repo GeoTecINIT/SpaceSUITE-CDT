@@ -99,7 +99,7 @@
                                                 [class.ng-invalid]="errorMap.get(selectedNode().id + '.timeRequired') != undefined" 
                                                 [class.ng-dirty]="errorMap.get(selectedNode().id + '.timeRequired') != undefined" 
                                                 class="custom-input" [(ngModel)]="selectedNode().timeRequired.value" fluid/>
-                                            <p-inputicon class="pi pi-clock"/>
+                                            <p-inputicon class="pi pi-calculator"/>
                                         </p-iconfield>
                                         <label for="durationValue">Value</label>
                                     </p-floatlabel>
@@ -114,6 +114,46 @@
                                 <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(selectedNode().id + '.timeRequired')}}</p>
                             }
                         </div>
+                        <div>
+                            <multiselect-chips optionsName="Study Areas" fieldName="Study Areas *" [(chips)]="selectedStudyAreas"  icon="pi pi-bookmark"
+                                pTooltip="Specific area(s) of study of the profile. Maintained by the UNESCO Institute for Statistics"
+                                tooltipPosition="top" showDelay="200" hideDelay="200">
+                            </multiselect-chips>
+                        </div>
+                        <div class="flex flex-column">
+                            <treeselect-chips
+                                [(chips)]="selectedTransversalSkills" [treeselectOptions]="transversalSkills" fieldName="Transversal Skills"
+                                pTooltip="Skills considered unrelated to a particular job, task, academic discipline or area of knowledge but that can be used in a wide variety of situations and work settings. Based on the ESCO transversal and cross-sector skills."
+                                tooltipPosition="top" showDelay="200" hideDelay="200"
+                            ></treeselect-chips>
+                            @if(!showCustomTransversalSkills) {
+                                <p-button [rounded]="true" [text]="true" size="small" (onClick)="showCustomTransversalSkills = true"
+                                    class="text-button ml-auto mt-1 p-0 text-xs font-italic">Add custom Transversal Skills</p-button>
+                            }
+                        </div>
+                        @if(showCustomTransversalSkills) {
+                            <div>
+                                <text-chips [fieldName]="'Custom Transversal Skills'" [icon]="'pi pi-chart-bar'" [(chips)]="selectedNode().customTransversalSkills"
+                                        pTooltip="Custom transversal skills related to this {{getSelectedNodeType()}}" 
+                                        tooltipPosition="right" showDelay="200" hideDelay="200"></text-chips>
+                            </div>
+                        }
+                        <div>
+                            <text-chips [fieldName]="'Learning Outcomes *'" [icon]="'pi pi-graduation-cap'" [(chips)]="selectedNode().learningObjectives"
+                                    [error]="errorMap.get(selectedNode().id + '.learningObjectives') != undefined" 
+                                    pTooltip="Learning outcomes describe the knowledge, skills, qualifications, or experiences that a learner is expected to have after completing this {{getSelectedNodeType()}}" 
+                                    tooltipPosition="right" showDelay="200" hideDelay="200"></text-chips>
+                            @if(errorMap.get(selectedNode().id + '.learningObjectives')) {
+                                <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(selectedNode().id + '.learningObjectives')}}</p>
+                            }
+                        </div>
+                        // Training Materials component to be added here
+                        <div>
+                            <text-chips [fieldName]="'Bibliography'" [icon]="'pi pi-book'" [(chips)]="selectedNode().bibliography"
+                                    pTooltip="Bibliography describe the recommended reading materials, resources, or references related to this {{getSelectedNodeType()}}" 
+                                    tooltipPosition="right" showDelay="200" hideDelay="200"></text-chips>
+                        </div>
+                        // Affiliations component to be added here
                     </div>
                </ng-template>
             </p-step-panel>

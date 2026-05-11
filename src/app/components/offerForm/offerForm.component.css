@@ -55,3 +55,10 @@
     color: #64748b;
     pointer-events: none;
 }
+
+.text-button {
+    --p-button-text-primary-color: var(--secondary-color);
+    --p-button-text-primary-active-background: color-mix(in srgb, var(--secondary-color) 20%, rgba(0, 0, 0, 0) 80%);
+    --p-button-text-primary-hover-background: color-mix(in srgb, var(--secondary-color) 10%, rgba(0, 0, 0, 0) 90%);
+    --p-datepicker-date-selected-background: var(--secondary-color);
+}

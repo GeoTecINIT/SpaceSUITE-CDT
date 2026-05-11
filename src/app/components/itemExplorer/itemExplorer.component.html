@@ -24,9 +24,12 @@
         <p *ngIf="filteredEducationalItems().length == 0 && !loadingCards()" class="font-italic flex mx-auto justify-content-center">No offer found</p>
     </div>
 </div>
-<div class="floating-container flex flex-column gap-2 align-items-end" [ngStyle]="{ bottom: buttonBottom + 'px' }">
-    <p-button *ngIf="isLogged()" (click)="createTrainingItem()" icon="pi pi-plus" label="Add offer" class="custom-button floating-button"/>
-</div>
+
+@if(isLogged() | async) {
+    <div class="floating-container flex flex-column gap-2 align-items-end" [ngStyle]="{ bottom: buttonBottom + 'px' }">
+        <p-button (click)="createTrainingItem()" icon="pi pi-plus" label="Add offer" class="custom-button floating-button"/>
+    </div>
+}
 
 <p-menu #menu [model]="sortOptions" popup styleClass="!min-w-fit" class="custom-menu">
     <ng-template #item let-item>
