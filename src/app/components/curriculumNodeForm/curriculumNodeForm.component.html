@@ -88,7 +88,7 @@
                             pTooltip="The total time required to complete this {{getSelectedNodeType()}}." 
                             [style.border-color]="errorMap.get(curriculumNode.id + '.timeRequired') != undefined ? 'var(--danger-color)' : '' ">
                             Duration *
-                            <div class="flex gap-3 p-3">
+                            <div class="flex flex-column sm:flex-row gap-3 p-3">
                                 <p-floatlabel variant="on" class="w-full custom-floatlabel">
                                     <p-iconfield>
                                         <p-inputnumber id="durationValue" [min]="0" [useGrouping]="false"

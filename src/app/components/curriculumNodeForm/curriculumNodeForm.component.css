@@ -27,6 +27,12 @@
     width: 50vw;
 }
 
+@media (max-width: 992px) {
+    .custom-stepper {
+        width: 100%;
+    }
+}
+
 .custom-textarea {
     --p-textarea-invalid-placeholder-color: var(--danger-color);
     --p-textarea-invalid-border-color: var(--danger-color);
