@@ -102,6 +102,7 @@ export class CurriculumNodeFormComponent {
       if (changes['curriculumNode'].isFirstChange() || (newNode != undefined && oldNode != undefined && newNode.id != oldNode.id)) {
         this.selectedTransversalSkills = newNode.transversalSkills.map(skill => skill.preferredLabel);
         this.selectedStudyAreas = newNode.studyAreas.map(area => area.name);
+        this.showCustomTransversalSkills = newNode.customTransversalSkills.length > 0;
       }
     }
   }
