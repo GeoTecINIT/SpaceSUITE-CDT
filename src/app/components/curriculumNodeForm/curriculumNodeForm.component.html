@@ -1,0 +1,159 @@
+<p-toast class="custom-toast" position="bottom-right"/>
+<p-confirmdialog />
+<p-stepper [value]="1" class="custom-stepper">
+    <p-step-list>
+        <p-step [value]="1">General Information</p-step>
+        <p-step [value]="2">Skills</p-step>
+    </p-step-list>
+    <p-step-panels>
+        <p-step-panel [value]="1">
+            <ng-template #content let-activateCallback="activateCallback">
+                <div class="flex flex-column gap-3">
+                    <div>
+                        <p-floatlabel variant="on" class="custom-floatlabel">
+                            <p-iconfield>
+                                <input pInputText id="name" autocomplete="off" class="w-full custom-input" 
+                                    [class.ng-invalid]="errorMap.get(curriculumNode.id + '.name') != undefined" [class.ng-dirty]="errorMap.get(curriculumNode.id + '.name') != undefined" 
+                                    [ngModel]="curriculumNode.name" (ngModelChange)="onNameChange($event)" pTooltip="A name given to the {{getSelectedNodeType()}}"
+                                    tooltipPosition="right" showDelay="200" hideDelay="200" maxlength="200"/>
+                                <p-inputicon class="pi pi-pencil" [style]="errorMap.get(curriculumNode.id + '.title') != undefined ? 'color: var(--danger-color)' : ''" />
+                            </p-iconfield>
+                            <label for="title">Title *</label>
+                        </p-floatlabel>
+                        @if(errorMap.get(curriculumNode.id + '.title')) {
+                            <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.title')}}</p>
+                        }
+                    </div>
+                    <div>
+                        <p-floatlabel variant="on" class="custom-floatlabel">
+                            <textarea id="description" pTextarea [(ngModel)]="curriculumNode.description"
+                                [class.ng-invalid]="errorMap.get(curriculumNode.id + '.description') != undefined" [class.ng-dirty]="errorMap.get(curriculumNode.id + '.description') != undefined"
+                                rows="4" class="w-full custom-textarea m-0"
+                                pTooltip="Provide a concise summary or overview of the {{getSelectedNodeType()}} content. Include key topics, purpose, scope, and any important features." 
+                                tooltipPosition="right" showDelay="200" hideDelay="200" maxlength="2000"></textarea>
+                            <div class="textarea-length" [style]="errorMap.get(curriculumNode.id + '.description') != undefined ? 'color: var(--danger-color)' : ''">
+                                <span>{{curriculumNode.description.length + ' '}}</span>
+                                <span>/ 2000</span>
+                            </div>
+                            <label for="description">Description *</label>
+                        </p-floatlabel>
+                        @if(errorMap.get(curriculumNode.id + '.description')) {
+                            <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.description')}}</p>
+                        }
+                    </div>
+                    <div>
+                        <div class="custom-border p-2" style="color: #64748b;" pTooltip="List of Body of Knowledge concepts addressed in the {{getSelectedNodeType()}}" 
+                            tooltipPosition="right" showDelay="200" hideDelay="200" 
+                            [style.border-color]="errorMap.get(curriculumNode.id + '.bokConcepts') != undefined ? 'var(--danger-color)' : '' ">
+                            <bokModal [(selectedConcepts)]="curriculumNode.bokConcepts" [label]="'Knowledge Annotations *'"
+                                [style.color]="errorMap.get(curriculumNode.id + '.bokConcepts') != undefined ? 'var(--danger-color)' : '' "></bokModal>
+                        </div>
+                        @if(errorMap.get(curriculumNode.id + '.bokConcepts')) {
+                            <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.bokConcepts')}}</p>
+                        }
+                    </div>
+                    <div>
+                        <text-chips [fieldName]="'Prerequisites *'" [icon]="'pi pi-list-check'" [(chips)]="curriculumNode.prerequisites"
+                                [error]="errorMap.get(curriculumNode.id + '.prerequisites') != undefined" 
+                                pTooltip="Prerequisites describe the knowledge, skills, qualifications, or experiences that a learner is expected to have before starting this {{getSelectedNodeType()}}" 
+                                tooltipPosition="right" showDelay="200" hideDelay="200"></text-chips>
+                        @if(errorMap.get(curriculumNode.id + '.prerequisites')) {
+                            <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.prerequisites')}}</p>
+                        }
+                    </div>
+                    <div>
+                        <custom-select [fieldName]="'EQF Level *'" [selection]="selectedNodeEqf()" (selectionChange)="onEqfChange($event)"
+                                [error]="errorMap.get(curriculumNode.id + '.eqf') != undefined" [optionsName]="'EQF Level'" [filter]="false"
+                                pTooltip="The European Qualifications Framework. Indicates level of knowledge, skills and competences, from 1 (basic) to 8 (highly specialized)." 
+                                tooltipPosition="right" showDelay="200" hideDelay="200"></custom-select>
+                        @if(errorMap.get(curriculumNode.id + '.eqf')) {
+                            <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.eqf')}}</p>
+                        }
+                    </div>
+                    <div>
+                        <p-floatlabel variant="on" class="w-full custom-floatlabel">
+                            <p-iconfield>
+                                <p-inputnumber id="workload" [min]="0" [useGrouping]="false" suffix=" ECTS"
+                                    [class.ng-invalid]="errorMap.get(curriculumNode.id + '.ects') != undefined" [class.ng-dirty]="errorMap.get(curriculumNode.id + '.ects') != undefined" 
+                                    class="custom-input" [(ngModel)]="curriculumNode.ects" fluid tooltipPosition="right" showDelay="200" hideDelay="200"
+                                    pTooltip="Amount of time expected to invest in order to meet the defined learning outcomes, quantified using ECTS"/>
+                                <p-inputicon class="pi pi-clock"/>
+                            </p-iconfield>
+                            <label for="workload">Workload *</label>
+                        </p-floatlabel>
+                        @if(errorMap.get(curriculumNode.id + '.ects')) {
+                            <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.ects')}}</p>
+                        }
+                    </div>
+                    <div>
+                        <div class="custom-border p-2" style="color: #64748b;" tooltipPosition="right" showDelay="200" hideDelay="200"
+                            pTooltip="The total time required to complete this {{getSelectedNodeType()}}." 
+                            [style.border-color]="errorMap.get(curriculumNode.id + '.timeRequired') != undefined ? 'var(--danger-color)' : '' ">
+                            Duration *
+                            <div class="flex gap-3 p-3">
+                                <p-floatlabel variant="on" class="w-full custom-floatlabel">
+                                    <p-iconfield>
+                                        <p-inputnumber id="durationValue" [min]="0" [useGrouping]="false"
+                                            [class.ng-invalid]="errorMap.get(curriculumNode.id + '.timeRequired') != undefined" 
+                                            [class.ng-dirty]="errorMap.get(curriculumNode.id + '.timeRequired') != undefined" 
+                                            class="custom-input" [(ngModel)]="curriculumNode.timeRequired.value" fluid/>
+                                        <p-inputicon class="pi pi-calculator"/>
+                                    </p-iconfield>
+                                    <label for="durationValue">Value</label>
+                                </p-floatlabel>
+                                <p-floatlabel variant="on" class="custom-floatlabel w-full">
+                                    <p-select [inputId]="'durationUnit'" [options]="DURATION_UNIT" [(ngModel)]="curriculumNode.timeRequired.unit"  class="w-full custom-select" 
+                                        [checkmark]="true" optionLabel="label" optionValue="value"/>
+                                    <label [for]="'durationUnit'">Unit</label>
+                                </p-floatlabel>
+                            </div>
+                        </div>
+                        @if(errorMap.get(curriculumNode.id + '.timeRequired')) {
+                            <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.timeRequired')}}</p>
+                        }
+                    </div>
+                    <div>
+                        <multiselect-chips optionsName="Study Areas" fieldName="Study Areas *" [(chips)]="selectedStudyAreas"  icon="pi pi-bookmark"
+                            pTooltip="Specific area(s) of study of the profile. Maintained by the UNESCO Institute for Statistics"
+                            tooltipPosition="top" showDelay="200" hideDelay="200" (chipsChange)="onStudyAreasChange()">
+                        </multiselect-chips>
+                    </div>
+                    <div class="flex flex-column">
+                        <treeselect-chips
+                            [(chips)]="selectedTransversalSkills" (chipsChange)="onTransversalSkillChange()" [treeselectOptions]="transversalSkills" fieldName="Transversal Skills"
+                            pTooltip="Skills considered unrelated to a particular job, task, academic discipline or area of knowledge but that can be used in a wide variety of situations and work settings. Based on the ESCO transversal and cross-sector skills."
+                            tooltipPosition="top" showDelay="200" hideDelay="200"
+                        ></treeselect-chips>
+                        @if(!showCustomTransversalSkills) {
+                            <p-button [rounded]="true" [text]="true" size="small" (onClick)="showCustomTransversalSkills = true"
+                                class="text-button ml-auto mt-1 p-0 text-xs font-italic">Add custom Transversal Skills</p-button>
+                        }
+                    </div>
+                    @if(showCustomTransversalSkills) {
+                        <div>
+                            <text-chips [fieldName]="'Custom Transversal Skills'" [icon]="'pi pi-chart-bar'" [(chips)]="curriculumNode.customTransversalSkills"
+                                    pTooltip="Custom transversal skills related to this {{getSelectedNodeType()}}" 
+                                    tooltipPosition="right" showDelay="200" hideDelay="200"></text-chips>
+                        </div>
+                    }
+                    <div>
+                        <text-chips [fieldName]="'Learning Outcomes *'" [icon]="'pi pi-graduation-cap'" [(chips)]="curriculumNode.learningObjectives"
+                                [error]="errorMap.get(curriculumNode.id + '.learningObjectives') != undefined" 
+                                pTooltip="Learning outcomes describe the knowledge, skills, qualifications, or experiences that a learner is expected to have after completing this {{getSelectedNodeType()}}" 
+                                tooltipPosition="right" showDelay="200" hideDelay="200"></text-chips>
+                        @if(errorMap.get(curriculumNode.id + '.learningObjectives')) {
+                            <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.learningObjectives')}}</p>
+                        }
+                    </div>
+                    // Training Materials component to be added here
+                    <div>
+                        <text-chips [fieldName]="'Bibliography'" [icon]="'pi pi-book'" [(chips)]="curriculumNode.bibliography"
+                                pTooltip="Bibliography describe the recommended reading materials, resources, or references related to this {{getSelectedNodeType()}}" 
+                                tooltipPosition="right" showDelay="200" hideDelay="200"></text-chips>
+                    </div>
+                    // Affiliations component to be added here
+                </div>
+            </ng-template>
+        </p-step-panel>
+    </p-step-panels>
+</p-stepper>

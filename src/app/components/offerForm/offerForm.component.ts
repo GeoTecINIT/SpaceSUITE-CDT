@@ -6,13 +6,9 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { AuthService, ExitWithoutSavingService } from "@eo4geo/ngx-bok-utils";
 import { Router } from "@angular/router";
 import { Subscription, take } from "rxjs";
-import { ConfirmationService, MessageService, TreeNode } from "primeng/api";
-import { InputTextModule } from "primeng/inputtext";
+import { ConfirmationService, MessageService } from "primeng/api";
 import { FormsModule } from "@angular/forms";
-import { InputIconModule } from "primeng/inputicon";
-import { IconFieldModule } from "primeng/iconfield";
 import { FloatLabelModule } from "primeng/floatlabel";
-import { StepperModule } from 'primeng/stepper';
 import { SelectModule } from 'primeng/select';
 import { CurriculumNode } from "../../model/coreModel/curriculumNode";
 import { OfferIndexComponent } from "../offerIndexComponent/offerIndexComponent.component";
@@ -20,30 +16,19 @@ import { UtilsService } from "../../services/useCaseServices/utils.service";
 import { Module, ModuleType } from "../../model/coreModel/module";
 import { TooltipModule } from "primeng/tooltip";
 import { ButtonModule } from "primeng/button";
-import { TextareaModule } from 'primeng/textarea';
 import { Course } from "../../model/coreModel/course";
 import { Lecture } from "../../model/coreModel/lecture";
 import { DialogModule } from "primeng/dialog";
-import { InputNumberModule } from 'primeng/inputnumber';
-import { BokModalComponent } from "../bokModal/bokModal.component";
 import { PanelModule } from "primeng/panel";
-import { TextChipsComponent } from "../textChips/textChips.component";
-import { CustomSelectComponent } from "../customSelect/customSelect.component";
-import { DurationUnit } from "../../model/coreModel/duration";
-import { MultiselectChipsComponent } from "../multiselectChips/multiselectChips.component";
-import { IscedfAreaService } from "../../services/useCaseServices/iscedfArea.service";
-import { ISCEDFArea } from "../../model/coreModel/iscedfArea";
-import { TreeselectChipsComponent } from "../treeselectChips/treeselectChips.component";
-import { ESCOService } from "../../services/useCaseServices/esco.service";
+import { CurriculumNodeFormComponent } from "../curriculumNodeForm/curriculumNodeForm.component";
 
 @Component({
   standalone: true,
   selector: 'offer-form',
   templateUrl: './offerForm.component.html',
   styleUrls: ['./offerForm.component.css'],
-  imports: [ToastModule, ConfirmDialogModule, InputTextModule, FloatLabelModule, FormsModule, InputIconModule, IconFieldModule, PanelModule, InputNumberModule,
-            OfferIndexComponent, StepperModule, SelectModule, TooltipModule, ButtonModule, DialogModule, TextareaModule, BokModalComponent, TextChipsComponent,
-            CustomSelectComponent, MultiselectChipsComponent, TreeselectChipsComponent],
+  imports: [ToastModule, ConfirmDialogModule, FloatLabelModule, FormsModule, PanelModule, OfferIndexComponent, SelectModule, TooltipModule, 
+            ButtonModule, DialogModule, CurriculumNodeFormComponent],
 })
 export class OfferFormComponent {
   @Input() pageName: string = 'Create New Educational Offer';
@@ -54,13 +39,12 @@ export class OfferFormComponent {
 
   rootNodeModalVisible: boolean = false;
   rootNodeModalClosable: boolean = false;
+
   rootNodeType: string | undefined;
   rootNodeModuleType: ModuleType | undefined;
 
   newNodeType: string | undefined;
   newNodeModuleType: ModuleType | undefined;
-
-  showCustomTransversalSkills: boolean = false;
 
   private readonly CHILD_TYPES: Record<string, string[]> = {
     'Root': ['Study Program', 'Module', 'Course', 'Lecture'],
@@ -109,45 +93,6 @@ export class OfferFormComponent {
     'Lecture': [],
   };
 
-  public readonly DURATION_UNIT: object[] = [
-    {
-      label: 'Years',
-      value: DurationUnit.Years
-    },
-    {
-      label: 'Semesters',
-      value: DurationUnit.Semesters
-    },
-    {
-      label: 'Trimesters',
-      value: DurationUnit.Trimesters
-    },
-    {
-      label: 'Months',
-      value: DurationUnit.Months
-    },
-    {
-      label: 'Weeks',
-      value: DurationUnit.Weeks
-    },
-    {
-      label: 'Days',
-      value: DurationUnit.Days
-    },
-    {
-      label: 'Hours',
-      value: DurationUnit.Hours
-    },
-    {
-      label: 'Minutes',
-      value: DurationUnit.Minutes
-    },
-  ]
-
-  public transversalSkills: TreeNode<any>[] = [];
-  public selectedTransversalSkills: string[] = [];
-  public selectedStudyAreas: string[] = [];
-
   private sessionSubscription?: Subscription;
 
   private authService: AuthService = inject(AuthService);
@@ -156,8 +101,6 @@ export class OfferFormComponent {
   private exitWithoutSavingService: ExitWithoutSavingService = inject(ExitWithoutSavingService);
   private router: Router = inject(Router);
   private utilsService: UtilsService = inject(UtilsService);
-  private iscedfAreaService: IscedfAreaService = inject(IscedfAreaService);
-  private escoService: ESCOService = inject(ESCOService);
 
   ngOnInit() {
     this.sessionSubscription = this.authService.getUserState().subscribe ( state => {
@@ -168,19 +111,12 @@ export class OfferFormComponent {
     })
     if (this.inputOffer) {
       this.offer.set(new EducationalOffer(this.inputOffer.root, this.inputOffer));
-      this.selectedTransversalSkills = this.selectedNode().transversalSkills.map(skill => skill.preferredLabel);
-      this.selectedStudyAreas = this.selectedNode().studyAreas.map(area => area.name);
     }
     else this.rootNodeModalVisible = true;
     this.selectedNode.set(this.offer().root);
     this.exitWithoutSavingService.showModalSubject.subscribe(value => {
       if (value) this.confirmExitWithoutSaving()
     });
-    this.escoService.getTransversalSkillsFromJson().pipe(take(1)).subscribe(
-      data => {
-        this.transversalSkills = data;
-      }
-    );
   }
 
   ngOnDestroy() {
@@ -202,23 +138,6 @@ export class OfferFormComponent {
       },
       accept: () => this.exitWithoutSavingService.exitSubject.next(true),
       reject: () => this.exitWithoutSavingService.exitSubject.next(false),
-    });
-  }
-
-  changeSelectedNode(nodeId: string) {
-    this.newNodeType = undefined;
-    this.newNodeModuleType = undefined;
-    const newNode = this.offer().getNodeById(nodeId);
-    if (newNode == undefined) return;
-    this.selectedNode().transversalSkills = this.selectedTransversalSkills.map(skillLabel => {
-      const skillNode = this.transversalSkills.find(skill => skill.data.preferredLabel === skillLabel);
-      return skillNode ? skillNode.data : { preferredLabel: skillLabel };
-    });
-    this.iscedfAreaService.getFieldsByNames(this.selectedStudyAreas).subscribe((fields: ISCEDFArea[]) => {
-      this.selectedNode().studyAreas = fields;
-      this.selectedNode.set(newNode);
-      this.selectedTransversalSkills = newNode.transversalSkills.map(skill => skill.preferredLabel);
-      this.selectedStudyAreas = newNode.studyAreas.map(area => area.name);
     });
   }
 
@@ -245,6 +164,20 @@ export class OfferFormComponent {
 
   getRootModuleTypes(): object[] {
     return this.MODULE_TYPES['Root'];
+  }
+
+  updateSelectedNode() {
+    this.offer.update(o =>
+      Object.assign(Object.create(Object.getPrototypeOf(o)), o)
+    );
+  }
+
+  changeSelectedNode(nodeId: string) {
+    this.newNodeType = undefined;
+    this.newNodeModuleType = undefined;
+    const newNode = this.offer().getNodeById(nodeId);
+    if (newNode == undefined) return;
+    this.selectedNode.set(newNode);
   }
 
   addNewChild() {
@@ -326,34 +259,11 @@ export class OfferFormComponent {
     this.selectedNode.set(this.offer().root);
     this.rootNodeModalVisible = false;
     this.rootNodeModalClosable = false;
-    this.selectedTransversalSkills = [];
-    this.selectedStudyAreas = [];
   }
 
   resetRootNode() {
     this.rootNodeModalVisible = true;
     this.rootNodeModalClosable = true;
-  }
-
-  onNameChange(node: CurriculumNode, value: string) {
-    node.name = value;
-    this.offer.update(o =>
-      Object.assign(Object.create(Object.getPrototypeOf(o)), o)
-    );
-  }
-
-  selectedNodeEqf(): string | undefined {
-    if (this.selectedNode().eqf < 1 || this.selectedNode().eqf > 8) return undefined;
-    return 'EQF ' + this.selectedNode().eqf;
-  }
-
-  onEqfChange(value: string) {
-    const cleanedValue = value.replace('EQF', '').trim();
-    this.selectedNode().eqf = Number(cleanedValue);
-  }
-
-  getSelectedNodeType(): string {
-    return this.utilsService.getNodeType(this.selectedNode());
   }
 
   private generateTimeBasedID() {  

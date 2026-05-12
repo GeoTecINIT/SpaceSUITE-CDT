@@ -29,36 +29,3 @@
     width: 35vw;
   }
 }
-
-.custom-stepper {
-    --p-stepper-step-number-active-color: var(--hover-color);
-    --p-stepper-step-title-active-color: var(--hover-color);
-    --p-stepper-separator-active-background: var(--hover-color);
-    width: 50vw;
-}
-
-.custom-textarea {
-    --p-textarea-invalid-placeholder-color: var(--danger-color);
-    --p-textarea-invalid-border-color: var(--danger-color);
-}
-
-.custom-textarea:hover,
-.custom-textarea:focus {
-    border-color: var(--hover-color) !important;
-}
-
-.textarea-length {
-    position: absolute;
-    bottom: 0.5rem;
-    right: 0.75rem;
-    font-size: 0.75rem;
-    color: #64748b;
-    pointer-events: none;
-}
-
-.text-button {
-    --p-button-text-primary-color: var(--secondary-color);
-    --p-button-text-primary-active-background: color-mix(in srgb, var(--secondary-color) 20%, rgba(0, 0, 0, 0) 80%);
-    --p-button-text-primary-hover-background: color-mix(in srgb, var(--secondary-color) 10%, rgba(0, 0, 0, 0) 90%);
-    --p-datepicker-date-selected-background: var(--secondary-color);
-}
