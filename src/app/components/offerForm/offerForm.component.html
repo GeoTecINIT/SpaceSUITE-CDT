@@ -27,6 +27,7 @@
         </p-panel>
         <div class="flex justify-content-end gap-3">
             <p-button icon="pi pi-refresh" class="delete-button" label="Reset Root Node" (onClick)="resetRootNode()"></p-button>
+            <p-button icon="pi pi-trash" class="delete-button" label="Delete Selected Node" (onClick)="deleteModal($event)"></p-button>
             <p-button class="custom-button" label="Submit" disabled></p-button>
         </div>
     </div>

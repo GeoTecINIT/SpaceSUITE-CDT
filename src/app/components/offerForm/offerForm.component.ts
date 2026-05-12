@@ -266,6 +266,58 @@ export class OfferFormComponent {
     this.rootNodeModalClosable = true;
   }
 
+  deleteModal(event: Event) {
+    if (this.selectedNode().id === this.offer().root.id) {
+      this.messageService.add({ 
+        severity: 'error', 
+        summary: 'Error', 
+        detail: 'Invalid node selection. Root node cannot be deleted, try again with other node.', 
+        life: 3000, 
+        closable: true 
+      });
+    }
+    else {
+      this.confirmationService.confirm({
+        target: event.target as EventTarget,
+        message: 'Do you want to delete the selected curriculum node?',
+        header: 'Delete Node',
+        icon: 'pi pi-info-circle',
+        rejectLabel: 'Cancel',
+        rejectButtonProps: {
+          label: 'Cancel',
+          severity: 'secondary',
+        },
+        acceptButtonProps: {
+          label: 'Delete',
+          severity: 'primary',
+        },
+
+        accept: () => {
+          this.deleteSelectedNode();
+        },
+        reject: () => {},
+      });
+    }
+  }
+
+  private deleteSelectedNode() {
+    this.offer.update(offer => {
+      offer.removeNode(this.selectedNode().id)
+      return Object.assign(
+        Object.create(Object.getPrototypeOf(offer)),
+        offer
+      );
+    });
+    this.selectedNode.set(this.offer().root);
+    this.messageService.add({ 
+      severity: 'info', 
+      summary: 'Info',
+      detail: 'Node deleted without problems.', 
+      life: 3000, 
+      closable: true 
+    });
+  }
+
   private generateTimeBasedID() {  
     const now = new Date();  
   
