@@ -150,19 +150,19 @@
                             <div class="flex flex-column sm:flex-row gap-3 p-3">
                                 <p-floatlabel variant="on" class="custom-floatlabel flex-1">
                                     <p-iconfield>
-                                        <input pInputText id="name" autocomplete="off" class="w-full custom-input"
+                                        <input pInputText [id]="'matName' + idx" autocomplete="off" class="w-full custom-input"
                                             [(ngModel)]="mat.title"/>
                                         <p-inputicon class="pi pi-pencil"/>
                                     </p-iconfield>
-                                    <label for="title">Title</label>
+                                    <label [for]="'matName' + idx">Title</label>
                                 </p-floatlabel>
                                 <p-floatlabel variant="on" class="custom-floatlabel flex-1">
                                     <p-iconfield>
-                                        <input pInputText id="name" autocomplete="off" class="w-full custom-input"
+                                        <input pInputText [id]="'matUrl' + idx" autocomplete="off" class="w-full custom-input"
                                             [(ngModel)]="mat.url"/>
                                         <p-inputicon class="pi pi-pencil"/>
                                     </p-iconfield>
-                                    <label for="title">URL</label>
+                                    <label [for]="'matUrl' + idx">URL</label>
                                 </p-floatlabel>
                                 <p-button icon="pi pi-trash" rounded class="delete-button" (onClick)="deleteTrainingMaterial(idx)"></p-button>
                             </div>
@@ -190,17 +190,17 @@
                                 <div class="flex flex-column sm:flex-row gap-3 p-3">
                                     <p-floatlabel variant="on" class="custom-floatlabel flex-1">
                                         <p-iconfield>
-                                            <input pInputText id="name" autocomplete="off" class="w-full custom-input" [(ngModel)]="mat.name"/>
+                                            <input pInputText [id]="'affiliationName' + idx" autocomplete="off" class="w-full custom-input" [(ngModel)]="mat.name"/>
                                             <p-inputicon class="pi pi-pencil"/>
                                         </p-iconfield>
-                                        <label for="title">Name *</label>
+                                        <label [for]="'affiliationName' + idx">Name *</label>
                                     </p-floatlabel>
                                     <p-floatlabel variant="on" class="custom-floatlabel flex-1">
                                         <p-iconfield>
-                                            <input pInputText id="name" autocomplete="off" class="w-full custom-input" [(ngModel)]="mat.url"/>
+                                            <input pInputText [id]="'affiliationUrl' + idx" autocomplete="off" class="w-full custom-input" [(ngModel)]="mat.url"/>
                                             <p-inputicon class="pi pi-pencil"/>
                                         </p-iconfield>
-                                        <label for="title">URL</label>
+                                        <label [for]="'affiliationUrl' + idx">URL</label>
                                     </p-floatlabel>
                                     <p-button icon="pi pi-trash" rounded class="delete-button" (onClick)="deleteAffiliation(idx)"></p-button>
                                 </div>
@@ -216,6 +216,42 @@
                             <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.affiliations')}}</p>
                         }
                     </div>
+                    @if(selectedCourse) {
+                        <div>
+                            <p-floatlabel variant="on" class="custom-floatlabel w-full">
+                                <p-select [inputId]="'courseType'" [options]="COURSE_TYPE" [(ngModel)]="selectedCourse.courseType"  class="w-full custom-select" 
+                                    [checkmark]="true" optionLabel="label" optionValue="value" tooltipPosition="right" showDelay="200" hideDelay="200"
+                                    pTooltip="Select the type of course. This classification determines how the course fits within the curriculum structure."/>
+                                <label [for]="'courseType'">Course Type</label>
+                            </p-floatlabel>
+                        </div>
+                    }
+                    @if(selectedCourse) {
+                        <div>
+                            <p-floatlabel variant="on" class="custom-floatlabel">
+                                <textarea id="assesment" pTextarea [(ngModel)]="selectedCourse.assesment"
+                                    [class.ng-invalid]="errorMap.get(curriculumNode.id + '.assesment') != undefined" [class.ng-dirty]="errorMap.get(curriculumNode.id + '.assesment') != undefined"
+                                    rows="4" class="w-full custom-textarea m-0"
+                                    pTooltip="Describe how students will be evaluated in this course. Include assessment methods (exams, projects, participation), grading criteria, and any relevant deadlines or requirements." 
+                                    tooltipPosition="right" showDelay="200" hideDelay="200" maxlength="1000"></textarea>
+                                <div class="textarea-length" [style]="errorMap.get(curriculumNode.id + '.assesment') != undefined ? 'color: var(--danger-color)' : ''">
+                                    <span>{{selectedCourse.assesment.length + ' '}}</span>
+                                    <span>/ 1000</span>
+                                </div>
+                                <label for="assesment">Assesment *</label>
+                            </p-floatlabel>
+                            @if(errorMap.get(curriculumNode.id + '.assesment')) {
+                                <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.assesment')}}</p>
+                            }
+                        </div>
+                    }
+                    @if(selectedLecture) {
+                        <div class="flex w-full">
+                            <p-selectbutton [options]="LECTURE_ISPRACTICAL" [(ngModel)]="selectedLecture.isPractical" optionLabel="label" optionValue="value"
+                                pTooltip="Specifies whether this lecture is theoretical or practical. Practical lectures involve hands-on activities, labs, or exercises." allowEmpty="false"
+                                tooltipPosition="right" showDelay="200" hideDelay="200"/>
+                        </div>
+                    }
                 </div>
             </ng-template>
         </p-step-panel>

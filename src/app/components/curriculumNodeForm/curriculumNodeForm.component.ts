@@ -30,6 +30,9 @@ import { UtilsService } from "../../services/useCaseServices/utils.service";
 import { DividerModule } from "primeng/divider";
 import { TrainingMaterial } from "../../model/coreModel/trainingMaterial";
 import { Affiliation } from "../../model/coreModel/affiliation";
+import { Course, CourseType } from "../../model/coreModel/course";
+import { Lecture } from "../../model/coreModel/lecture";
+import { SelectButtonModule } from "primeng/selectbutton";
 
 @Component({
   standalone: true,
@@ -38,7 +41,7 @@ import { Affiliation } from "../../model/coreModel/affiliation";
   styleUrls: ['./curriculumNodeForm.component.css'],
   imports: [ToastModule, ConfirmDialogModule, InputTextModule, FloatLabelModule, FormsModule, InputIconModule, IconFieldModule, PanelModule, InputNumberModule,
             StepperModule, SelectModule, TooltipModule, ButtonModule, DialogModule, TextareaModule, BokModalComponent, TextChipsComponent,
-            CustomSelectComponent, MultiselectChipsComponent, TreeselectChipsComponent, DividerModule],
+            CustomSelectComponent, MultiselectChipsComponent, TreeselectChipsComponent, DividerModule, SelectButtonModule],
 })
 export class CurriculumNodeFormComponent {
   @Input() errorMap: Map<string, string | undefined> = new Map();
@@ -84,7 +87,24 @@ export class CurriculumNodeFormComponent {
       label: 'Minutes',
       value: DurationUnit.Minutes
     },
-  ]
+  ];
+
+  public readonly COURSE_TYPE: object[] = [
+    {
+      label: 'Common',
+      value: CourseType.Common
+    },
+    {
+      label: 'Elective',
+      value: CourseType.Elective
+    },
+    {
+      label: 'Specialization',
+      value: CourseType.Specialization
+    }
+  ];
+
+  public readonly LECTURE_ISPRACTICAL: any[] = [{ label: 'Practical', value: true },{ label: 'Theoretical', value: false }];
 
   private iscedfAreaService: IscedfAreaService = inject(IscedfAreaService);
   private escoService: ESCOService = inject(ESCOService);
@@ -158,5 +178,17 @@ export class CurriculumNodeFormComponent {
 
   deleteAffiliation(index: number) {
     this.curriculumNode.affiliations.splice(index, 1);
+  }
+
+  get selectedCourse(): Course | null {
+    return this.curriculumNode instanceof Course 
+      ? this.curriculumNode as Course 
+      : null;
+  }
+
+  get selectedLecture(): Lecture | null {
+    return this.curriculumNode instanceof Lecture 
+      ? this.curriculumNode as Lecture 
+      : null;
   }
 }
