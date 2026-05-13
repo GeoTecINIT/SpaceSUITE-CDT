@@ -27,6 +27,9 @@ import { TreeselectChipsComponent } from "../treeselectChips/treeselectChips.com
 import { ESCOService } from "../../services/useCaseServices/esco.service";
 import { DurationUnit } from "../../model/coreModel/duration";
 import { UtilsService } from "../../services/useCaseServices/utils.service";
+import { DividerModule } from "primeng/divider";
+import { TrainingMaterial } from "../../model/coreModel/trainingMaterial";
+import { Affiliation } from "../../model/coreModel/affiliation";
 
 @Component({
   standalone: true,
@@ -35,7 +38,7 @@ import { UtilsService } from "../../services/useCaseServices/utils.service";
   styleUrls: ['./curriculumNodeForm.component.css'],
   imports: [ToastModule, ConfirmDialogModule, InputTextModule, FloatLabelModule, FormsModule, InputIconModule, IconFieldModule, PanelModule, InputNumberModule,
             StepperModule, SelectModule, TooltipModule, ButtonModule, DialogModule, TextareaModule, BokModalComponent, TextChipsComponent,
-            CustomSelectComponent, MultiselectChipsComponent, TreeselectChipsComponent],
+            CustomSelectComponent, MultiselectChipsComponent, TreeselectChipsComponent, DividerModule],
 })
 export class CurriculumNodeFormComponent {
   @Input() errorMap: Map<string, string | undefined> = new Map();
@@ -137,5 +140,23 @@ export class CurriculumNodeFormComponent {
 
   getSelectedNodeType(): string {
     return this.utilsService.getNodeType(this.curriculumNode);
+  }
+
+  addTrainingMaterial() {
+    const newMat = new TrainingMaterial();
+    this.curriculumNode.trainingMaterials.push(newMat);
+  }
+
+  deleteTrainingMaterial(index: number) {
+    this.curriculumNode.trainingMaterials.splice(index, 1);
+  }
+
+  addAffiliation() {
+    const newAff = new Affiliation();
+    this.curriculumNode.affiliations.push(newAff);
+  }
+
+  deleteAffiliation(index: number) {
+    this.curriculumNode.affiliations.splice(index, 1);
   }
 }

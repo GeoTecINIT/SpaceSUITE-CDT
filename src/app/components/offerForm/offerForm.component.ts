@@ -261,7 +261,7 @@ export class OfferFormComponent {
     this.rootNodeModalClosable = false;
   }
 
-  resetRootNode() {
+  replaceRootNode() {
     this.rootNodeModalVisible = true;
     this.rootNodeModalClosable = true;
   }

@@ -95,9 +95,9 @@ export class OfferValidationService {
       this.addError(errors, `${base}.affiliations`, 'At least one affiliation is required.');
     }
 
-    node.affiliations.forEach((affiliation, index) => {
+    node.affiliations.forEach((affiliation) => {
       if (this.isBlank(affiliation.name)) {
-        this.addError(errors, `${base}.affiliations.${index}.name`, 'Affiliation name is required.');
+        this.addError(errors, `${base}.affiliations`, 'Affiliation name is required.');
       }
     });
 

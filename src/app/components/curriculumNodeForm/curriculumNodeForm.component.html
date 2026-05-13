@@ -143,13 +143,79 @@
                             <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.learningObjectives')}}</p>
                         }
                     </div>
-                    // Training Materials component to be added here
+                    <div class="custom-border p-2" style="color: #64748b;" tooltipPosition="right" showDelay="200" hideDelay="200"
+                            pTooltip="Resources and materials used to support the teaching of this {{getSelectedNodeType()}}.">
+                        <div class="ml-1">Training Materials</div>
+                        @for(mat of curriculumNode.trainingMaterials; track mat.title; let idx = $index) {
+                            <div class="flex flex-column sm:flex-row gap-3 p-3">
+                                <p-floatlabel variant="on" class="custom-floatlabel flex-1">
+                                    <p-iconfield>
+                                        <input pInputText id="name" autocomplete="off" class="w-full custom-input"
+                                            [(ngModel)]="mat.title"/>
+                                        <p-inputicon class="pi pi-pencil"/>
+                                    </p-iconfield>
+                                    <label for="title">Title</label>
+                                </p-floatlabel>
+                                <p-floatlabel variant="on" class="custom-floatlabel flex-1">
+                                    <p-iconfield>
+                                        <input pInputText id="name" autocomplete="off" class="w-full custom-input"
+                                            [(ngModel)]="mat.url"/>
+                                        <p-inputicon class="pi pi-pencil"/>
+                                    </p-iconfield>
+                                    <label for="title">URL</label>
+                                </p-floatlabel>
+                                <p-button icon="pi pi-trash" rounded class="delete-button" (onClick)="deleteTrainingMaterial(idx)"></p-button>
+                            </div>
+                            @if(idx != curriculumNode.trainingMaterials.length - 1) {
+                                <p-divider></p-divider>
+                            }
+                        }
+                        <div class="mt-2">
+                            <p-button icon="pi pi-plus" rounded class="custom-button" (onClick)="addTrainingMaterial()"></p-button>
+                        </div>
+                    </div>
                     <div>
                         <text-chips [fieldName]="'Bibliography'" [icon]="'pi pi-book'" [(chips)]="curriculumNode.bibliography"
-                                pTooltip="Bibliography describe the recommended reading materials, resources, or references related to this {{getSelectedNodeType()}}" 
-                                tooltipPosition="right" showDelay="200" hideDelay="200"></text-chips>
+                            pTooltip="Bibliography describe the recommended reading materials, resources, or references related to this {{getSelectedNodeType()}}" 
+                            tooltipPosition="right" showDelay="200" hideDelay="200"></text-chips>
                     </div>
-                    // Affiliations component to be added here
+                    <div>
+                        <div class="custom-border p-2" style="color: #64748b;" tooltipPosition="right" showDelay="200" hideDelay="200"
+                            pTooltip="Institutions or organizations associated with this {{getSelectedNodeType()}}."
+                            [style.border-color]="errorMap.get(curriculumNode.id + '.affiliations') != undefined ? 'var(--danger-color)' : '' ">
+                            <div class="ml-1" [style]="errorMap.get(curriculumNode.id + '.affiliations') != undefined ? 'color: var(--danger-color);' : ''">
+                                Affiliations *
+                            </div>
+                            @for(mat of curriculumNode.affiliations; track mat.name; let idx = $index) {
+                                <div class="flex flex-column sm:flex-row gap-3 p-3">
+                                    <p-floatlabel variant="on" class="custom-floatlabel flex-1">
+                                        <p-iconfield>
+                                            <input pInputText id="name" autocomplete="off" class="w-full custom-input" [(ngModel)]="mat.name"/>
+                                            <p-inputicon class="pi pi-pencil"/>
+                                        </p-iconfield>
+                                        <label for="title">Name *</label>
+                                    </p-floatlabel>
+                                    <p-floatlabel variant="on" class="custom-floatlabel flex-1">
+                                        <p-iconfield>
+                                            <input pInputText id="name" autocomplete="off" class="w-full custom-input" [(ngModel)]="mat.url"/>
+                                            <p-inputicon class="pi pi-pencil"/>
+                                        </p-iconfield>
+                                        <label for="title">URL</label>
+                                    </p-floatlabel>
+                                    <p-button icon="pi pi-trash" rounded class="delete-button" (onClick)="deleteAffiliation(idx)"></p-button>
+                                </div>
+                                @if(idx != curriculumNode.affiliations.length - 1) {
+                                    <p-divider></p-divider>
+                                }
+                            }
+                            <div class="mt-2">
+                                <p-button icon="pi pi-plus" rounded class="custom-button" (onClick)="addAffiliation()"></p-button>
+                            </div>
+                        </div>
+                        @if(errorMap.get(curriculumNode.id + '.affiliations')) {
+                            <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.affiliations')}}</p>
+                        }
+                    </div>
                 </div>
             </ng-template>
         </p-step-panel>

@@ -3,10 +3,10 @@ export class TrainingMaterial {
   public description: string;
   public url: string;
 
-  constructor(partialMaterial: Partial<TrainingMaterial>) {
-    this.title = partialMaterial.title || '';
-    this.description = partialMaterial.description || '';
-    this.url = partialMaterial.url || '';
+  constructor(partialMaterial?: Partial<TrainingMaterial>) {
+    this.title = partialMaterial?.title || '';
+    this.description = partialMaterial?.description || '';
+    this.url = partialMaterial?.url || '';
   }
 
   public toPlainObject(): any {
