@@ -75,6 +75,11 @@ body {
     --p-floatlabel-focus-color: var(--hover-color);
 }
 
+.invalid-floatlabel {
+    --p-floatlabel-color: var(--danger-color);
+    --p-floatlabel-active-color: var(--danger-color);
+}
+
 .custom-input {
     --p-inputtext-focus-border-color: var(--hover-color);
     --p-inputtext-hover-border-color: var(--hover-color);

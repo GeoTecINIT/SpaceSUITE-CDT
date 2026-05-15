@@ -180,6 +180,13 @@ export class CurriculumNodeFormComponent {
     this.curriculumNode.affiliations.splice(index, 1);
   }
 
+  goToNextStep(callback: (nextStepValue: number) => void, index: number) {
+    callback(index);
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 0);
+  }
+
   get selectedCourse(): Course | null {
     return this.curriculumNode instanceof Course 
       ? this.curriculumNode as Course 

@@ -2,12 +2,13 @@
 <p-confirmdialog />
 <h2 class="flex justify-content-center">{{pageName}}</h2>
 <div class="flex flex-column lg:flex-row lg:justify-content-between align-items-center lg:align-items-start p-4 gap-4">
-    <curriuclum-node-form class="flex w-full lg:w-auto" [curriculumNode]="this.selectedNode()" (nodeNameChange)="updateSelectedNode()" [errorMap]="this.errorMap"></curriuclum-node-form>
+    <curriuclum-node-form class="flex w-full lg:w-auto" [curriculumNode]="this.selectedNode()" (nodeNameChange)="updateSelectedNode()" 
+        [errorMap]="this.errorMap"></curriuclum-node-form>
     <div class="offer-index-column flex flex-column gap-3">
         <offer-index-component [offer]="offer()" [selectedNode]="selectedNode().id" (selectedNodeChanged)="changeSelectedNode($event)"></offer-index-component>
         <p-panel class="custom-panel">
             <div class="font-bold mb-3">Add New Node</div>
-            <div class="flex flex-column sm:flex-row gap-3">
+            <div class="flex flex-column sm:flex-row gap-3 mb-4">
                 <p-floatlabel variant="on" class="custom-floatlabel w-full">
                     <p-select [inputId]="'newNodeType'" [options]="getValidChildTypes()" [(ngModel)]="newNodeType" class="w-full custom-select" [checkmark]="true"
                         pTooltip="The new node type" tooltipPosition="bottom" showDelay="200" hideDelay="200" [disabled]="getValidChildTypes().length <= 0"/>
@@ -24,11 +25,37 @@
                 <p-button icon="pi pi-plus" rounded [disabled]="newNodeType == undefined || (newNodeType == 'Module' && newNodeModuleType == undefined)" 
                     class="custom-button" (onClick)="addNewChild()"></p-button>
             </div>
+            <div class="font-bold mb-3">Manage Nodes</div>
+            <div class="flex justify-content-between gap-3">
+                <p-button icon="pi pi-refresh" class="delete-button" label="Replace Root Node" (onClick)="replaceRootNode()"></p-button>
+                <p-button icon="pi pi-trash" [disabled]="selectedNode().id === offer().root.id" class="delete-button" label="Delete Selected Node" (onClick)="deleteModal($event)"></p-button>
+            </div>
         </p-panel>
-        <div class="flex justify-content-end gap-3">
-            <p-button icon="pi pi-refresh" class="delete-button" label="Replace Root Node" (onClick)="replaceRootNode()"></p-button>
-            <p-button icon="pi pi-trash" [disabled]="selectedNode().id === offer().root.id" class="delete-button" label="Delete Selected Node" (onClick)="deleteModal($event)"></p-button>
-            <p-button class="custom-button" label="Submit" disabled></p-button>
+        <p-panel class="custom-panel">
+            <div class="font-bold mb-3">Organization & Division</div>
+            <div class="flex flex-column sm:flex-row gap-3 mb-4">
+                <p-floatlabel variant="on" class="custom-floatlabel w-full" [class.invalid-floatlabel]="errorMap.get('organization') != undefined">
+                    <p-select inputId="orgId" [options]="organizations" (ngModelChange)="loadDivisions($event)"
+                        [ngModel]="this.offer().orgId == '' ? undefined : {value: this.offer().orgId, label: this.offer().orgName}"
+                        class="w-full custom-select" optionLabel="label" [checkmark]="true"
+                        [class.invalid-select]="errorMap.get('organization') != undefined"
+                        pTooltip="The organization under which the resource is to be registered" 
+                        tooltipPosition="right" showDelay="200" hideDelay="200"/>
+                    <label for="orgId">Organization *</label>
+                </p-floatlabel>
+                <p-floatlabel variant="on" class="custom-floatlabel w-full">
+                    <p-select [options]="divisions" [(ngModel)]="this.offer().division" class="w-full custom-select" 
+                        [disabled]="divisions.length == 0" [checkmark]="true" inputId="division"
+                        pTooltip="The organization division under which the resource is to be registered" 
+                        tooltipPosition="right" showDelay="200" hideDelay="200"/>
+                    <label for="division">Division</label>
+                </p-floatlabel>
+            </div>
+        </p-panel>
+        <div class="flex justify-content-between gap-3">
+            <p-button icon="pi pi-arrow-left" severity="secondary" class="custom-secondary-button" (onClick)="returnToHomepage()"
+                [label]="'Return to ' + (inputOffer != undefined ? 'offer' : 'homepage')"></p-button>
+            <p-button class="custom-button" label="Submit" (onClick)="submitEducationalOffer()"></p-button>
         </div>
     </div>
 </div>

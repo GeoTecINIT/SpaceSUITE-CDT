@@ -1,12 +1,3 @@
-.custom-floatlabel {
-    --p-floatlabel-focus-color: var(--hover-color);
-}
-
-.invalid-floatlabel {
-    --p-floatlabel-color: var(--danger-color);
-    --p-floatlabel-active-color: var(--danger-color);
-}
-
 .custom-button {
     --p-button-primary-color: white;
     --p-button-primary-background: var(--secondary-color);

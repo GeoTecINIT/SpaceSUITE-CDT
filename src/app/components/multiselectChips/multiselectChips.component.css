@@ -45,3 +45,8 @@
         transform: scale(1);
     }
 }
+
+.invalid-multiselect {
+    --p-multiselect-border-color: var(--danger-color);
+    --p-multiselect-dropdown-color: var(--danger-color);
+}

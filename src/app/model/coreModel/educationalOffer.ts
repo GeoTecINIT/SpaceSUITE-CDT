@@ -25,7 +25,7 @@ export class EducationalOffer {
   public userId: string;
   public orgId: string;
   public orgName: string;
-  public division: string;
+  public division?: string;
 
   constructor(rootNode: CurriculumNode, partialOffer?: Partial<EducationalOffer>) {
     this.id = partialOffer?.id || '';
@@ -36,7 +36,7 @@ export class EducationalOffer {
     this.userId = partialOffer?.userId || '';
     this.orgId = partialOffer?.orgId || '';
     this.orgName = partialOffer?.orgName || '';
-    this.division = partialOffer?.division || '';
+    this.division = partialOffer?.division;
   }
 
   public getNodeById(id: string): CurriculumNode | undefined {

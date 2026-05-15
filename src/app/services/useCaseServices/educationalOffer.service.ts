@@ -44,7 +44,7 @@ export class EducationalOfferService {
     throw new Error('NOT IMPLEMENTED');
   }
 
-    public getOffersOrganizations(): Observable<string[]> {
+  public getOffersOrganizations(): Observable<string[]> {
     return this.offerMap.asObservable().pipe(
       map(offers => {
         if (offers == undefined || offers.size == 0) return [];

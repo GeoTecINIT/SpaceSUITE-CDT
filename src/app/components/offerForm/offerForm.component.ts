@@ -5,7 +5,7 @@ import { ToastModule } from "primeng/toast";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { AuthService, ExitWithoutSavingService } from "@eo4geo/ngx-bok-utils";
 import { Router } from "@angular/router";
-import { Subscription, take } from "rxjs";
+import { catchError, of, Subscription, take } from "rxjs";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { FormsModule } from "@angular/forms";
 import { FloatLabelModule } from "primeng/floatlabel";
@@ -21,6 +21,9 @@ import { Lecture } from "../../model/coreModel/lecture";
 import { DialogModule } from "primeng/dialog";
 import { PanelModule } from "primeng/panel";
 import { CurriculumNodeFormComponent } from "../curriculumNodeForm/curriculumNodeForm.component";
+import { EducationalOfferService } from "../../services/useCaseServices/educationalOffer.service";
+import { OfferValidationService } from "../../services/useCaseServices/offerValidation.service";
+import { OrganizationDBService } from "../../services/databaseServices/organizationDB.service";
 
 @Component({
   standalone: true,
@@ -35,7 +38,7 @@ export class OfferFormComponent {
   @Input() inputOffer?: EducationalOffer;
   offer: WritableSignal<EducationalOffer> = signal(new EducationalOffer(new StudyProgram(undefined, this.generateTimeBasedID())));
   selectedNode: WritableSignal<CurriculumNode> = signal<CurriculumNode>(this.offer().root);
-  errorMap: Map<string, string | undefined> = new Map();
+  errorMap: Map<string, string> = new Map();
 
   rootNodeModalVisible: boolean = false;
   rootNodeModalClosable: boolean = false;
@@ -93,7 +96,13 @@ export class OfferFormComponent {
     'Lecture': [],
   };
 
+  organizations: object[] = [];
+  divisions: string[] = [];
+
+  loading: boolean = false;
+
   private sessionSubscription?: Subscription;
+  private userOrgsSubscription?: Subscription;
 
   private authService: AuthService = inject(AuthService);
   private confirmationService: ConfirmationService = inject(ConfirmationService);
@@ -101,12 +110,24 @@ export class OfferFormComponent {
   private exitWithoutSavingService: ExitWithoutSavingService = inject(ExitWithoutSavingService);
   private router: Router = inject(Router);
   private utilsService: UtilsService = inject(UtilsService);
+  private educationalOfferService: EducationalOfferService = inject(EducationalOfferService);
+  private offerValidationService: OfferValidationService = inject(OfferValidationService);
+  private organizationDBService: OrganizationDBService = inject(OrganizationDBService);
 
   ngOnInit() {
     this.sessionSubscription = this.authService.getUserState().subscribe ( state => {
       if (!state?.logged) {
         this.exitWithoutSavingService.bypassGuard.next(true);
         this.router.navigate(['']);
+      }
+      else if (!this.inputOffer) {
+        this.offer.update(offer => {
+          offer.userId = state.uid;
+          return Object.assign(
+            Object.create(Object.getPrototypeOf(offer)),
+            offer
+          );
+        });
       }
     })
     if (this.inputOffer) {
@@ -116,6 +137,13 @@ export class OfferFormComponent {
     this.selectedNode.set(this.offer().root);
     this.exitWithoutSavingService.showModalSubject.subscribe(value => {
       if (value) this.confirmExitWithoutSaving()
+    });
+
+    this.userOrgsSubscription = this.organizationDBService.getUserOrganizations().subscribe(organizations => {
+      this.organizations = [];
+      organizations.forEach(organization =>
+        this.organizations.push({label: organization.name, value: organization._id})
+      )
     });
   }
 
@@ -298,6 +326,61 @@ export class OfferFormComponent {
         reject: () => {},
       });
     }
+  }
+
+  returnToHomepage() {
+    if (this.inputOffer != undefined) this.router.navigate(['offer/' + this.inputOffer.id]);
+    else this.router.navigate(['']);
+  }
+
+  submitEducationalOffer() {
+    this.loading = true;
+    this.exitWithoutSavingService.bypassGuard.next(true);
+    this.errorMap = this.offerValidationService.validateEducationalOffer(this.offer());
+    if (this.errorMap.size == 0) {
+      this.educationalOfferService.submitEducationalOffer(this.offer(), this.inputOffer).pipe(
+        take(1),
+        catchError( () => {
+          this.loading = false;
+          this.messageService.add({ 
+            severity: 'error', 
+            summary: 'Error', 
+            detail: 'Something went wrong. Try again later or contact the administrator.', 
+            life: 3000, 
+            closable: true 
+          });
+          return of(null)
+        })
+      ).subscribe(() => {
+        this.loading = false;
+        this.router.navigate(
+            [''], 
+            { 
+              queryParams: { 
+                submited: true, 
+                mode: this.inputOffer != undefined ? 'update' : 'create' 
+              } 
+            }
+          );
+      });
+    }
+    else {
+      this.loading = false;
+      this.messageService.add({ 
+        severity: 'error', 
+        summary: 'Error', 
+        detail: 'There are incomplete mandatory fields. Please review the form and try to submit again.', 
+        life: 3000, 
+        closable: true 
+      });
+    }
+  }
+
+  loadDivisions(newValue: {label: string, value: string}) {
+    this.offer().orgId = newValue.value;
+    this.offer().orgName = newValue.label;
+    this.offer().division = undefined;
+    this.organizationDBService.getOrganizationDivisions(this.offer().orgId).subscribe(divisions => this.divisions = divisions);
   }
 
   private deleteSelectedNode() {

@@ -10,8 +10,8 @@ import { CurriculumNode } from '../../model/coreModel/curriculumNode';
 })
 export class OfferValidationService {
 
-  public validateEducationalOffer(offer: EducationalOffer): Record<string, string[]> {
-    const errors: Record<string, string[]> = {};
+  public validateEducationalOffer(offer: EducationalOffer): Map<string, string> {
+    const errors: Map<string, string> = new Map();
 
     this.validateOfferFields(offer, errors);
 
@@ -22,8 +22,8 @@ export class OfferValidationService {
     return errors;
   }
 
-  private addError(errors: Record<string, string[]>, path: string, message: string) {
-    (errors[path] ??= []).push(message);
+  private addError(errors: Map<string, string>, path: string, message: string) {
+    errors.set(path, message);
   }
 
   private isBlank(value?: string | null): boolean {
@@ -34,7 +34,7 @@ export class OfferValidationService {
     return value instanceof Date && !Number.isNaN(value.getTime());
   }
 
-  private validateOfferFields(offer: EducationalOffer, errors: Record<string, string[]>): void {
+  private validateOfferFields(offer: EducationalOffer, errors: Map<string, string>): void {
     if (!this.isValidDate(offer.createdAt)) {
       this.addError(errors, 'createdAt', 'Creation date is invalid.');
     }
@@ -52,7 +52,7 @@ export class OfferValidationService {
     }
   }
 
-  private validateNode(node: CurriculumNode, errors: Record<string, string[]>): void {
+  private validateNode(node: CurriculumNode, errors: Map<string, string>): void {
     const base = `${node.id}`;
 
     if (this.isBlank(node.name)) {
@@ -83,10 +83,6 @@ export class OfferValidationService {
       this.addError(errors, `${base}.studyAreas`, 'At least one study area is required.');
     }
 
-    if (node.transversalSkills.length === 0 && node.customTransversalSkills.length === 0) {
-      this.addError(errors, `${base}.transversalSkills`, 'At least one transversal skill is required.');
-    }
-
     if (node.learningObjectives.length === 0) {
       this.addError(errors, `${base}.learningObjectives`, 'At least one learning objective is required.');
     }
@@ -114,19 +110,19 @@ export class OfferValidationService {
     }
   }
 
-  private validateLecture(node: Lecture, errors: Record<string, string[]>, base: string): void {
+  private validateLecture(node: Lecture, errors: Map<string, string>, base: string): void {
     if (typeof node.isPractical !== 'boolean') {
       this.addError(errors, `${base}.isPractical`, 'isPractical is required.');
     }
   }
 
-  private validateCourse(node: Course, errors: Record<string, string[]>, base: string): void {
+  private validateCourse(node: Course, errors: Map<string, string>, base: string): void {
     if (this.isBlank(node.assesment)) {
       this.addError(errors, `${base}.assesment`, 'Assessment is required.');
     }
   }
 
-  private validateModule(node: Module, errors: Record<string, string[]>, base: string): void {
+  private validateModule(node: Module, errors: Map<string, string>, base: string): void {
     if (node.moduleType === undefined || node.moduleType === null) {
       this.addError(errors, `${base}.moduleType`, 'Module type is required.');
     }
