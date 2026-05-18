@@ -24,6 +24,7 @@ import { CurriculumNodeFormComponent } from "../curriculumNodeForm/curriculumNod
 import { EducationalOfferService } from "../../services/useCaseServices/educationalOffer.service";
 import { OfferValidationService } from "../../services/useCaseServices/offerValidation.service";
 import { OrganizationDBService } from "../../services/databaseServices/organizationDB.service";
+import { SelectButtonModule } from "primeng/selectbutton";
 
 @Component({
   standalone: true,
@@ -31,7 +32,7 @@ import { OrganizationDBService } from "../../services/databaseServices/organizat
   templateUrl: './offerForm.component.html',
   styleUrls: ['./offerForm.component.css'],
   imports: [ToastModule, ConfirmDialogModule, FloatLabelModule, FormsModule, PanelModule, OfferIndexComponent, SelectModule, TooltipModule, 
-            ButtonModule, DialogModule, CurriculumNodeFormComponent],
+            ButtonModule, DialogModule, CurriculumNodeFormComponent, SelectButtonModule],
 })
 export class OfferFormComponent {
   @Input() pageName: string = 'Create New Educational Offer';
@@ -95,6 +96,8 @@ export class OfferFormComponent {
     ],
     'Lecture': [],
   };
+
+  public readonly IS_PUBLIC: any[] = [{ label: 'Public', value: true },{ label: 'Private', value: false }];
 
   organizations: object[] = [];
   divisions: string[] = [];
