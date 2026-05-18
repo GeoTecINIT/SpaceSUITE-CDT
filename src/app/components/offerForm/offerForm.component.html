@@ -40,14 +40,14 @@
                         class="w-full custom-select" optionLabel="label" [checkmark]="true"
                         [class.invalid-select]="errorMap.get('organization') != undefined"
                         pTooltip="The organization under which the resource is to be registered" 
-                        tooltipPosition="right" showDelay="200" hideDelay="200"/>
+                        tooltipPosition="bottom" showDelay="200" hideDelay="200"/>
                     <label for="orgId">Organization *</label>
                 </p-floatlabel>
                 <p-floatlabel variant="on" class="custom-floatlabel w-full">
                     <p-select [options]="divisions" [(ngModel)]="this.offer().division" class="w-full custom-select" 
                         [disabled]="divisions.length == 0" [checkmark]="true" inputId="division"
                         pTooltip="The organization division under which the resource is to be registered" 
-                        tooltipPosition="right" showDelay="200" hideDelay="200"/>
+                        tooltipPosition="bottom" showDelay="200" hideDelay="200"/>
                     <label for="division">Division</label>
                 </p-floatlabel>
             </div>
