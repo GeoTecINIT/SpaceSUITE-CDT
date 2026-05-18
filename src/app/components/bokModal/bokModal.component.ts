@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ComponentRef, EventEmitter, inject, Input, Output, signal, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, EventEmitter, inject, Input, Output, signal, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
 import { BokComponent, BokInformationService } from '@eo4geo/ngx-bok-visualization';
 import { ButtonModule } from "primeng/button";
 import { DialogModule } from 'primeng/dialog';
@@ -42,18 +42,20 @@ export class BokModalComponent {
   private utilsService = inject(UtilsService);
   private messageService = inject(MessageService);
 
-  ngOnInit() {
-    this.selectedConcepts.forEach( concept => {
-      this.bokInfo.getConceptColor(concept).subscribe(
-        color => {
-          const softColor = color ? this.utilsService.convertHexToRgba(color, 0.5) : '';
-          this.selectedConceptsColor.set(concept, softColor)
-        }
-      )
-      this.bokInfo.getConceptName(concept).subscribe(
-        tooltip => this.selectedConceptsTooltip.set(concept, tooltip)
-      );
-    })
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['selectedConcepts']) {
+      this.selectedConcepts.forEach( concept => {
+        this.bokInfo.getConceptColor(concept).subscribe(
+          color => {
+            const softColor = color ? this.utilsService.convertHexToRgba(color, 0.5) : '';
+            this.selectedConceptsColor.set(concept, softColor)
+          }
+        )
+        this.bokInfo.getConceptName(concept).subscribe(
+          tooltip => this.selectedConceptsTooltip.set(concept, tooltip)
+        );
+      })
+    }
   }
 
   showDialog() {
