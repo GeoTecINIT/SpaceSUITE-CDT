@@ -15,7 +15,7 @@
             <div class="flex gap-3 flex-column align-content-start justify-content-center mb-4">
                 <ng-container *ngIf="!loadingCards() else cardSkeleton">
                     <ng-container *ngFor="let item of paginationEducationalItems; trackBy: trackById">
-                        <card [educationalOffer]="item"></card>
+                        <card [educationalOffer]="item" [logged]="(isLogged() | async) || false"></card>
                     </ng-container>
                 </ng-container>
             </div>
