@@ -132,6 +132,7 @@ export class OfferFormComponent {
     })
     if (this.inputOffer) {
       this.offer.set(new EducationalOffer(this.inputOffer.root, this.inputOffer));
+      this.organizationDBService.getOrganizationDivisions(this.offer().orgId).subscribe(divisions => this.divisions = divisions);
     }
     else this.rootNodeModalVisible = true;
     this.selectedNode.set(this.offer().root);
@@ -149,6 +150,7 @@ export class OfferFormComponent {
 
   ngOnDestroy() {
     this.sessionSubscription?.unsubscribe();
+    this.userOrgsSubscription?.unsubscribe();
   }
 
   confirmExitWithoutSaving() {
