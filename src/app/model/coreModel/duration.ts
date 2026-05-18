@@ -1,12 +1,12 @@
 export enum DurationUnit {
-  Hours,
-  Minutes,
-  Days,
-  Weeks,
-  Months,
-  Trimesters,
-  Semesters,
-  Years
+  Hours = 'Hours',
+  Minutes = 'Minutes',
+  Days = 'Days',
+  Weeks = 'Weeks',
+  Months = 'Months',
+  Trimesters = 'Trimesters',
+  Semesters = 'Semesters',
+  Years = 'Years'
 }
 
 export class Duration {

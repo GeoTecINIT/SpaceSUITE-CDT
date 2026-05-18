@@ -1,11 +1,5 @@
+import { CourseType } from "../coreModel/course";
 import {CurriculumNodeDB } from "./curriculumNodeDB";
-
-
-export enum CourseType {
-  Common,
-  Specialization,
-  Elective
-}
 
 export class CourseDB extends CurriculumNodeDB {
   public assesment: string;

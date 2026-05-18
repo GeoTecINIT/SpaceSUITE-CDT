@@ -4,9 +4,9 @@ import { Lecture } from "./lecture";
 import { Module, ModuleType } from "./module";
 
 export enum CourseType {
-  Common,
-  Specialization,
-  Elective
+  Common = 'Common',
+  Specialization = 'Specialization',
+  Elective = 'Elective'
 }
 
 export class Course extends CurriculumNode {
