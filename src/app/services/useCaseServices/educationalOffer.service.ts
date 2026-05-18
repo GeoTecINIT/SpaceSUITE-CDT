@@ -39,9 +39,9 @@ export class EducationalOfferService {
     return this.educationalOfferAdapterService.deleteEducationalOffer(educationalOfferId);
   }
 
-  submitEducationalOffer(newOffer: EducationalOffer, oldOffer?: EducationalOffer): Observable<void> {
-    // TODO
-    throw new Error('NOT IMPLEMENTED');
+  submitEducationalOffer(offer: EducationalOffer, oldOffer?: EducationalOffer): Observable<void> {
+    if (!oldOffer) return this.educationalOfferAdapterService.createEducationalOffer(offer);
+    return this.educationalOfferAdapterService.updateEducationalOffer(offer, oldOffer);
   }
 
   public getOffersOrganizations(): Observable<string[]> {
