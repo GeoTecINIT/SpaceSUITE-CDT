@@ -126,9 +126,7 @@ export class CardComponent implements OnInit {
   }
 
   editJob() {
-    this.router.navigate([`edit/${this.educationalOffer.id}`], {
-      queryParams: { origin: 'explorer' },
-    });
+    this.router.navigate([`edit/${this.educationalOffer.id}`]);
   }
 
   duplicateJob() {

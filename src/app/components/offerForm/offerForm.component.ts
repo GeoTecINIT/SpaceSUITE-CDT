@@ -4,7 +4,7 @@ import { StudyProgram } from "../../model/coreModel/studyProgram";
 import { ToastModule } from "primeng/toast";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { AuthService, ExitWithoutSavingService } from "@eo4geo/ngx-bok-utils";
-import { Router } from "@angular/router";
+import { Router, UrlTree } from "@angular/router";
 import { catchError, of, Subscription, take } from "rxjs";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { FormsModule } from "@angular/forms";
@@ -104,6 +104,8 @@ export class OfferFormComponent {
 
   loading: boolean = false;
 
+  private previousNavigationUrl?: UrlTree;
+
   private sessionSubscription?: Subscription;
   private userOrgsSubscription?: Subscription;
 
@@ -149,6 +151,8 @@ export class OfferFormComponent {
         this.organizations.push({label: organization.name, value: organization._id})
       )
     });
+
+    this.previousNavigationUrl = this.router.lastSuccessfulNavigation?.previousNavigation?.initialUrl;
   }
 
   ngOnDestroy() {
@@ -334,7 +338,7 @@ export class OfferFormComponent {
   }
 
   returnToHomepage() {
-    if (this.inputOffer != undefined) this.router.navigate(['offer/' + this.inputOffer.id]);
+    if (this.previousNavigationUrl) this.router.navigateByUrl(this.previousNavigationUrl);
     else this.router.navigate(['']);
   }
 
