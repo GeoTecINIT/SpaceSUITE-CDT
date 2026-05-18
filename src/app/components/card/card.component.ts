@@ -130,9 +130,7 @@ export class CardComponent implements OnInit {
   }
 
   duplicateJob() {
-    this.router.navigate([`new/${this.educationalOffer.id}`], {
-      queryParams: { origin: 'explorer' },
-    });
+    this.router.navigate([`new/${this.educationalOffer.id}`]);
   }
 
   deleteModal(event: Event) {

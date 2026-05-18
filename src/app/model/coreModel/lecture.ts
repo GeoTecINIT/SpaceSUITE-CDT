@@ -16,4 +16,8 @@ export class Lecture extends CurriculumNode {
       `Lectures are leaf nodes and cannot have children. Move content up to a Course or Module.`
     );
   }
+
+  public override clone(): CurriculumNode {
+    return new Lecture(this);
+  }
 }

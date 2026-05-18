@@ -42,4 +42,8 @@ export class Module extends CurriculumNode {
       );
     }
   }
+
+  public override clone(): CurriculumNode {
+    return new Module(this);
+  }
 }

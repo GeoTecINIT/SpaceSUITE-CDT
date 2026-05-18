@@ -29,7 +29,7 @@ export class EducationalOffer {
 
   constructor(rootNode: CurriculumNode, partialOffer?: Partial<EducationalOffer>) {
     this.id = partialOffer?.id || '';
-    this.root = rootNode;
+    this.root = rootNode.clone();
     this.isPublic = partialOffer?.isPublic ?? false;
     this.createdAt = partialOffer?.createdAt || new Date();
     this.updatedAt = partialOffer?.updatedAt;  

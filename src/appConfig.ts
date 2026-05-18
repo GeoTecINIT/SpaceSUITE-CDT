@@ -21,13 +21,16 @@ const routes: Routes = [
     { path: '', component: ItemExplorerComponent },
     { path: 'profile', component: UserPageComponent, canMatch: [AuthGuard]},
     { path: 'organizations', component: OrganizationPageComponent, canMatch: [AuthGuard]},
-    { path: 'new', component: OfferFormComponent, canMatch: [AuthGuard], canDeactivate: [exitWithoutSavingGuard]},
+    { path: 'new', canMatch: [AuthGuard], canDeactivate: [exitWithoutSavingGuard], children: [
+        {path: '', component: OfferFormComponent},
+        {path: ':offerId', component: OfferFormComponent}
+    ]},
     { path: 'edit/:dynamicValue', component: EditPageComponent, canMatch: [AuthGuard], canDeactivate: [exitWithoutSavingGuard]},
     { path: 'not_found', component: NotFoundPageComponent},
     { path: 'offer/:offerId', children: [
         { path: '', component: OfferPageComponent},
         { path: ':nodeId', component: OfferPageComponent}
-    ] },
+    ]},
     { path: '**', component: NotFoundPageComponent}
 ];
 

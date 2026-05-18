@@ -27,22 +27,24 @@ export abstract class CurriculumNode {
     this.id = id || currentNode?.id || '';
     this.name = currentNode?.name || '';
     this.description = currentNode?.description || '';
-    this.children = currentNode?.getChildren?.() || [];
-    this.bokConcepts = currentNode?.bokConcepts || [];
-    this.prerequisites = currentNode?.prerequisites || [];
+    this.children = currentNode?.getChildren?.().map(child => child.clone()) || [];
+    this.bokConcepts = [...currentNode?.bokConcepts || []];
+    this.prerequisites = [...currentNode?.prerequisites || []];
     this.eqf = currentNode?.eqf || 0;
     this.ects = currentNode?.ects || 0;
-    this.timeRequired = currentNode?.timeRequired || new Duration();
-    this.studyAreas = currentNode?.studyAreas || [];
-    this.transversalSkills = currentNode?.transversalSkills || [];
-    this.customTransversalSkills = currentNode?.customTransversalSkills || [];
-    this.learningObjectives = currentNode?.learningObjectives || [];
-    this.trainingMaterials = currentNode?.trainingMaterials || [];
-    this.bibliography = currentNode?.bibliography || [];
-    this.affiliations = currentNode?.affiliations || [];
+    this.timeRequired = new Duration(currentNode?.timeRequired);
+    this.studyAreas = currentNode?.studyAreas?.map(area => new ISCEDFArea(area)) || [];
+    this.transversalSkills = currentNode?.transversalSkills?.map(skill => new ESCOSkill(skill)) || [];
+    this.customTransversalSkills = [...currentNode?.customTransversalSkills || []];
+    this.learningObjectives = [...currentNode?.learningObjectives || []];
+    this.trainingMaterials = currentNode?.trainingMaterials?.map(material => new TrainingMaterial(material)) || [];
+    this.bibliography = [...currentNode?.bibliography || []];
+    this.affiliations = currentNode?.affiliations?.map(affiliation => new Affiliation(affiliation)) || [];
   }
 
   protected abstract validateChildCandidate(child: CurriculumNode): void;
+
+  public abstract clone(): CurriculumNode;
 
   public addChild(child: CurriculumNode): void {
     this.validateChildCandidate(child);

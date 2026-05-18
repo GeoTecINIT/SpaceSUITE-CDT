@@ -12,7 +12,7 @@ export class ESCOSkill {
     this.reuseLevel = escoSkill?.reuseLevel || "";
     this.preferredLabel = escoSkill?.preferredLabel || "";
     this.description = escoSkill?.description || "";
-    this.altLabels = escoSkill?.altLabels || [];
+    this.altLabels = [...escoSkill?.altLabels || []];
   }
 
   public toPlainObject(): any {

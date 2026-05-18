@@ -27,4 +27,8 @@ export class Course extends CurriculumNode {
       );
     }
   }
+
+  public override clone(): CurriculumNode {
+    return new Course(this);
+  }
 }

@@ -4,8 +4,8 @@ import { StudyProgram } from "../../model/coreModel/studyProgram";
 import { ToastModule } from "primeng/toast";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { AuthService, ExitWithoutSavingService } from "@eo4geo/ngx-bok-utils";
-import { Router, UrlTree } from "@angular/router";
-import { catchError, of, Subscription, take } from "rxjs";
+import { ActivatedRoute, Router, UrlTree } from "@angular/router";
+import { catchError, of, Subscription, switchMap, take } from "rxjs";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { FormsModule } from "@angular/forms";
 import { FloatLabelModule } from "primeng/floatlabel";
@@ -103,6 +103,7 @@ export class OfferFormComponent {
   divisions: string[] = [];
 
   loading: boolean = false;
+  loggedUserId!: string;
 
   private previousNavigationUrl?: UrlTree;
 
@@ -114,33 +115,39 @@ export class OfferFormComponent {
   private messageService: MessageService = inject(MessageService);
   private exitWithoutSavingService: ExitWithoutSavingService = inject(ExitWithoutSavingService);
   private router: Router = inject(Router);
+  private route: ActivatedRoute = inject(ActivatedRoute);
   private utilsService: UtilsService = inject(UtilsService);
   private educationalOfferService: EducationalOfferService = inject(EducationalOfferService);
   private offerValidationService: OfferValidationService = inject(OfferValidationService);
   private organizationDBService: OrganizationDBService = inject(OrganizationDBService);
 
   ngOnInit() {
+    this.route.paramMap.pipe(switchMap(paramMap => {
+      const offerId = paramMap.get('offerId');
+      if (!offerId) return of(undefined)
+      else return this.educationalOfferService.getEducationalOffer(offerId);
+    })).subscribe((duplicatedOffer: EducationalOffer | undefined) => {
+      if (this.inputOffer) {
+        this.offer.set(new EducationalOffer(this.inputOffer.root, this.inputOffer));
+        this.organizationDBService.getOrganizationDivisions(this.offer().orgId).subscribe(divisions => this.divisions = divisions);
+      } else if (duplicatedOffer) {
+        this.offer.set(new EducationalOffer(duplicatedOffer.root));
+      }
+      else {
+        this.rootNodeModalVisible = true;
+      }
+
+      this.selectedNode.set(this.offer().root);
+    });
+
     this.sessionSubscription = this.authService.getUserState().subscribe ( state => {
       if (!state?.logged) {
         this.exitWithoutSavingService.bypassGuard.next(true);
         this.router.navigate(['']);
       }
-      else if (!this.inputOffer) {
-        this.offer.update(offer => {
-          offer.userId = state.uid;
-          return Object.assign(
-            Object.create(Object.getPrototypeOf(offer)),
-            offer
-          );
-        });
-      }
-    })
-    if (this.inputOffer) {
-      this.offer.set(new EducationalOffer(this.inputOffer.root, this.inputOffer));
-      this.organizationDBService.getOrganizationDivisions(this.offer().orgId).subscribe(divisions => this.divisions = divisions);
-    }
-    else this.rootNodeModalVisible = true;
-    this.selectedNode.set(this.offer().root);
+      else this.loggedUserId = state.uid;
+    });
+
     this.exitWithoutSavingService.showModalSubject.subscribe(value => {
       if (value) this.confirmExitWithoutSaving()
     });
@@ -345,6 +352,7 @@ export class OfferFormComponent {
   submitEducationalOffer() {
     this.loading = true;
     this.exitWithoutSavingService.bypassGuard.next(true);
+    if (!this.inputOffer) this.offer().userId = this.loggedUserId;
     this.errorMap = this.offerValidationService.validateEducationalOffer(this.offer());
     if (this.errorMap.size == 0) {
       this.educationalOfferService.submitEducationalOffer(this.offer(), this.inputOffer).pipe(
