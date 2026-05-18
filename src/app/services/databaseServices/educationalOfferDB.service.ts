@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { collection, collectionData, CollectionReference, deleteDoc, doc, docData, DocumentData, DocumentReference, Firestore, setDoc, updateDoc } from "@angular/fire/firestore";
+import { collection, collectionData, CollectionReference, deleteDoc, doc, docData, DocumentData, DocumentReference, Firestore, getDocs, setDoc, updateDoc } from "@angular/fire/firestore";
 import { combineLatest, concatMap, defaultIfEmpty, filter, forkJoin, from, map, Observable, of, switchMap } from "rxjs";
 import { CurriculumNodeDB } from "../../model/databaseModel/curriculumNodeDB";
 import { EducationalOfferDB } from "../../model/databaseModel/educationalOfferDB";
@@ -45,7 +45,20 @@ export class EducationalOfferDBService {
 
   public deleteEducationalOffer(educationalOfferId: string): Observable<void> {
     const docRef = doc(this.educationalOfferCollection, educationalOfferId);
-    return from(deleteDoc(docRef));
+    const subcollections = ['lectures', 'courses', 'modules', 'studyPrograms'];
+
+    const deleteSubcollection$ = (name: string): Observable<unknown> =>
+      from(getDocs(collection(docRef, name))).pipe(
+        switchMap(snapshot => {
+          if (snapshot.empty) return of(null);
+          return forkJoin(snapshot.docs.map(d => from(deleteDoc(d.ref))));
+        })
+      );
+
+    return forkJoin(subcollections.map(deleteSubcollection$)).pipe(
+      switchMap(() => from(deleteDoc(docRef))),
+      map(() => undefined)
+    );
   }
 
   public getEdcationalOffers(): Observable<{educationalOffer: EducationalOfferDB, curriculumNodes: CurriculumNodeDB[]}[]> {
