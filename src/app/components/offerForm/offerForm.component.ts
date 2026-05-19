@@ -102,7 +102,6 @@ export class OfferFormComponent {
   organizations: object[] = [];
   divisions: string[] = [];
 
-  loading: boolean = false;
   loggedUserId!: string;
 
   private previousNavigationUrl?: UrlTree;
@@ -350,7 +349,6 @@ export class OfferFormComponent {
   }
 
   submitEducationalOffer() {
-    this.loading = true;
     this.exitWithoutSavingService.bypassGuard.next(true);
     if (!this.inputOffer) this.offer().userId = this.loggedUserId;
     this.errorMap = this.offerValidationService.validateEducationalOffer(this.offer());
@@ -358,7 +356,6 @@ export class OfferFormComponent {
       this.educationalOfferService.submitEducationalOffer(this.offer(), this.inputOffer).pipe(
         take(1),
         catchError( () => {
-          this.loading = false;
           this.messageService.add({ 
             severity: 'error', 
             summary: 'Error', 
@@ -369,7 +366,6 @@ export class OfferFormComponent {
           return of(null)
         })
       ).subscribe(() => {
-        this.loading = false;
         this.router.navigate(
             [''], 
             { 
@@ -382,7 +378,6 @@ export class OfferFormComponent {
       });
     }
     else {
-      this.loading = false;
       this.messageService.add({ 
         severity: 'error', 
         summary: 'Error', 
