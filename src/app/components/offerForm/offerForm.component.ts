@@ -158,7 +158,8 @@ export class OfferFormComponent {
       )
     });
 
-    this.previousNavigationUrl = this.router.lastSuccessfulNavigation?.previousNavigation?.initialUrl;
+    const initial = this.router.lastSuccessfulNavigation?.previousNavigation?.initialUrl?.toString();
+    this.previousNavigationUrl = initial ? this.router.parseUrl(initial.split('?')[0]) : undefined;
   }
 
   ngOnDestroy() {
