@@ -34,11 +34,11 @@
         <p-panel class="custom-panel">
             <div class="font-bold mb-3">Organization & Division</div>
             <div class="flex flex-column sm:flex-row gap-3 mb-4">
-                <p-floatlabel variant="on" class="custom-floatlabel w-full" [class.invalid-floatlabel]="errorMap.get('organization') != undefined">
+                <p-floatlabel variant="on" class="custom-floatlabel w-full" [class.invalid-floatlabel]="errorMap.get('orgId') != undefined">
                     <p-select inputId="orgId" [options]="organizations" (ngModelChange)="loadDivisions($event)"
                         [ngModel]="this.offer().orgId == '' ? undefined : {value: this.offer().orgId, label: this.offer().orgName}"
                         class="w-full custom-select" optionLabel="label" [checkmark]="true"
-                        [class.invalid-select]="errorMap.get('organization') != undefined"
+                        [class.invalid-select]="errorMap.get('orgId') != undefined"
                         pTooltip="The organization under which the offer is to be registered" 
                         tooltipPosition="bottom" showDelay="200" hideDelay="200"/>
                     <label for="orgId">Organization *</label>

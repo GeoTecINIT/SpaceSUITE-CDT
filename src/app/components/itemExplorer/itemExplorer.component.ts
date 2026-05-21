@@ -22,6 +22,7 @@ import { FiltersComponent } from "../filters/filters.component";
 import { CardComponent } from "../card/card.component";
 import { AuthService } from "@eo4geo/ngx-bok-utils";
 import { DividerModule } from 'primeng/divider';
+import { ConfirmDialogModule } from "primeng/confirmdialog";
 
 @Component({
   standalone: true,
@@ -30,7 +31,7 @@ import { DividerModule } from 'primeng/divider';
   styleUrls: ['./itemExplorer.component.css'],
   imports: [CardComponent, FiltersComponent, SkeletonModule, CommonModule, 
             PaginatorModule, ToastModule, ButtonModule, MenuModule, ButtonGroupModule, 
-            DividerModule, TabsModule],
+            DividerModule, TabsModule, ConfirmDialogModule],
 })
 export class ItemExplorerComponent {
   educationalOffers: EducationalOffer[] = [];

@@ -15,7 +15,7 @@ export class CourseDB extends CurriculumNodeDB {
     return {
       ...super.toPlainObject(),
       assesment: this.assesment,
-      courseType: this.courseType,
+      courseType: this.courseType ?? null,
     };
   }
 }

@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { collection, collectionData, CollectionReference, deleteDoc, doc, docData, DocumentData, DocumentReference, Firestore, getDocs, setDoc, updateDoc } from "@angular/fire/firestore";
+import { collection, collectionData, CollectionReference, deleteDoc, doc, docData, DocumentData, DocumentReference, Firestore, getDocs, setDoc, updateDoc, WriteBatch, writeBatch } from "@angular/fire/firestore";
 import { combineLatest, concatMap, defaultIfEmpty, filter, forkJoin, from, map, Observable, of, switchMap } from "rxjs";
 import { CurriculumNodeDB } from "../../model/databaseModel/curriculumNodeDB";
 import { EducationalOfferDB } from "../../model/databaseModel/educationalOfferDB";
@@ -7,6 +7,7 @@ import { LectureDB } from "../../model/databaseModel/lectureDB";
 import { CourseDB } from "../../model/databaseModel/courseDB";
 import { ModuleDB } from "../../model/databaseModel/moduleDB";
 import { StudyProgramDB } from "../../model/databaseModel/studyProgramDB";
+import { DomainError } from "../../model/domainError";
 
 
 @Injectable({
@@ -20,45 +21,88 @@ export class EducationalOfferDBService {
     this.educationalOfferCollection = collection(this.firestore, 'EducationalOffers');
   }
 
-  public createEducationalOffer(educationalOffer: EducationalOfferDB, curriculumNodes: CurriculumNodeDB[]): Observable<void> {
-    const plainEducationalOffer = educationalOffer.toPlainObject();
+  public createEducationalOffer(educationalOffer: EducationalOfferDB, curriculumNodes: CurriculumNodeDB[]): Observable<string> {
     const docRef = doc(this.educationalOfferCollection);
-    return from(setDoc(docRef, plainEducationalOffer)).pipe(concatMap( () => {
-      const lectureNodes = curriculumNodes.filter(node => node instanceof LectureDB).map(node => node.toPlainObject());
-      const courseNodes = curriculumNodes.filter(node => node instanceof CourseDB).map(node => node.toPlainObject());
-      const moduleNodes = curriculumNodes.filter(node => node instanceof ModuleDB).map(node => node.toPlainObject());
-      const studyProgramNodes = curriculumNodes.filter(node => node instanceof StudyProgramDB).map(node => node.toPlainObject());
+    const batch = writeBatch(this.firestore);
+    
+    const plainEducationalOffer = educationalOffer.toPlainObject();
+    plainEducationalOffer['id'] = docRef.id;
 
-      const lectureCollection = collection(docRef, 'lectures');
-      const courseCollection = collection(docRef, 'courses');
-      const moduleCollection = collection(docRef, 'modules');
-      const studyProgramCollection = collection(docRef, 'studyPrograms');
+    const nodeMap: Map<string, CurriculumNodeDB> = new Map();
+    curriculumNodes.forEach(node => nodeMap.set(node.id, node));
 
-      const lectureOps = this.addNodesToCollection(lectureCollection, lectureNodes);
-      const courseOps = this.addNodesToCollection(courseCollection, courseNodes);
-      const moduleOps = this.addNodesToCollection(moduleCollection, moduleNodes);
-      const studyProgramOps = this.addNodesToCollection(studyProgramCollection, studyProgramNodes);
+    const root = nodeMap.get(educationalOffer.root);
+    if (!root) {
+      throw new DomainError(
+        'ROOT_NODE_NOT_FOUND',
+        `Root node with id ${educationalOffer.root} was not found.`
+      );
+    }
 
-      return forkJoin([...lectureOps, ...courseOps, ...moduleOps, ...studyProgramOps]).pipe(defaultIfEmpty(undefined), map(() => undefined));
-    }));
+    plainEducationalOffer['root'] = this.AddNewNodesToBatch(root, nodeMap, docRef, batch);
+
+    batch.set(docRef, plainEducationalOffer);
+
+    return from(batch.commit()).pipe(
+      map(() => docRef.id)
+    );
+  }
+
+  private AddNewNodesToBatch(currentNode: CurriculumNodeDB, nodeMap: Map<string, CurriculumNodeDB>, eduOfferDocRef: DocumentReference, batch: WriteBatch): string {
+    const childrenIds: string[] = currentNode.children.map(childId => {
+      const child = nodeMap.get(childId)!;
+      return this.AddNewNodesToBatch(child, nodeMap, eduOfferDocRef, batch);
+    });
+    let newDocRef: DocumentReference;
+    switch (true) {
+      case currentNode instanceof LectureDB:
+        newDocRef = doc(collection(eduOfferDocRef, 'lectures'));
+        break;
+      case currentNode instanceof CourseDB:
+        newDocRef = doc(collection(eduOfferDocRef, 'courses'));
+        break;
+      case currentNode instanceof ModuleDB:
+        newDocRef = doc(collection(eduOfferDocRef, 'modules'));
+        break;
+      case currentNode instanceof StudyProgramDB:
+        newDocRef = doc(collection(eduOfferDocRef, 'studyPrograms'));
+        break;
+      default:
+        throw new DomainError(
+          'NODE_TYPE_INVALID', 
+          `Unknown node type: ${currentNode.constructor.name}.`
+        );
+    }
+
+    const plainNode = currentNode.toPlainObject();
+    plainNode['children'] = childrenIds;
+    plainNode['id'] = newDocRef.id;
+
+    batch.set(newDocRef, plainNode);
+
+    return newDocRef.id;;
   }
 
   public deleteEducationalOffer(educationalOfferId: string): Observable<void> {
+    return from(this.deleteEducationalOfferInternal(educationalOfferId)).pipe(
+      map(() => undefined)
+    );
+  }
+
+  private async deleteEducationalOfferInternal(educationalOfferId: string): Promise<void> {
     const docRef = doc(this.educationalOfferCollection, educationalOfferId);
     const subcollections = ['lectures', 'courses', 'modules', 'studyPrograms'];
 
-    const deleteSubcollection$ = (name: string): Observable<unknown> =>
-      from(getDocs(collection(docRef, name))).pipe(
-        switchMap(snapshot => {
-          if (snapshot.empty) return of(null);
-          return forkJoin(snapshot.docs.map(d => from(deleteDoc(d.ref))));
-        })
-      );
+    const batch = writeBatch(this.firestore);
 
-    return forkJoin(subcollections.map(deleteSubcollection$)).pipe(
-      switchMap(() => from(deleteDoc(docRef))),
-      map(() => undefined)
-    );
+    for (const subcollectionName of subcollections) {
+      const snapshot = await getDocs(collection(docRef, subcollectionName));
+      snapshot.docs.forEach(d => batch.delete(d.ref));
+    }
+
+    batch.delete(docRef);
+
+    await batch.commit();
   }
 
   public getEdcationalOffers(): Observable<{educationalOffer: EducationalOfferDB, curriculumNodes: CurriculumNodeDB[]}[]> {
@@ -94,7 +138,8 @@ export class EducationalOfferDBService {
     );
   }
 
-  public updateEducationalOffer(updatedEducationalOffer: EducationalOfferDB, updatedNodes: CurriculumNodeDB[], oldEducationalOffer: EducationalOfferDB, oldNodes: CurriculumNodeDB[]): Observable<void> {
+  public updateEducationalOffer(updatedEducationalOffer: EducationalOfferDB, updatedNodes: CurriculumNodeDB[], oldEducationalOffer: EducationalOfferDB, oldNodes: CurriculumNodeDB[]): Observable<string> {
+    /**
     // Define collections references
     const docRef = doc(this.educationalOfferCollection, updatedEducationalOffer.id);
 
@@ -208,6 +253,8 @@ export class EducationalOfferDBService {
     }
 
     return forkJoin(allOps).pipe(defaultIfEmpty(undefined), map(() => undefined));
+    */
+   return of();
   }
 
   private getEducationalOfferNodes(educationalOfferDocRef: DocumentReference): Observable<CurriculumNodeDB[]> {
@@ -224,15 +271,6 @@ export class EducationalOfferDBService {
     return combineLatest([lectures$, courses$, modules$, studyPrograms$]).pipe(defaultIfEmpty([]), map(([lectures, courses, modules, studyPrograms]) => {
       return [...lectures, ...courses, ...modules, ...studyPrograms];
     }));
-  }
-
-  private addNodesToCollection(collection: CollectionReference, items: CurriculumNodeDB[]): Observable<void>[] {
-    return items.map( item => {
-      const docRef = doc(collection);
-      item.id = docRef.id;
-      const plainItem = item.toPlainObject();
-      return from(setDoc(docRef, plainItem));
-    })
   }
 
   private updateNodesFromCollection(collection: CollectionReference, items:  Array<{ id: string; [key: string]: any }>): Observable<void>[] {

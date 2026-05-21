@@ -29,7 +29,7 @@ export class EducationalOfferAdapterService {
   private educationalOfferDBService = inject(EducationalOfferDBService);
   private bokInformationService = inject(BokInformationService);
 
-  public createEducationalOffer(educationalOffer: EducationalOffer): Observable<void> {
+  public createEducationalOffer(educationalOffer: EducationalOffer): Observable<string> {
     const educationalOfferDB = this.parseEducationalOffer(educationalOffer);
     const curriculumNodesDBObservables = educationalOffer.getAllNodes().map(node => this.parseCurriculumNode(node));
     return forkJoin(curriculumNodesDBObservables).pipe(

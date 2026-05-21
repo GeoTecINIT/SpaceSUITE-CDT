@@ -1,8 +1,7 @@
 import { Timestamp } from "@angular/fire/firestore";
-import { Affiliation } from "../coreModel/affiliation";
 
 export class EducationalOfferDB {
-  public readonly id: string;
+  public id: string;
   public root: string;
 
   public isPublic: boolean;
@@ -32,7 +31,7 @@ export class EducationalOfferDB {
       root: this.root,
       isPublic: this.isPublic,
       createdAt: this.createdAt,
-      updatedAt: this.updatedAt ? this.updatedAt : undefined,
+      updatedAt: this.updatedAt ?? null,
       userId: this.userId,
       orgId: this.orgId,
       orgName: this.orgName,

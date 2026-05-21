@@ -39,7 +39,7 @@ export class EducationalOfferService {
     return this.educationalOfferAdapterService.deleteEducationalOffer(educationalOfferId);
   }
 
-  submitEducationalOffer(offer: EducationalOffer, oldOffer?: EducationalOffer): Observable<void> {
+  submitEducationalOffer(offer: EducationalOffer, oldOffer?: EducationalOffer): Observable<string> {
     if (!oldOffer) return this.educationalOfferAdapterService.createEducationalOffer(offer);
     return this.educationalOfferAdapterService.updateEducationalOffer(offer, oldOffer);
   }

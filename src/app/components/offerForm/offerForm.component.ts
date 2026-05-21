@@ -5,7 +5,7 @@ import { ToastModule } from "primeng/toast";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { AuthService, ExitWithoutSavingService } from "@eo4geo/ngx-bok-utils";
 import { ActivatedRoute, Router, UrlTree } from "@angular/router";
-import { catchError, of, Subscription, switchMap, take } from "rxjs";
+import { catchError, EMPTY, of, Subscription, switchMap, take } from "rxjs";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { FormsModule } from "@angular/forms";
 import { FloatLabelModule } from "primeng/floatlabel";
@@ -355,7 +355,8 @@ export class OfferFormComponent {
     if (this.errorMap.size == 0) {
       this.educationalOfferService.submitEducationalOffer(this.offer(), this.inputOffer).pipe(
         take(1),
-        catchError( () => {
+        catchError( error => {
+          console.log(error)
           this.messageService.add({ 
             severity: 'error', 
             summary: 'Error', 
@@ -363,11 +364,11 @@ export class OfferFormComponent {
             life: 3000, 
             closable: true 
           });
-          return of(null)
+          return EMPTY;
         })
-      ).subscribe(() => {
+      ).subscribe(eduOfferId => {
         this.router.navigate(
-            [''], 
+            ['offer/' + eduOfferId], 
             { 
               queryParams: { 
                 submited: true, 

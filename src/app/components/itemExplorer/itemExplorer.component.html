@@ -1,4 +1,5 @@
 <p-toast class="custom-toast" position="bottom-right"/>
+<p-confirmdialog />
 <div #container class="flex flex-column xl:flex-row gap-4 m-2">
     <filters [(multiSelectOptions)]="filterOptions" [loading]="loadingFilters" 
         (multiSelectOptionsChange)="filterPipeline()" (advancedMultiSelectOptionsChange)="filterPipeline()" [filterUserItemOptions]="filterUserItemOptions"

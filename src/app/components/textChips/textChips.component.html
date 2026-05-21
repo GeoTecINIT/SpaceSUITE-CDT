@@ -2,7 +2,7 @@
     <p-floatlabel variant="on" class="custom-floatlabel">
         <p-iconfield>
             <input pInputText id="{{fieldName}}" autocomplete="off" class="w-full custom-input" [(ngModel)]="currentText" 
-                [class.ng-invalid]="error" [class.ng-dirty]="error" (keyup.enter)="clickButton()" maxlength="100"/>
+                [class.ng-invalid]="error" [class.ng-dirty]="error" (keyup.enter)="clickButton()"/>
             <p-inputicon [class]="icon" [style]="error ? 'color: var(--danger-color)' : ''"></p-inputicon>
         </p-iconfield>
         <label for="{{fieldName}}">{{fieldName}}</label>
