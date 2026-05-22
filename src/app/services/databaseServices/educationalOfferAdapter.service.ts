@@ -63,11 +63,10 @@ export class EducationalOfferAdapterService {
   public updateEducationalOffer(updatedOffer: EducationalOffer, oldOffer: EducationalOffer) {
     const educationalOfferDB = this.parseEducationalOffer(updatedOffer);
     const curriculumNodesDBObservables = updatedOffer.getAllNodes().map(node => this.parseCurriculumNode(node));
-    const oldEducationalOfferDB = this.parseEducationalOffer(oldOffer);
     const oldCurriculumNodesDBObservables = oldOffer.getAllNodes().map(node => this.parseCurriculumNode(node));
     return forkJoin(curriculumNodesDBObservables).pipe(
       concatMap(curriculumNodesDB => forkJoin(oldCurriculumNodesDBObservables).pipe(
-        concatMap(oldCurriculumNodesDB => this.educationalOfferDBService.updateEducationalOffer(educationalOfferDB, curriculumNodesDB, oldEducationalOfferDB, oldCurriculumNodesDB))
+        concatMap(oldCurriculumNodesDB => this.educationalOfferDBService.updateEducationalOffer(educationalOfferDB, curriculumNodesDB, oldCurriculumNodesDB))
       )
     ));
   }

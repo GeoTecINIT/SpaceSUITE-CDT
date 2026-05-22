@@ -13,7 +13,7 @@ export class IscedfAreaService {
 
   constructor() {
     this.http.get<ISCEDFArea[]>('/assets/fields.json')
-      .pipe(take(1))
+      .pipe(take(1), map(areas => areas.map(area => new ISCEDFArea(area))))
       .subscribe((fields) => {
         this.fieldsSubject.next(fields);
       });

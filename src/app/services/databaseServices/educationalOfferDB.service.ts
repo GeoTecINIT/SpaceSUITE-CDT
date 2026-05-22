@@ -39,7 +39,7 @@ export class EducationalOfferDBService {
       );
     }
 
-    plainEducationalOffer['root'] = this.AddNewNodesToBatch(root, nodeMap, docRef, batch);
+    plainEducationalOffer['root'] = this.AddNodesToBatch(root, nodeMap, docRef, batch);
 
     batch.set(docRef, plainEducationalOffer);
 
@@ -48,30 +48,27 @@ export class EducationalOfferDBService {
     );
   }
 
-  private AddNewNodesToBatch(currentNode: CurriculumNodeDB, nodeMap: Map<string, CurriculumNodeDB>, eduOfferDocRef: DocumentReference, batch: WriteBatch): string {
+  private AddNodesToBatch(
+    currentNode: CurriculumNodeDB, 
+    nodeMap: Map<string, CurriculumNodeDB>, 
+    eduOfferDocRef: DocumentReference, 
+    batch: WriteBatch,
+    createSet?: Set<string>
+  ): string {
     const childrenIds: string[] = currentNode.children.map(childId => {
-      const child = nodeMap.get(childId)!;
-      return this.AddNewNodesToBatch(child, nodeMap, eduOfferDocRef, batch);
+      const child = nodeMap.get(childId);
+      if (!child) {
+        throw new DomainError('CHILD_NODE_NOT_FOUND', `Child node with id ${childId} was not found.`);
+      }
+      return this.AddNodesToBatch(child, nodeMap, eduOfferDocRef, batch);
     });
+
     let newDocRef: DocumentReference;
-    switch (true) {
-      case currentNode instanceof LectureDB:
-        newDocRef = doc(collection(eduOfferDocRef, 'lectures'));
-        break;
-      case currentNode instanceof CourseDB:
-        newDocRef = doc(collection(eduOfferDocRef, 'courses'));
-        break;
-      case currentNode instanceof ModuleDB:
-        newDocRef = doc(collection(eduOfferDocRef, 'modules'));
-        break;
-      case currentNode instanceof StudyProgramDB:
-        newDocRef = doc(collection(eduOfferDocRef, 'studyPrograms'));
-        break;
-      default:
-        throw new DomainError(
-          'NODE_TYPE_INVALID', 
-          `Unknown node type: ${currentNode.constructor.name}.`
-        );
+    if (createSet && createSet.has(currentNode.id)) {
+      newDocRef = this.getSubCollectionDocRef(currentNode, eduOfferDocRef);
+    }
+    else {
+      newDocRef = this.getSubCollectionDocRef(currentNode, eduOfferDocRef, currentNode.id);
     }
 
     const plainNode = currentNode.toPlainObject();
@@ -80,7 +77,7 @@ export class EducationalOfferDBService {
 
     batch.set(newDocRef, plainNode);
 
-    return newDocRef.id;;
+    return newDocRef.id;
   }
 
   public deleteEducationalOffer(educationalOfferId: string): Observable<void> {
@@ -138,123 +135,54 @@ export class EducationalOfferDBService {
     );
   }
 
-  public updateEducationalOffer(updatedEducationalOffer: EducationalOfferDB, updatedNodes: CurriculumNodeDB[], oldEducationalOffer: EducationalOfferDB, oldNodes: CurriculumNodeDB[]): Observable<string> {
-    /**
-    // Define collections references
+  public updateEducationalOffer(
+    updatedEducationalOffer: EducationalOfferDB, 
+    updatedNodes: CurriculumNodeDB[], 
+    oldNodes: CurriculumNodeDB[]
+  ): Observable<string> {
     const docRef = doc(this.educationalOfferCollection, updatedEducationalOffer.id);
+    const batch = writeBatch(this.firestore);
+    
+    const plainEducationalOffer = updatedEducationalOffer.toPlainObject();
 
-    const lectureCollection = collection(docRef, 'lectures');
-    const courseCollection = collection(docRef, 'courses');
-    const moduleCollection = collection(docRef, 'modules');
-    const studyProgramCollection = collection(docRef, 'studyPrograms');
+    const updatedNodeSet: Set<string> = new Set(updatedNodes.map(node => node.id));
+    const oldNodeSet: Set<string> = new Set(oldNodes.map(node => node.id));
 
-    // Define allOps Array
-    const allOps = [];
+    const nodesToDelete = new Set<string>([...oldNodeSet].filter(x => !updatedNodeSet.has(x)));
+    const nodesToCreate = new Set<string>([...updatedNodeSet].filter(x => !oldNodeSet.has(x)));
 
-    // Update new nodes
-    const newLectureNodes = updatedNodes.filter(node => node instanceof LectureDB && node.id == '').map(node => node.toPlainObject());
-    const newCourseNodes = updatedNodes.filter(node => node instanceof CourseDB && node.id == '').map(node => node.toPlainObject());
-    const newModuleNodes = updatedNodes.filter(node => node instanceof ModuleDB && node.id == '').map(node => node.toPlainObject());
-    const newStudyProgramNodes = updatedNodes.filter(node => node instanceof StudyProgramDB && node.id == '').map(node => node.toPlainObject());
+    // Delete from firebase deleted nodes
 
-    const newLectureOps = this.addNodesToCollection(lectureCollection, newLectureNodes);
-    const newCourseOps = this.addNodesToCollection(courseCollection, newCourseNodes);
-    const newModuleOps = this.addNodesToCollection(moduleCollection, newModuleNodes);
-    const newStudyProgramOps = this.addNodesToCollection(studyProgramCollection, newStudyProgramNodes);
+    const oldNodeMap: Map<string, CurriculumNodeDB> = new Map();
+    oldNodes.forEach(node => oldNodeMap.set(node.id, node));
 
-    allOps.push([
-      ...newLectureOps,
-      ...newCourseOps,
-      ...newModuleOps,
-      ...newStudyProgramOps
-    ]);
+    nodesToDelete.forEach(id => {
+      const currentNode = oldNodeMap.get(id);
+      if (currentNode){
+        batch.delete(this.getSubCollectionDocRef(currentNode, docRef, id));
+      }
+    });
 
-    // Update existing nodes
-    const lectureUpdateNodes = updatedNodes.flatMap(node =>
-      oldNodes
-        .filter(oldNode => node instanceof LectureDB && node.id === oldNode.id)
-        .map(oldNode => {
-          const plainNode = node.toPlainObject();
-          const plainOldNode = oldNode.toPlainObject();
-          const updateObject = this.createUpdateObject(plainNode, plainOldNode, '', [], false);
-          updateObject['id'] = node.id
-          return updateObject
-        })
-    );
+    // Overwrite and create nodes
 
-    const courseUpdateNodes = updatedNodes.flatMap(node =>
-      oldNodes
-        .filter(oldNode => node instanceof CourseDB && node.id === oldNode.id)
-        .map(oldNode => {
-          const plainNode = node.toPlainObject();
-          const plainOldNode = oldNode.toPlainObject();
-          const updateObject = this.createUpdateObject(plainNode, plainOldNode, '', [], false);
-          updateObject['id'] = node.id
-          return updateObject
-        })
-    );
+    const nodeMap: Map<string, CurriculumNodeDB> = new Map();
+    updatedNodes.forEach(node => nodeMap.set(node.id, node));
 
-    const moduleUpdateNodes = updatedNodes.flatMap(node =>
-      oldNodes
-        .filter(oldNode => node instanceof ModuleDB && node.id === oldNode.id)
-        .map(oldNode => {
-          const plainNode = node.toPlainObject();
-          const plainOldNode = oldNode.toPlainObject();
-          const updateObject = this.createUpdateObject(plainNode, plainOldNode, '', [], false);
-          updateObject['id'] = node.id
-          return updateObject
-        })
-    );
-
-    const studyProgramUpdateNodes = updatedNodes.flatMap(node =>
-      oldNodes
-        .filter(oldNode => node instanceof StudyProgramDB && node.id === oldNode.id)
-        .map(oldNode => {
-          const plainNode = node.toPlainObject();
-          const plainOldNode = oldNode.toPlainObject();
-          const updateObject = this.createUpdateObject(plainNode, plainOldNode, '', [], false);
-          updateObject['id'] = node.id
-          return updateObject
-        })
-    );
-
-    const updateLectureOps = this.updateNodesFromCollection(lectureCollection, lectureUpdateNodes);
-    const updateCourseOps = this.updateNodesFromCollection(courseCollection, courseUpdateNodes);
-    const updateModuleOps = this.updateNodesFromCollection(moduleCollection, moduleUpdateNodes);
-    const updateStudyProgramOps = this.updateNodesFromCollection(studyProgramCollection, studyProgramUpdateNodes);
-
-    allOps.push([
-      ...updateLectureOps,
-      ...updateCourseOps,
-      ...updateModuleOps,
-      ...updateStudyProgramOps
-    ]);
-
-    // Delete old nodes
-
-    const deleteLectureOps = this.deleteNodesFromCollection(lectureCollection, oldNodes.filter(oldNode => oldNode instanceof LectureDB && !updatedNodes.some(node => node.id === oldNode.id)));
-    const deleteCourseOps = this.deleteNodesFromCollection(courseCollection, oldNodes.filter(oldNode => oldNode instanceof CourseDB && !updatedNodes.some(node => node.id === oldNode.id)));
-    const deleteModuleOps = this.deleteNodesFromCollection(moduleCollection, oldNodes.filter(oldNode => oldNode instanceof ModuleDB && !updatedNodes.some(node => node.id === oldNode.id)));
-    const deleteStudyProgramOps = this.deleteNodesFromCollection(studyProgramCollection, oldNodes.filter(oldNode => oldNode instanceof StudyProgramDB && !updatedNodes.some(node => node.id === oldNode.id)));
-
-    allOps.push([
-      ...deleteLectureOps,
-      ...deleteCourseOps,
-      ...deleteModuleOps,
-      ...deleteStudyProgramOps
-    ]);
-
-    // Update basic portfolio information
-
-    const basicInfoUpdate: { [key: string]: any } = this.createUpdateObject(updatedEducationalOffer, oldEducationalOffer, '', ['updatedAt', 'createdAt'], false);
-
-    if (Object.keys(basicInfoUpdate).length > 0) {
-      allOps.push(from(updateDoc(docRef, basicInfoUpdate)))
+    const root = nodeMap.get(updatedEducationalOffer.root);
+    if (!root) {
+      throw new DomainError(
+        'ROOT_NODE_NOT_FOUND',
+        `Root node with id ${updatedEducationalOffer.root} was not found.`
+      );
     }
 
-    return forkJoin(allOps).pipe(defaultIfEmpty(undefined), map(() => undefined));
-    */
-   return of();
+    plainEducationalOffer['root'] = this.AddNodesToBatch(root, nodeMap, docRef, batch, nodesToCreate);
+
+    batch.set(docRef, plainEducationalOffer);
+
+    return from(batch.commit()).pipe(
+      map(() => docRef.id)
+    );
   }
 
   private getEducationalOfferNodes(educationalOfferDocRef: DocumentReference): Observable<CurriculumNodeDB[]> {
@@ -273,71 +201,32 @@ export class EducationalOfferDBService {
     }));
   }
 
-  private updateNodesFromCollection(collection: CollectionReference, items:  Array<{ id: string; [key: string]: any }>): Observable<void>[] {
-    return items.map( ({ _id, ...data }) => {
-      const docRef = doc(collection, _id);
-      if (Object.keys(data).length > 0) {
-        return from(updateDoc(docRef, data))
-      }
-      return of(void 0)
-    })
-  }
-
-  private deleteNodesFromCollection(collection: CollectionReference, items: CurriculumNodeDB[]): Observable<void>[] {
-    return items.map( item => {
-      const docRef = doc(collection, item.id);
-      return from(deleteDoc(docRef));
-    })
-  }
-
-  private compareElements<T>(objectA: T, objectB: T): boolean {
-    if (Array.isArray(objectA) && Array.isArray(objectB)) {
-      if (objectA === objectB) return true;
-      if (objectA.length != objectB.length) return false;
-      for (var i = 0; i < objectA.length; ++i) {
-        if (!this.compareElements(objectA[i], objectB[i])) return false;
-      }
-      return true;
+  private getSubCollectionDocRef(currentNode: CurriculumNodeDB, parentDocRef: DocumentReference, docId?: string) {
+    let newDocRef: DocumentReference;
+    switch (true) {
+      case currentNode instanceof LectureDB:
+        const lectureRef = collection(parentDocRef, 'lectures');
+        newDocRef = docId ? doc(lectureRef, docId) : doc(lectureRef);
+        break;
+      case currentNode instanceof CourseDB:
+        const courseRef = collection(parentDocRef, 'courses');
+        newDocRef = docId ? doc(courseRef, docId) : doc(courseRef);
+        break;
+      case currentNode instanceof ModuleDB:
+        const moduleRef = collection(parentDocRef, 'modules');
+        newDocRef = docId ? doc(moduleRef, docId) : doc(moduleRef);
+        break;
+      case currentNode instanceof StudyProgramDB:
+        const studyProgramRef = collection(parentDocRef, 'studyPrograms');
+        newDocRef = docId ? doc(studyProgramRef, docId) : doc(studyProgramRef);
+        break;
+      default:
+        throw new DomainError(
+          'NODE_TYPE_INVALID', 
+          `Unknown node type: ${currentNode.constructor.name}.`
+        );
     }
-    if (typeof objectA === 'object' && objectA != null &&
-        typeof objectB === "object" && objectB != null) {
-      for (const key of Object.keys(objectA) as Array<keyof T>) {
-        const aValue = objectA[key];
-        const bValue = objectB[key];
-        if (!this.compareElements(aValue, bValue)) return false;
-      }
-      return true;
-    }
-    return objectA === objectB;
-  }
-
-  private createUpdateObject<T extends object>(newObject: T, oldObject: T, prefix: string = '', specialObjects: string[] = [], ignoreArrays: boolean = true): any {
-    const updateObject: { [key: string]: any } = {}
-    if (newObject != null) {
-      for (const key of Object.keys(newObject) as Array<keyof T>) {
-        const newValue = newObject[key];
-        const oldValue = oldObject != null ? oldObject[key] : null;
-        const fullKey = `${prefix}${key as string}`;
-        if ((ignoreArrays && Array.isArray(newValue)) || this.compareElements(newValue, oldValue)) continue
-        if (typeof newValue == 'object') {
-          if (specialObjects.includes(key as string) || Array.isArray(newValue)) updateObject[fullKey] = newValue;
-          else {
-            const subObject = this.createUpdateObject(newValue as object, oldValue as object, key as string + '.', specialObjects);
-            for (const subKey of Object.keys(subObject)) {
-              const fullSubKey = `${prefix}${subKey as string}`;
-              updateObject[fullSubKey] = subObject[subKey];
-            }
-          }
-        }
-        else updateObject[fullKey] = newValue;
-      }
-    }
-    else {
-      if (prefix != '') {
-        updateObject[prefix.slice(0, -1)] = null;
-      }
-    }
-    return updateObject;
+    return newDocRef;
   }
 
   private mapToClass<T extends object>(cls: new () => T) {

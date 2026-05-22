@@ -10,7 +10,7 @@ export class Affiliation {
   public toPlainObject(): any {
     return {
       name: this.name,
-      url: this.url,
+      url: this.url ?? null,
     };
   }
 }

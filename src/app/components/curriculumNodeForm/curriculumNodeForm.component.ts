@@ -33,6 +33,7 @@ import { Affiliation } from "../../model/coreModel/affiliation";
 import { Course, CourseType } from "../../model/coreModel/course";
 import { Lecture } from "../../model/coreModel/lecture";
 import { SelectButtonModule } from "primeng/selectbutton";
+import { ESCOSkill } from "../../model/coreModel/escoSkill";
 
 @Component({
   standalone: true,
@@ -153,9 +154,25 @@ export class CurriculumNodeFormComponent {
 
   onTransversalSkillChange() {
     this.curriculumNode.transversalSkills = this.selectedTransversalSkills.map(skillLabel => {
-      const skillNode = this.transversalSkills.find(skill => skill.data.preferredLabel === skillLabel);
-      return skillNode ? skillNode.data : { preferredLabel: skillLabel };
+      const skillNode: any = this.findTransversalSkill(skillLabel, this.transversalSkills);
+      console.log(skillNode)
+      if (skillNode) {
+        skillNode['preferredLabel'] = skillNode.label;
+        return new ESCOSkill(skillNode);
+      }
+      return new ESCOSkill({preferredLabel: skillLabel });
     });
+  }
+
+  // TODO - create independent trasnversalSkill list & ChipComponent TreeNode objects
+  private findTransversalSkill(label: string, nodes: TreeNode[]): TreeNode | undefined {
+    let match: TreeNode | undefined;
+    for(let node of nodes) {
+      if (node.label === label) return node;
+      match = this.findTransversalSkill(label, node.children || []);
+      if (match) return match;
+    }
+    return undefined;
   }
 
   getSelectedNodeType(): string {

@@ -51,7 +51,7 @@ export class TreeselectChipsComponent {
   private getNodesMatchingChips(nodes: TreeNode[], chips: string[]): TreeNode[] {
     let matched: TreeNode[] = [];
     for (const node of nodes) {
-      if (chips.includes(node.data)) {
+      if (chips.includes(node.label!)) {
         matched.push(node);
       }
       if (node.children) {
@@ -68,7 +68,7 @@ export class TreeselectChipsComponent {
 
   treeselectChange(values: TreeNode[]) {
     this.treeSelection = values || [];
-    const selectedValues = this.treeSelection.map(node => node.data);
+    const selectedValues = this.treeSelection.map(node => node.label as any);
     this.chips = selectedValues;
     this.chipsChange.emit(this.chips);
   }

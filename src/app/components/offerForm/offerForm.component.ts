@@ -352,6 +352,7 @@ export class OfferFormComponent {
   submitEducationalOffer() {
     this.exitWithoutSavingService.bypassGuard.next(true);
     if (!this.inputOffer) this.offer().userId = this.loggedUserId;
+    else this.offer().updatedAt = new Date();
     this.errorMap = this.offerValidationService.validateEducationalOffer(this.offer());
     if (this.errorMap.size == 0) {
       this.educationalOfferService.submitEducationalOffer(this.offer(), this.inputOffer).pipe(
