@@ -164,7 +164,6 @@ export class CurriculumNodeFormComponent {
     });
   }
 
-  // TODO - create independent trasnversalSkill list & ChipComponent TreeNode objects
   private findTransversalSkill(label: string, nodes: TreeNode[]): TreeNode | undefined {
     let match: TreeNode | undefined;
     for(let node of nodes) {

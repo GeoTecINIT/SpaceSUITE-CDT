@@ -68,7 +68,7 @@ export class TreeselectChipsComponent {
 
   treeselectChange(values: TreeNode[]) {
     this.treeSelection = values || [];
-    const selectedValues = this.treeSelection.map(node => node.label as any);
+    const selectedValues = this.treeSelection.map(node => node.label!);
     this.chips = selectedValues;
     this.chipsChange.emit(this.chips);
   }
