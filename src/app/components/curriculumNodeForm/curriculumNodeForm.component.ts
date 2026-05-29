@@ -52,7 +52,7 @@ export class CurriculumNodeFormComponent {
   public showCustomTransversalSkills: boolean = false;
   public transversalSkills: TreeNode<any>[] = [];
 
-  public selectedTransversalSkills: string[] = [];
+  public selectedTransversalSkills: TreeNode[] = [];
   public selectedStudyAreas: string[] = [];
 
   public readonly DURATION_UNIT: object[] = [
@@ -115,6 +115,8 @@ export class CurriculumNodeFormComponent {
     this.escoService.getTransversalSkillsFromJson().pipe(take(1)).subscribe(
       data => {
         this.transversalSkills = data;
+        this.selectedTransversalSkills = this.curriculumNode.transversalSkills
+          .map(skill => this.findTransversalSkill(skill.preferredLabel, this.transversalSkills)).filter(value => value != undefined);
       }
     );
   }
@@ -124,11 +126,22 @@ export class CurriculumNodeFormComponent {
       const newNode: CurriculumNode = changes['curriculumNode'].currentValue;
       const oldNode: CurriculumNode = changes['curriculumNode'].previousValue;
       if (changes['curriculumNode'].isFirstChange() || (newNode != undefined && oldNode != undefined && newNode.id != oldNode.id)) {
-        this.selectedTransversalSkills = newNode.transversalSkills.map(skill => skill.preferredLabel);
+        this.selectedTransversalSkills = newNode.transversalSkills
+          .map(skill => this.findTransversalSkill(skill.preferredLabel, this.transversalSkills)).filter(value => value != undefined);
         this.selectedStudyAreas = newNode.studyAreas.map(area => area.name);
         this.showCustomTransversalSkills = newNode.customTransversalSkills.length > 0;
       }
     }
+  }
+
+  private findTransversalSkill(label: string, nodes: TreeNode[]): TreeNode | undefined {
+    let match: TreeNode | undefined;
+    for(let node of nodes) {
+      if (node.label === label) return node;
+      match = this.findTransversalSkill(label, node.children || []);
+      if (match) return match;
+    }
+    return undefined;
   }
 
   onNameChange(newName: string) {
@@ -153,25 +166,11 @@ export class CurriculumNodeFormComponent {
   }
 
   onTransversalSkillChange() {
-    this.curriculumNode.transversalSkills = this.selectedTransversalSkills.map(skillLabel => {
-      const skillNode: any = this.findTransversalSkill(skillLabel, this.transversalSkills);
-      console.log(skillNode)
-      if (skillNode) {
-        skillNode['preferredLabel'] = skillNode.label;
-        return new ESCOSkill(skillNode);
-      }
-      return new ESCOSkill({preferredLabel: skillLabel });
+    this.curriculumNode.transversalSkills = this.selectedTransversalSkills.map(value => {
+      const newEscoSkill: ESCOSkill = new ESCOSkill(value as any); 
+      newEscoSkill.preferredLabel = value.label!;
+      return newEscoSkill;
     });
-  }
-
-  private findTransversalSkill(label: string, nodes: TreeNode[]): TreeNode | undefined {
-    let match: TreeNode | undefined;
-    for(let node of nodes) {
-      if (node.label === label) return node;
-      match = this.findTransversalSkill(label, node.children || []);
-      if (match) return match;
-    }
-    return undefined;
   }
 
   getSelectedNodeType(): string {

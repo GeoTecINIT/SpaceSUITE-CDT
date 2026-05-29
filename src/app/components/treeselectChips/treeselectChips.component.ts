@@ -17,59 +17,31 @@ import { TreeNode } from "primeng/api";
 })
 export class TreeselectChipsComponent {
 
-  @Input() chips: string[] = [];
-  @Output() chipsChange: EventEmitter<string[]> = new EventEmitter();
+  @Input() treeSelection: TreeNode[] = []
+  @Output() treeSelectionChange: EventEmitter<TreeNode[]> = new EventEmitter();
 
-  treeSelection: TreeNode[] = []
+  chips: string[] = [];
+  
   @Input() treeselectOptions: TreeNode[] = [];
 
   @Input() fieldName: string = 'Field Name';
 
   @Input() error: boolean = false;
 
-  chipAnimations: Record<string, boolean> = {}
-
-  ngOnInit() {
-    this.chips.forEach(chip => {
-      this.chipAnimations[chip] = false;
-    })
-  }
-
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['treeselectOptions']) {
-      const currentValue: TreeNode[] = changes['treeselectOptions'].currentValue;
-      this.treeSelection = this.getNodesMatchingChips(currentValue, this.chips);
+    if (changes['treeSelection']) {
+      const currentValue: TreeNode[] = changes['treeSelection'].currentValue;
+      this.chips = currentValue.map(value => value.label ?? '');
     }
-    if (changes['chips'] && !changes['chips'].firstChange) {
-      const currentValue: string[] = changes['chips'].currentValue;
-      if (this.treeSelection.some(node => !currentValue.includes(node.data)) || currentValue.some(chip => !this.treeSelection.some(node => node.data === chip))) {
-        this.treeSelection = this.getNodesMatchingChips(this.treeselectOptions, currentValue);
-      }
-    }
-  }
-
-  private getNodesMatchingChips(nodes: TreeNode[], chips: string[]): TreeNode[] {
-    let matched: TreeNode[] = [];
-    for (const node of nodes) {
-      if (chips.includes(node.label!)) {
-        matched.push(node);
-      }
-      if (node.children) {
-        matched = matched.concat(this.getNodesMatchingChips(node.children, chips));
-      }
-    }
-    return matched;
   }
 
   deleteElement(element: string) {
-    this.treeSelection = this.treeSelection.filter(value => value.data != element)
-    this.chipsChange.emit(this.chips.filter(value => value != element));
+    this.treeSelection = this.treeSelection.filter(value => value.label != element)
+    this.treeSelectionChange.emit(this.treeSelection);
   }
 
   treeselectChange(values: TreeNode[]) {
     this.treeSelection = values || [];
-    const selectedValues = this.treeSelection.map(node => node.label!);
-    this.chips = selectedValues;
-    this.chipsChange.emit(this.chips);
+    this.treeSelectionChange.emit(this.treeSelection);
   }
 }

@@ -248,7 +248,7 @@
                     </div>
                     <div class="flex flex-column">
                         <treeselect-chips
-                            [(chips)]="selectedTransversalSkills" (chipsChange)="onTransversalSkillChange()" [treeselectOptions]="transversalSkills" fieldName="Transversal Skills"
+                            [(treeSelection)]="selectedTransversalSkills" (treeSelectionChange)="onTransversalSkillChange()" [treeselectOptions]="transversalSkills" fieldName="Transversal Skills"
                             pTooltip="Skills considered unrelated to a particular job, task, academic discipline or area of knowledge but that can be used in a wide variety of situations and work settings. Based on the ESCO transversal and cross-sector skills."
                             tooltipPosition="top" showDelay="200" hideDelay="200"
                         ></treeselect-chips>
