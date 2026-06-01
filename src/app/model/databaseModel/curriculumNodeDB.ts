@@ -1,4 +1,5 @@
 import { Affiliation } from "../coreModel/affiliation";
+import { NodeType } from "../coreModel/curriculumNode";
 import { Duration } from "../coreModel/duration";
 import { ESCOSkill } from "../coreModel/escoSkill";
 import { ISCEDFArea } from "../coreModel/iscedfArea";
@@ -21,6 +22,7 @@ export abstract class CurriculumNodeDB {
   public trainingMaterials: TrainingMaterial[];
   public bibliography: string[];
   public affiliations: Affiliation[];
+  public abstract nodeType: NodeType;
 
   constructor(currentNode?: Partial<CurriculumNodeDB>, id?: string) {
     this.id = id || currentNode?.id || '';

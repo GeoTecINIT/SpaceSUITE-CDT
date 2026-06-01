@@ -5,6 +5,13 @@ import { ISCEDFArea } from "./iscedfArea";
 import { TrainingMaterial } from "./trainingMaterial";
 import { Affiliation } from "./affiliation";
 
+export enum NodeType {
+  StudyProgram = "Study Program",
+  Module = "Module",
+  Course = "Course",
+  Lecture = "Lecture"
+}
+
 export abstract class CurriculumNode {
   public id: string;
   public name: string;
@@ -22,6 +29,7 @@ export abstract class CurriculumNode {
   public trainingMaterials: TrainingMaterial[];
   public bibliography: string[];
   public affiliations: Affiliation[];
+  public abstract nodeType: NodeType;
 
   constructor(currentNode?: Partial<CurriculumNode>, id?: string) {
     this.id = id || currentNode?.id || '';

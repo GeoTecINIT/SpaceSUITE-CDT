@@ -1,4 +1,4 @@
-import { CurriculumNode } from "./curriculumNode";
+import { CurriculumNode, NodeType } from "./curriculumNode";
 import { DomainError } from "../domainError";
 import { StudyProgram } from "./studyProgram";
 import { Course } from "./course";
@@ -12,10 +12,12 @@ export enum ModuleType {
 
 export class Module extends CurriculumNode {
   public moduleType: ModuleType;
+  public override nodeType: NodeType;
 
   constructor(currentNode?: Partial<Module>, id?: string) {
     super(currentNode, id);
     this.moduleType = currentNode?.moduleType || ModuleType.Course;
+    this.nodeType = NodeType.Module;
   }
 
   protected override validateChildCandidate(child: CurriculumNode): void {
@@ -38,7 +40,7 @@ export class Module extends CurriculumNode {
     if (!isValid) {
       throw new DomainError(
         'HIERARCHY_INVALID', 
-        `Cannot add a child of type ${child.constructor.name} to a Module of type ${this.moduleType}.`
+        `Cannot add a child of type ${child.nodeType} to a Module of type ${this.moduleType}.`
       );
     }
   }

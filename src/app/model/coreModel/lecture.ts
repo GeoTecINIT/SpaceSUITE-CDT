@@ -1,13 +1,15 @@
-import { CurriculumNode } from "./curriculumNode";
+import { CurriculumNode, NodeType } from "./curriculumNode";
 import { DomainError } from "../domainError";
 
 export class Lecture extends CurriculumNode {
   public isPractical: boolean;
+  public override nodeType: NodeType;
 
   constructor(currentNode?: Partial<Lecture>, id?: string) {
     super(currentNode, id);
     this.children = [];
     this.isPractical = currentNode?.isPractical || false;
+    this.nodeType = NodeType.Lecture;
   }
 
   public override validateChildCandidate(_: CurriculumNode): void {
