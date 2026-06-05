@@ -231,9 +231,9 @@
     "headers": {
       "pageName": "Create Educational Offer",
       "addNode": "Add New Node",
-      "manageNodes": "Manage Nodes",
       "organization": "Organization & Division",
-      "rootNodeModal": "Choose Educational Offer Type"
+      "rootNodeModal": "Select Offer Type",
+      "newNodeName": "New {{nodeType}}"
     },
     "fields":{
       "newNodeType": {
@@ -265,10 +265,11 @@
       }
     },
     "buttons": {
-      "resetOffer": "Reset Educational Offer",
-      "deleteNode": "Delete Selected Node",
+      "resetOffer": "Reset Offer",
+      "deleteNode": "Delete {{nodeType}}",
       "return": "Return",
-      "save": "Save"
+      "save": "Save",
+      "addNode": "Add {{nodeType}}"
     },
     "isPublic": {
       "public": "Public",

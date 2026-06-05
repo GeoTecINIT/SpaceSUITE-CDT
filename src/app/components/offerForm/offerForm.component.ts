@@ -25,6 +25,7 @@ import { OfferValidationService } from "../../services/useCaseServices/offerVali
 import { OrganizationDBService } from "../../services/databaseServices/organizationDB.service";
 import { SelectButtonModule } from "primeng/selectbutton";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { UtilsService } from "../../services/useCaseServices/utils.service";
 
 @Component({
   standalone: true,
@@ -80,6 +81,7 @@ export class OfferFormComponent {
   private offerValidationService: OfferValidationService = inject(OfferValidationService);
   private organizationDBService: OrganizationDBService = inject(OrganizationDBService);
   private translate: TranslateService = inject(TranslateService);
+  private utilsService: UtilsService = inject(UtilsService);
 
   constructor() {
     this.langChangeSub = this.translate.onLangChange.subscribe(() => this.buildSelectOptions());
@@ -461,5 +463,13 @@ export class OfferFormComponent {
       { label: this.translate.instant('offerForm.isPublic.public'), value: true },
       { label: this.translate.instant('offerForm.isPublic.private'), value: false }
     ];
+  }
+
+  getSelectedNodeType(): string {
+    return this.utilsService.getTranslatedNodeType(this.selectedNode().nodeType);
+  }
+
+  getNewNodeType(): string {
+    return this.newNodeType ? this.utilsService.getTranslatedNodeType(this.newNodeType) : '';
   }
 }

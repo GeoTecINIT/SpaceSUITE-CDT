@@ -1,9 +1,14 @@
 <p-toast class="custom-toast" position="bottom-right"/>
 <p-confirmdialog />
-<h2 class="flex justify-content-center">{{pageName}}</h2>
 <div class="flex flex-column lg:flex-row lg:justify-content-between align-items-center lg:align-items-start p-4 gap-4">
-    <curriuclum-node-form class="flex w-full lg:w-auto" [curriculumNode]="this.selectedNode()" (nodeNameChange)="updateSelectedNode()" 
-        [errorMap]="this.errorMap"></curriuclum-node-form>
+    <div class="w-full lg:w-auto">
+        <h2 class="flex justify-content-center m-0">{{pageName}}</h2>
+        <h3 class="flex font-italic font-light justify-content-center m-0">
+            {{selectedNode().name == '' ? ('offerForm.headers.newNodeName' | translate: {nodeType: getSelectedNodeType()}) : selectedNode().name}}
+        </h3>
+        <curriuclum-node-form class="flex mt-3" [curriculumNode]="this.selectedNode()" (nodeNameChange)="updateSelectedNode()" 
+            [errorMap]="this.errorMap"></curriuclum-node-form>
+    </div>
     <div class="offer-index-column flex flex-column gap-3">
         <offer-index-component [offer]="offer()" [selectedNode]="selectedNode().id" (selectedNodeChanged)="changeSelectedNode($event)"></offer-index-component>
         <p-panel class="custom-panel">
@@ -22,13 +27,16 @@
                         <label [for]="'newNodeModuleType'">{{'offerForm.fields.newNodeModuleType.label' | translate}}</label>
                     </p-floatlabel>
                 }
-                <p-button icon="pi pi-plus" rounded [disabled]="newNodeType == undefined || (newNodeType == 'Module' && newNodeModuleType == undefined)" 
-                    class="custom-button" (onClick)="addNewChild()"></p-button>
             </div>
-            <div class="font-bold mb-3">{{'offerForm.headers.manageNodes' | translate}}</div>
             <div class="flex justify-content-between gap-3">
-                <p-button icon="pi pi-refresh" class="delete-button" [label]="'offerForm.buttons.resetOffer' | translate" (onClick)="replaceRootNode()"></p-button>
-                <p-button icon="pi pi-trash" [disabled]="selectedNode().id === offer().root.id" class="delete-button" [label]="'offerForm.buttons.deleteNode' | translate" (onClick)="deleteModal($event)"></p-button>
+                @if(selectedNode().id == offer().root.id) {
+                    <p-button icon="pi pi-refresh" class="delete-button" [label]="'offerForm.buttons.resetOffer' | translate" (onClick)="replaceRootNode()"></p-button>
+                }
+                @else { 
+                    <p-button icon="pi pi-trash" class="delete-button" [label]="'offerForm.buttons.deleteNode' | translate: {nodeType: getSelectedNodeType()}" (onClick)="deleteModal($event)"></p-button>
+                }
+                <p-button icon="pi pi-plus" [disabled]="newNodeType == undefined || (newNodeType == 'Module' && newNodeModuleType == undefined)" 
+                    class="custom-button" (onClick)="addNewChild()" [label]="'offerForm.buttons.addNode' | translate: {nodeType: getNewNodeType()}"></p-button>
             </div>
         </p-panel>
         <p-panel class="custom-panel">
