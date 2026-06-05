@@ -70,3 +70,15 @@
 ::ng-deep .p-togglebutton {
     flex: auto;
 }
+
+.step-list-margin {
+    margin-left: 5rem;
+    margin-right: 5rem;
+}
+
+@media (max-width: 1200px) {
+    .step-list-margin {
+        margin-left: 0rem;
+        margin-right: 0rem;
+    }
+}

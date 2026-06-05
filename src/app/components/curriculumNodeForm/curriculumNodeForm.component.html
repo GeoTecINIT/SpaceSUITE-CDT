@@ -1,7 +1,7 @@
 <p-stepper [value]="1" class="custom-stepper">
-    <p-step-list>
-        <p-step [value]="1">General Information</p-step>
-        <p-step [value]="2">Skills & Resources</p-step>
+    <p-step-list class="step-list-margin">
+        <p-step [value]="1">{{'curriculumNodeForm.stepList.step1' | translate}}</p-step>
+        <p-step [value]="2">{{'curriculumNodeForm.stepList.step2' | translate}}</p-step>
     </p-step-list>
     <p-step-panels>
         <p-step-panel [value]="1">
@@ -60,10 +60,10 @@
                     <div>
                         <p-floatlabel variant="on" class="w-full custom-floatlabel">
                             <p-iconfield>
-                                <p-inputnumber id="workload" [min]="0" [useGrouping]="false" suffix=" ECTS"
+                                <p-inputnumber id="workload" [min]="0" [useGrouping]="false" suffix=" ECTS" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="1"
                                     [class.ng-invalid]="errorMap.get(curriculumNode.id + '.ects') != undefined" [class.ng-dirty]="errorMap.get(curriculumNode.id + '.ects') != undefined" 
                                     class="custom-input" [(ngModel)]="curriculumNode.ects" fluid tooltipPosition="right" showDelay="200" hideDelay="200"
-                                    [pTooltip]="'curriculumNodeForm.fields.workload.tooltip' | translate"/>
+                                    [pTooltip]="'curriculumNodeForm.fields.workload.tooltip' | translate" allowEmpty="false"/>
                                 <p-inputicon class="pi pi-clock" [style]="errorMap.get(curriculumNode.id + '.ects') != undefined ? 'color: var(--danger-color)' : ''"/>
                             </p-iconfield>
                             <label for="workload">{{ 'curriculumNodeForm.fields.workload.label' | translate }} *</label>
