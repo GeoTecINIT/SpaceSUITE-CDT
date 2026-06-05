@@ -223,7 +223,7 @@ export class EducationalOfferDBService {
       default:
         throw new DomainError(
           'NODE_TYPE_INVALID', 
-          `Unknown node type: ${currentNode.constructor.name}.`
+          `Unknown node type: ${currentNode.nodeType}.`
         );
     }
     return newDocRef;

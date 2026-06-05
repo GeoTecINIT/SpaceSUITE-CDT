@@ -1,12 +1,11 @@
 import { inject, Injectable } from "@angular/core";
-import { Tag, Variant } from "@eo4geo/ngx-bok-utils";
+import { Tag } from "@eo4geo/ngx-bok-utils";
 import { BokInformationService } from "@eo4geo/ngx-bok-visualization";
 import { combineLatest, forkJoin, map, Observable, of, take } from "rxjs";
-import { StudyProgram } from "../../model/coreModel/studyProgram";
-import { Course } from "../../model/coreModel/course";
-import { Lecture } from "../../model/coreModel/lecture";
-import { Module } from "../../model/coreModel/module";
-import { CurriculumNode } from "../../model/coreModel/curriculumNode";
+import { CurriculumNode, NodeType } from "../../model/coreModel/curriculumNode";
+import { TranslateService } from "@ngx-translate/core";
+import { ModuleType } from "../../model/coreModel/module";
+import { CourseType } from "../../model/coreModel/course";
 
 @Injectable({
     providedIn: 'root',
@@ -14,6 +13,7 @@ import { CurriculumNode } from "../../model/coreModel/curriculumNode";
 export class UtilsService {
 
     private bokInfo: BokInformationService = inject(BokInformationService);
+    private translate: TranslateService = inject(TranslateService);
     
     codeToKnowledgeArea: Map<string, string> = new Map([
         ["AM", "Analytical Methods"],
@@ -78,22 +78,44 @@ export class UtilsService {
         );
     }
 
-    getNodeType(node: CurriculumNode): string {
-        let formattedName: string = '';
-        switch (true) {
-            case node instanceof StudyProgram:
-                formattedName = 'Study Program'
-                break;
-            case node instanceof Course:
-                formattedName = 'Course'
-                break;
-            case node instanceof Lecture:
-                formattedName = 'Lecture'
-                break;
-            case node instanceof Module:
-                formattedName = 'Module'
-                break;
+    getTranslatedNodeType(type: NodeType): string {
+        switch(type) {
+            case NodeType.StudyProgram:
+                return this.translate.instant('nodeTypes.studyProgram');
+            case NodeType.Module:
+                return this.translate.instant('nodeTypes.module');
+            case NodeType.Course:
+                return this.translate.instant('nodeTypes.course');
+            case NodeType.Lecture:
+                return this.translate.instant('nodeTypes.lecture');
+            default:
+                return '';
         }
-        return formattedName;
+    }
+
+    getTranslatedModuleType(type: ModuleType): string {
+        switch(type) {
+            case ModuleType.StudyProgram:
+                return this.translate.instant('moduleTypes.studyProgram');
+            case ModuleType.Course:
+                return this.translate.instant('moduleTypes.course');
+            case ModuleType.Lecture:
+                return this.translate.instant('moduleTypes.lecture');
+            default:
+                return '';
+        }
+    }
+
+    getTranslatedCourseType(type: CourseType): string {
+        switch(type) {
+            case CourseType.Common:
+                return this.translate.instant('courseTypes.common');
+            case CourseType.Elective:
+                return this.translate.instant('courseTypes.elective');
+            case CourseType.Specialization:
+                return this.translate.instant('courseTypes.specialization');
+            default:
+                return '';
+        }
     }
 }

@@ -1,0 +1,383 @@
+{
+  "header": {
+    "nav": {
+      "tools": "Tools",
+      "share": "Share"
+    }
+  },
+  "bokModal": {
+    "errors": {
+      "invalidConcept": "You cannot add top-level concepts.",
+      "instructions": "Please navigate down and select more specific concepts."
+    },
+    "toast": {
+      "info": {
+        "summary": "Info",
+        "detail": "Concept {{concept}} annotated!"
+      },
+      "error": {
+        "summary": "Error",
+        "detail": "Concept {{concept}} is already annotated!"
+      }
+    }
+  },
+  "card": {
+    "deleteModal": {
+      "message": "Do you want to delete this educational offer?",
+      "header": "Delete Offer",
+      "reject": "Cancel",
+      "accept": "Delete"
+    },
+    "toast": {
+      "delete": {
+        "info": {
+          "summary": "Info",
+          "detail": "Offer successfully deleted!"
+        },
+        "error": {
+          "summary": "Error",
+          "detail": "Something went wrong. Try again later or contact the administrator."
+        }
+      },
+      "copy": {
+        "info": {
+          "summary": "Info",
+          "detail": "You copied the educational offer url to clipboard!"
+        }
+      }
+    },
+    "attributes": {
+      "type": "Type",
+      "eqf": "EQF level",
+      "updated": "Last updated"
+    },
+    "tooltips": {
+      "share": "Share",
+      "download": "Download",
+      "duplicate": "Duplicate",
+      "edit": "Edit",
+      "delete": "Delete",
+      "loginRequired": "Login to be able to {{action}}.",
+      "accessRequired": "You can only {{action}} offers from your organization."
+    }
+  },
+  "curriculumNodeForm": {
+    "durationUnit": {
+      "years": "Years",
+      "semesters": "Semesters",
+      "trimesters": "Trimesters",
+      "months": "Months",
+      "weeks": "Weeks",
+      "days": "Days",
+      "hours": "Hours",
+      "minutes": "Minutes"
+    },
+    "lecturePractical": {
+      "practical": "Practical",
+      "theorical": "Theorical"
+    },
+    "stepList": {
+      "step1": "General Information",
+      "step2": "Skills & Resources"
+    },
+    "fields": {
+      "title": {
+        "tooltip": "A name given to the {{nodeType}}.",
+        "label": "Title"
+      },
+      "description": {
+        "tooltip": "Provide a concise summary or overview of the {{nodeType}} content. Include key topics, purpose, scope, and any important features.",
+        "label": "Description"
+      },
+      "bok": {
+        "tooltip": "List of Body of Knowledge concepts addressed in the {{nodeType}}.",
+        "label": "Knowledge Annotations"
+      },
+      "eqf": {
+        "tooltip": "The European Qualifications Framework. Indicates level of knowledge, skills and competences, from 1 (basic) to 8 (highly specialized).",
+        "label": "EQF Level"
+      },
+      "workload": {
+        "tooltip": "Amount of time expected to invest in order to meet the defined learning outcomes, quantified using ECTS.",
+        "label": "Workload"
+      },
+      "duration": {
+        "tooltip": "The total time required to complete this {{nodeType}}.",
+        "label": "Duration",
+        "durationValue": "Value",
+        "durationUnit": "Unit"
+      },
+      "studyAreas": {
+        "tooltip": "Specific area(s) of study of the {{nodeType}}. Maintained by the UNESCO Institute for Statistics.",
+        "label": "Study Areas"
+      },
+      "courseType": {
+        "tooltip": "Select the type of course. This classification determines how the course fits within the curriculum structure.",
+        "label": "Course Type"
+      },
+      "assesment": {
+        "tooltip": "Describe how students will be evaluated in this course. Include assessment methods (exams, projects, participation), grading criteria, and any relevant deadlines or requirements.",
+        "label": "Assesment"
+      },
+      "lecturePractical": {
+        "tooltip": "Specifies whether this lecture is theoretical or practical. Practical lectures involve hands-on activities, labs, or exercises."
+      },
+      "affiliations": {
+        "tooltip": "Institutions or organizations associated with this {{nodeType}}.",
+        "label": "Affiliations",
+        "affiliationName": "Name",
+        "affiliationUrl": "URL"
+      },
+      "trainingMaterials": {
+        "tooltip": "Resources and materials used to support the teaching of this {{nodeType}}.",
+        "label": "Training Materials",
+        "materialName": "Title",
+        "materialUrl": "URL"
+      },
+      "prerequisites": {
+        "tooltip": "Prerequisites describe the knowledge, skills, qualifications, or experiences that a learner is expected to have before starting this {{nodeType}}.",
+        "label": "Prerequisites"
+      },
+      "learningOutcomes": {
+        "tooltip": "Learning outcomes describe the knowledge, skills, qualifications, or experiences that a learner is expected to have after completing this {{nodeType}}.",
+        "label": "Learning Outcomes"
+      },
+      "bibliography": {
+        "tooltip": "Bibliography describe the recommended reading materials, resources, or references related to this {{nodeType}}.",
+        "label": "Bibliography"
+      },
+      "transversalSkills": {
+        "tooltip": "Skills considered unrelated to a particular job, task, academic discipline or area of knowledge but that can be used in a wide variety of situations and work settings. Based on the ESCO transversal and cross-sector skills.",
+        "label": "Transversal Skills",
+        "addCustom": "Add custom Transversal Skills"
+      },
+      "customTransversalSkills": {
+        "tooltip": "Custom transversal skills related to this {{nodeType}}.",
+        "label": "Custom Transversal Skills"
+      }
+    },
+    "buttons": {
+      "next": "Next",
+      "back": "Back"
+    }
+  },
+  "customSelect": {
+    "filterPlaceholder": "Choose a {{fieldName}} or specify a custom value"
+  },
+  "editPage": {
+    "pageName": "Edit Educational Offer"
+  },
+  "filters": {
+    "searchOptions": {
+      "title": "Title",
+      "description": "Description",
+      "learningOutcomes": "Learning Outcomes"
+    },
+    "filterUserItem": {
+      "loginRequired": "You must be logged in to use this field"
+    },
+    "showPrivateItems": {
+      "label": "Show private profiles?"
+    },
+    "searchByField": {
+      "label": "Search by",
+      "placeholder": "Search"
+    },
+    "bok": {
+      "label": "Filter by Knowledge / BoK Concept"
+    }
+  },
+  "itemExplorer": {
+    "sortOptions": {
+      "title": "Title",
+      "date": "Date",
+      "eqf": "EQF"
+    },
+    "filterUserItemOptions": {
+      "allOffers": "All Offers",
+      "myOffers": "My Offers"
+    },
+    "toast": {
+      "info": {
+        "summary": "Info",
+        "detail": "Offer successfully deleted!"
+      }
+    },
+    "orderBy": "Order By {{option}}",
+    "noOfferMessage": "No offer found",
+    "addOffer": "Add Offer"
+  },
+  "multiSelectChips": {
+    "itemsSelected": "{{number}} items selected",
+    "filterPlaceholder": "Choose a {{fieldName}}"
+  },
+  "nodeTypes": {
+    "studyProgram": "Study Program",
+    "course": "Course",
+    "module": "Module",
+    "lecture": "Lecture"
+  },
+  "moduleTypes": {
+    "studyProgram": "Study Program",
+    "course": "Course",
+    "lecture": "Lecture"
+  },
+  "courseTypes": {
+    "common": "Common",
+    "elective": "Elective",
+    "specialization": "Specialization"
+  },
+  "offerForm": {
+    "headers": {
+      "pageName": "Create Educational Offer",
+      "addNode": "Add New Node",
+      "manageNodes": "Manage Nodes",
+      "organization": "Organization & Division",
+      "rootNodeModal": "Choose Educational Offer Type"
+    },
+    "fields":{
+      "newNodeType": {
+        "label": "Node Type",
+        "tooltip":"The new node type."
+      },
+      "newNodeModuleType": {
+        "label": "Module Type",
+        "tooltip":"The new module type."
+      },
+      "organization": {
+        "label": "Organization *",
+        "tooltip":"The organization under which the offer is to be registered."
+      },
+      "division": {
+        "label": "Division",
+        "tooltip":"The organization division under which the offer is to be registered."
+      },
+      "isPublic": {
+        "tooltip": "Specifies whether this offer is public or restricted to your account."
+      },
+      "rootNodeType": {
+        "label": "Node Type",
+        "tooltip": "The root node type"
+      },
+      "rootNodeModuleType": {
+        "label": "Module Type",
+        "tooltip": "The root module type"
+      }
+    },
+    "buttons": {
+      "resetOffer": "Reset Educational Offer",
+      "deleteNode": "Delete Selected Node",
+      "return": "Return",
+      "save": "Save"
+    },
+    "isPublic": {
+      "public": "Public",
+      "private": "Private"
+    },
+    "modal":{
+      "exit": {
+        "message": "Are you sure that you want to exit without saving?",
+        "header": "Exit Without Saving",
+        "reject": "Cancel",
+        "accept": "Exit"
+      },
+      "deleteNode": {
+        "message": "Do you want to delete the selected curriculum node?",
+        "header": "Delete Node",
+        "reject": "Cancel",
+        "accept": "Delete"
+      }
+    },
+    "toast": {
+      "invalidTypeError": {
+        "detail": "Invalid node type. Try again with other node type.",
+        "summary": "Error"
+      },
+      "deleteRootError": {
+        "detail": "Invalid node selection. Root node cannot be deleted, try again with other node.",
+        "summary": "Error"
+      },
+      "submitError": {
+        "detail": "Something went wrong. Try again later or contact the administrator.",
+        "summary": "Error"
+      },
+      "mandatoryFieldsError": {
+        "detail": "There are incomplete mandatory fields. Please review the form and try to submit again.",
+        "summary": "Error"
+      },
+      "nodeDeleted": {
+        "detail": "Node deleted without problems.",
+        "summary": "Info"
+      }
+    }
+  },
+  "offerIndex": {
+    "tablist": {
+      "index": "Index",
+      "tree": "Tree"
+    }
+  },
+  "offerPage": {
+    "toast": {
+      "create": {
+        "summary": "Info",
+        "detail": "Educational offer successfully created!"
+      },
+      "update": {
+        "summary": "Info",
+        "detail": "Educational offer successfully updated!"
+      },
+      "error": {
+        "summary": "Error",
+        "detail": "Something went wrong. Try again later or contact the administrator."
+      },
+      "copy": {
+        "summary": "Info",
+        "detail": "You copied the educational offer url to clipboard!"
+      }
+    },
+    "modal": {
+      "delete": {
+        "message": "Do you want to delete this educational offer?",
+        "header": "Delete Offer",
+        "reject": "Cancel",
+        "accept": "Delete"
+      }
+    },
+    "buttons": {
+      "edit": "Edit Offer",
+      "delete": "Delete Offer",
+      "return": "Return to Homepage"
+    },
+    "permalink": "Permalink",
+    "type": "Type",
+    "moduleType": "Module Type",
+    "courseType": "Course Type",
+    "isPractical": "Is Practical",
+    "eqf":"EQF level",
+    "workload": "Workload",
+    "duration": "Duration",
+    "created": "Created",
+    "updated": "Updated",
+    "visibility": "Visibility",
+    "downloadMetadata": "Download Metadata",
+    "metadataFormat": "Metadata Format",
+    "assesment": "Assesment",
+    "prerequisites": "Prerequisites",
+    "trainingMaterials": "Training Materials",
+    "learningOutcomes": "Learning Outcomes",
+    "bibliography": "Bibliography",
+    "affiliations": "Affiliations",
+    "studyAreas": "Study Areas",
+    "knowledge": "Knowledge",
+    "transversalSkills": "Transversal Skills"
+  },
+  "treeselectChips": {
+    "placeholder": "Choose a {{fieldName}}",
+    "itemsSelected": "{{number}} items selected"
+  },
+  "boolean": {
+    "true": "True",
+    "false": "False"
+  }
+}

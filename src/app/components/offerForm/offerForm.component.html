@@ -7,78 +7,78 @@
     <div class="offer-index-column flex flex-column gap-3">
         <offer-index-component [offer]="offer()" [selectedNode]="selectedNode().id" (selectedNodeChanged)="changeSelectedNode($event)"></offer-index-component>
         <p-panel class="custom-panel">
-            <div class="font-bold mb-3">Add New Node</div>
+            <div class="font-bold mb-3">{{'offerForm.headers.addNode' | translate}}</div>
             <div class="flex flex-column sm:flex-row gap-3 mb-4">
                 <p-floatlabel variant="on" class="custom-floatlabel w-full">
                     <p-select [inputId]="'newNodeType'" [options]="getValidChildTypes()" [(ngModel)]="newNodeType" class="w-full custom-select" [checkmark]="true"
-                        pTooltip="The new node type" tooltipPosition="bottom" showDelay="200" hideDelay="200" [disabled]="getValidChildTypes().length <= 0"/>
-                    <label [for]="'newNodeType'">Node Type</label>
+                        [pTooltip]="'offerForm.fields.newNodeType.tooltip' | translate" tooltipPosition="bottom" showDelay="200" hideDelay="200" [disabled]="getValidChildTypes().length <= 0"/>
+                    <label [for]="'newNodeType'">{{'offerForm.fields.newNodeType.label' | translate}}</label>
                 </p-floatlabel>
                 @if(newNodeType == 'Module') {
                     <p-floatlabel variant="on" class="custom-floatlabel w-full">
                         <p-select [inputId]="'newNodeModuleType'" [options]="getValidModuleTypes()" [(ngModel)]="newNodeModuleType"  class="w-full custom-select" 
-                            [checkmark]="true" pTooltip="The new module type" tooltipPosition="bottom" showDelay="200" hideDelay="200" 
+                            [checkmark]="true" [pTooltip]="'offerForm.fields.newNodeModuleType.tooltip' | translate" tooltipPosition="bottom" showDelay="200" hideDelay="200" 
                             optionLabel="label" optionValue="value"/>
-                        <label [for]="'newNodeModuleType'">Module Type</label>
+                        <label [for]="'newNodeModuleType'">{{'offerForm.fields.newNodeModuleType.label' | translate}}</label>
                     </p-floatlabel>
                 }
                 <p-button icon="pi pi-plus" rounded [disabled]="newNodeType == undefined || (newNodeType == 'Module' && newNodeModuleType == undefined)" 
                     class="custom-button" (onClick)="addNewChild()"></p-button>
             </div>
-            <div class="font-bold mb-3">Manage Nodes</div>
+            <div class="font-bold mb-3">{{'offerForm.headers.manageNodes' | translate}}</div>
             <div class="flex justify-content-between gap-3">
-                <p-button icon="pi pi-refresh" class="delete-button" label="Replace Root Node" (onClick)="replaceRootNode()"></p-button>
-                <p-button icon="pi pi-trash" [disabled]="selectedNode().id === offer().root.id" class="delete-button" label="Delete Selected Node" (onClick)="deleteModal($event)"></p-button>
+                <p-button icon="pi pi-refresh" class="delete-button" [label]="'offerForm.buttons.resetOffer' | translate" (onClick)="replaceRootNode()"></p-button>
+                <p-button icon="pi pi-trash" [disabled]="selectedNode().id === offer().root.id" class="delete-button" [label]="'offerForm.buttons.deleteNode' | translate" (onClick)="deleteModal($event)"></p-button>
             </div>
         </p-panel>
         <p-panel class="custom-panel">
-            <div class="font-bold mb-3">Organization & Division</div>
+            <div class="font-bold mb-3">{{'offerForm.headers.organization' | translate}}</div>
             <div class="flex flex-column sm:flex-row gap-3 mb-4">
                 <p-floatlabel variant="on" class="custom-floatlabel w-full" [class.invalid-floatlabel]="errorMap.get('orgId') != undefined">
                     <p-select inputId="orgId" [options]="organizations" (ngModelChange)="loadDivisions($event)"
                         [ngModel]="this.offer().orgId == '' ? undefined : {value: this.offer().orgId, label: this.offer().orgName}"
                         class="w-full custom-select" optionLabel="label" [checkmark]="true"
                         [class.invalid-select]="errorMap.get('orgId') != undefined"
-                        pTooltip="The organization under which the offer is to be registered" 
+                        [pTooltip]="'offerForm.fields.organization.tooltip' | translate" 
                         tooltipPosition="bottom" showDelay="200" hideDelay="200"/>
-                    <label for="orgId">Organization *</label>
+                    <label for="orgId">{{'offerForm.fields.organization.label' | translate}}</label>
                 </p-floatlabel>
                 <p-floatlabel variant="on" class="custom-floatlabel w-full">
                     <p-select [options]="divisions" [(ngModel)]="this.offer().division" class="w-full custom-select" 
                         [disabled]="divisions.length == 0" [checkmark]="true" inputId="division"
-                        pTooltip="The organization division under which the offer is to be registered" 
+                        [pTooltip]="'offerForm.fields.division.tooltip' | translate" 
                         tooltipPosition="bottom" showDelay="200" hideDelay="200"/>
-                    <label for="division">Division</label>
+                    <label for="division">{{'offerForm.fields.division.label' | translate}}</label>
                 </p-floatlabel>
             </div>
         </p-panel>
         <div class="flex w-full">
             <p-selectbutton [options]="IS_PUBLIC" [(ngModel)]="offer().isPublic" optionLabel="label" optionValue="value"
-                pTooltip="Specifies whether this offer is public or restricted to your account." allowEmpty="false"
+                [pTooltip]="'offerForm.fields.isPublic.tooltip' | translate" allowEmpty="false"
                 tooltipPosition="bottom" showDelay="200" hideDelay="200"/>
         </div>
         <div class="flex justify-content-between gap-3">
             <p-button icon="pi pi-arrow-left" severity="secondary" class="custom-secondary-button" (onClick)="returnToHomepage()"
-                label="Return"></p-button>
-            <p-button class="custom-button" label="Submit" (onClick)="submitEducationalOffer()"></p-button>
+                [label]="'offerForm.buttons.return' | translate"></p-button>
+            <p-button class="custom-button" [label]="'offerForm.buttons.save' | translate" (onClick)="submitEducationalOffer()"></p-button>
         </div>
     </div>
 </div>
 
-<p-dialog [header]="rootNodeModalClosable ? 'Replace Root Node' : 'Add Root Node'" [modal]="true" [(visible)]="rootNodeModalVisible" 
+<p-dialog [header]="'offerForm.headers.rootNodeModal' | translate" [modal]="true" [(visible)]="rootNodeModalVisible" 
             [style]="{ width: '30rem', color: 'var(--primary-color)' }" [draggable]="false" [closable]="rootNodeModalClosable">
     <div class="flex flex-column sm:flex-row gap-3 p-3">
         <p-floatlabel variant="on" class="custom-floatlabel w-full">
             <p-select [inputId]="'newNodeType'" [options]="getRootNodeTypes()" [(ngModel)]="rootNodeType" class="w-full custom-select" [checkmark]="true"
-                pTooltip="The new node type" tooltipPosition="bottom" showDelay="200" hideDelay="200" appendTo="body"/>
-            <label [for]="'newNodeType'">Node Type</label>
+                [pTooltip]="'offerForm.fields.rootNodeType.tooltip' | translate" tooltipPosition="bottom" showDelay="200" hideDelay="200" appendTo="body"/>
+            <label [for]="'newNodeType'">{{'offerForm.fields.rootNodeType.label' | translate}}</label>
         </p-floatlabel>
         @if(rootNodeType == 'Module') {
             <p-floatlabel variant="on" class="custom-floatlabel w-full">
                 <p-select [inputId]="'newNodeModuleType'" [options]="getRootModuleTypes()" [(ngModel)]="rootNodeModuleType"  class="w-full custom-select" 
-                    [checkmark]="true" pTooltip="The new module type" tooltipPosition="bottom" showDelay="200" hideDelay="200" 
-                    optionLabel="label" optionValue="value" appendTo="body"/>
-                <label [for]="'newNodeModuleType'">Module Type</label>
+                    [checkmark]="true" [pTooltip]="'offerForm.fields.rootNodeModuleType.tooltip' | translate" tooltipPosition="bottom" 
+                    showDelay="200" hideDelay="200" optionLabel="label" optionValue="value" appendTo="body"/>
+                <label [for]="'newNodeModuleType'">{{'offerForm.fields.rootNodeModuleType.label' | translate}}</label>
             </p-floatlabel>
         }
         <p-button icon="pi pi-plus" rounded [disabled]="rootNodeType == undefined || (rootNodeType == 'Module' && rootNodeModuleType == undefined)" 

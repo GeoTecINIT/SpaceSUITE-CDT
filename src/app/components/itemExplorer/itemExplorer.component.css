@@ -11,13 +11,6 @@
     --p-button-primary-hover-border-color: var(--hover-color);
 }
 
-.custom-toast {
-    --p-toast-info-background: color-mix(in srgb, var(--secondary-color) 10%, rgba(255, 255, 255, 0.9) 90%);
-    --p-toast-info-border-color: var(--secondary-color);
-    --p-toast-info-color: var(--secondary-color);
-    --p-toast-info-detail-color: var(--primary-color);
-}
-
 .custom-paginator {
     --p-paginator-nav-button-selected-background: color-mix(in srgb, var(--secondary-color) 15%, rgba(255, 255, 255, 0.7) 85%);
     --p-select-option-selected-focus-background: color-mix(in srgb, var(--secondary-color) 15%, rgba(255, 255, 255, 0.7) 85%);

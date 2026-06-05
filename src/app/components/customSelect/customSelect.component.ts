@@ -7,13 +7,14 @@ import { ChipModule } from 'primeng/chip';
 import { CommonModule } from "@angular/common";
 import { Select, SelectModule } from "primeng/select";
 import { CardFilterService } from "../../services/useCaseServices/cardFilter.service";
+import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
   standalone: true,
   selector: 'custom-select',
   templateUrl: './customSelect.component.html',
   styleUrls: ['./customSelect.component.css'],
-  imports: [FloatLabelModule, FormsModule, IconFieldModule, ButtonModule, ChipModule, CommonModule, SelectModule],
+  imports: [FloatLabelModule, FormsModule, IconFieldModule, ButtonModule, ChipModule, CommonModule, SelectModule, TranslateModule],
 })
 export class CustomSelectComponent {
   @Input() selection?: string;

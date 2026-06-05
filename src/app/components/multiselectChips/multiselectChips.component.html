@@ -3,7 +3,7 @@
         <p-multiselect #pmulti [options]="multiselectOptions" [ngModel]="chips" inputId="{{fieldName}}"
             class="w-full custom-multiselect" [maxSelectedLabels]="0" (ngModelChange)="multiselectChange($event)"
             [class.invalid-multiselect]="error" showToggleAll="false" [filter]="filter" resetFilterOnHide="true" (onFilter)="currentText = pmulti.filterValue || ''"
-            filterPlaceHolder="Choose a {{getSingularFieldName()}}" [showClear]="true" (onClear)="this.chipsChange.emit([])"
+            [filterPlaceHolder]="'multiSelectChips.filterPlaceholder' | translate: {fieldName: getSingularFieldName()}" [showClear]="true" (onClear)="this.chipsChange.emit([])"
             optionValue="value" optionLabel="id" (onPanelShow)="onDropdownOpen()" (onClear)="pmulti.hide()" appendTo="body" panelStyleClass="custom-multiselect"
             [virtualScroll]="optionsName === 'Study Areas'"
             [virtualScrollItemSize]="optionsName === 'Study Areas' ? 34 : null"
@@ -14,7 +14,7 @@
                 <i class="pi pi-bookmark"></i>
             </ng-template>
             <ng-template #selecteditems>
-                {{chips.length}} items selected
+                {{'multiSelectChips.itemsSelected' | translate: {number: chips.length} }}
             </ng-template>
         </p-multiselect>
         <label for="{{fieldName}}">{{fieldName}}</label>

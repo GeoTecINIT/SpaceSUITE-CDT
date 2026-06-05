@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, EventEmitter, Input, Output, SimpleChanges } from "@angular/core";
+import { Component, EventEmitter, inject, Input, Output, SimpleChanges } from "@angular/core";
 import { FormsModule } from '@angular/forms';
 import { DividerModule } from "primeng/divider";
 import { InputTextModule } from 'primeng/inputtext'
@@ -15,6 +15,8 @@ import { ButtonModule } from "primeng/button";
 import { SkeletonModule } from "primeng/skeleton";
 import { FilterOption } from "../../model/viewModel/filterOption";
 import { CheckboxModule } from "primeng/checkbox";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { Subscription } from "rxjs";
 
 @Component({
   standalone: true,
@@ -22,7 +24,7 @@ import { CheckboxModule } from "primeng/checkbox";
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.css'],
   imports: [CommonModule, FormsModule, DividerModule, InputTextModule, MultiSelectModule, BokModalComponent, SelectButtonModule, TooltipModule,
-            InputGroupModule, InputGroupAddonModule, MenuModule, ButtonModule, SkeletonModule, CheckboxModule],
+            InputGroupModule, InputGroupAddonModule, MenuModule, ButtonModule, SkeletonModule, CheckboxModule, TranslateModule],
 })
 export class FiltersComponent {
   @Input() multiSelectOptions: FilterOption[] = [];
@@ -33,7 +35,7 @@ export class FiltersComponent {
   @Input() searchValue: string = '';
   @Output() searchValueChange: EventEmitter<string> = new EventEmitter();
 
-  searchOptions: MenuItem[] = [{ label: 'Title' }, { label: 'Description' }, { label: 'Learning Outcome' }];
+  searchOptions: MenuItem[] = [];
   @Input() selectedOption: string = "Title"
   @Output() selectedOptionChange: EventEmitter<string> = new EventEmitter();
 
@@ -51,8 +53,14 @@ export class FiltersComponent {
 
   skeletonElements: number[] = [];
 
+  private langChangeSub: Subscription;
+
+  private translate = inject(TranslateService);
+
   constructor() {
     this.skeletonElements = Array(5).fill(null);
+    this.langChangeSub = this.translate.onLangChange.subscribe(() => this.buildSearchOptions());
+    this.buildSearchOptions();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -60,6 +68,10 @@ export class FiltersComponent {
       this.filterUserItemChange.emit(false);
       this.showPrivateChange.emit(false);
     }
+  }
+
+  ngOnDestroy() {
+    this.langChangeSub.unsubscribe();
   }
 
   getMultiselectOptions(filterOption: FilterOption): {id: string, value: string}[] {
@@ -95,5 +107,17 @@ export class FiltersComponent {
 
   trackByLabel(index: number, item: FilterOption): string | number {
     return item.label ?? index;
+  }
+
+  getActiveSearchOption(): string {
+    return this.searchOptions.find((item: MenuItem) => item['value'] === this.selectedOption)?.label ?? '';
+  }
+
+  private buildSearchOptions() {
+    this.searchOptions = [
+      { label: this.translate.instant('filters.searchOptions.title'), value: 'Title' }, 
+      { label: this.translate.instant('filters.searchOptions.description'), value: 'Description' }, 
+      { label: this.translate.instant('filters.searchOptions.learningOutcomes'), value: 'Learning Outcomes' }
+    ]
   }
 }

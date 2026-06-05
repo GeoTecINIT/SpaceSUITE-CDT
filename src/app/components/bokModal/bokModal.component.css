@@ -21,18 +21,6 @@
     width: 15rem !important;
 }
 
-.custom-toast {
-    --p-toast-info-background: color-mix(in srgb, var(--secondary-color) 10%, rgba(255, 255, 255, 0.9) 90%);
-    --p-toast-info-border-color: var(--secondary-color);
-    --p-toast-info-color: var(--secondary-color);
-    --p-toast-info-detail-color: var(--primary-color);
-
-    --p-toast-error-background: color-mix(in srgb, var(--danger-color) 10%, rgba(255, 255, 255, 0.9) 90%);
-    --p-toast-error-border-color: var(--danger-color);
-    --p-toast-error-color: var(--danger-color);
-    --p-toast-error-detail-color: var(--primary-color);
-}
-
 ::ng-deep .p-toast-close-button .p-button-label {
     font-size: 0;
 } 

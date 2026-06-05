@@ -6,7 +6,7 @@
             <div class="my-4 flex">
                 <p-selectbutton [ngModel]="logged ? filterUserItem : undefined" [options]="logged ? filterUserItemOptions : [filterUserItemOptions[1]]" class="custom-togglebutton" 
                                 [allowEmpty]="!logged" optionLabel="label" optionValue="value" (ngModelChange)="updateFilterUserItem($event)" 
-                                [disabled]="!logged" [pTooltip]="!logged ? 'You must be logged in to use this field' : ''" tooltipPosition="top">
+                                [disabled]="!logged" [pTooltip]="!logged ? ('filters.filterUserItem.loginRequired' | translate) : ''" tooltipPosition="top">
                     <ng-template #item let-item>
                         <div class="row">
                             <i [class]="item.icon"></i>
@@ -17,7 +17,7 @@
             </div>
             @if (logged) {
                 <div class="my-4 flex align-items-center gap-3">
-                    Show private profiles?
+                    {{'filters.showPrivateItems.label' | translate}}
                     <p-checkbox
                         class="flex custom-checkbox"
                         [(ngModel)]="showPrivate"
@@ -27,18 +27,18 @@
                 </div>
             }
             <div class="my-4">
-                Search by {{selectedOption}}
+                {{'filters.searchByField.label' | translate}} {{getActiveSearchOption()}}
                 <p-inputgroup class="w-20rem">
                     <input type="text" pInputText [(ngModel)]="searchValue" (ngModelChange)="updateSearchValue()" 
-                        placeholder="Search" class="custom-input"/>
+                        [placeholder]="'filters.searchByField.placeholder' | translate" class="custom-input"/>
                     <p-inputgroup-addon>
                         <p-button class="input-button" icon="pi pi-chevron-down" severity="secondary" variant="text" (click)="menu.toggle($event)"/>
                     </p-inputgroup-addon>
                 </p-inputgroup>
                 <p-menu #menu [model]="searchOptions" popup styleClass="!min-w-fit" class="custom-menu">
                     <ng-template #item let-item>
-                        <a pRipple class="flex items-center p-menu-item-link" (click)="setSearchOption(item.label)">
-                            <i class="w-1rem" [ngClass]="item.label == selectedOption ? 'pi pi-check' : ''"></i>
+                        <a pRipple class="flex items-center p-menu-item-link" (click)="setSearchOption(item.value)">
+                            <i class="w-1rem" [ngClass]="item.value == selectedOption ? 'pi pi-check' : ''"></i>
                             <span class="ml-2">{{ item.label }}</span>
                         </a>
                     </ng-template>
@@ -56,7 +56,7 @@
                 </div>
             </ng-container>
             <div class="my-4 max-w-20rem">
-                <bokModal [selectedConcepts]="bokConcepts" (selectedConceptsChange)="bokConceptsChange.emit($event)" [label]="'Filter by Knowledge / BoK Concept'"></bokModal>
+                <bokModal [selectedConcepts]="bokConcepts" (selectedConceptsChange)="bokConceptsChange.emit($event)" [label]="'filters.bok.label' | translate"></bokModal>
             </div>
         </ng-content>
     </div>

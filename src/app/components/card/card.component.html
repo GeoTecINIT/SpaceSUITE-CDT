@@ -23,19 +23,19 @@
       <div class="flex flex-column gap-2">
         <div class="flex flex-wrap align-items-center gap-2 text-sm">
           <span class="white-space-nowrap">
-            <strong>Type:</strong>
+            <strong>{{ 'card.attributes.type' | translate }}:</strong>
 
-            {{ getOfferTypeString() }}
+            {{ educationalOffer.root.nodeType }}
           </span>
           |
           <span class="white-space-nowrap">
-            <strong>EQF level:</strong>
+            <strong>{{ 'card.attributes.eqf' | translate }}:</strong>
 
             {{ educationalOffer.root.eqf }}
           </span>
           |
           <span class="white-space-nowrap">
-            <strong>Last updated:</strong>
+            <strong>{{ 'card.attributes.updated' | translate }}:</strong>
 
             {{ educationalOffer.updatedAt?.toLocaleDateString() }}
           </span>
@@ -93,12 +93,12 @@
         icon="pi pi-share-alt"
         [rounded]="true"
         variant="text"
-        pTooltip="Share"
+        pTooltip="{{ 'card.tooltips.share' | translate }}"
         tooltipPosition="top"
         (onClick)="copyLink()"
       />
 
-      <div pTooltip="Download" tooltipPosition="top">
+      <div pTooltip="{{ 'card.tooltips.download' | translate }}" tooltipPosition="top">
         <p-button
           class="custom-button"
           icon="pi pi-download"
@@ -141,7 +141,7 @@
         icon="pi pi-clone"
         [rounded]="true"
         variant="text"
-        [pTooltip]="logged ? 'Duplicate' : 'Login to be able to duplicate.'"
+        [pTooltip]="duplicateTooltip"
         tooltipPosition="top"
         [disabled]="!logged"
         (onClick)="duplicateJob()"
@@ -152,13 +152,7 @@
         icon="pi pi-pencil"
         [rounded]="true"
         variant="text"
-        [pTooltip]="
-          logged
-            ? checkUser()
-              ? 'Edit'
-              : 'You can only edit jobs from your organization.'
-            : 'Login to be able to edit.'
-        "
+        [pTooltip]="editTooltip"
         tooltipPosition="top"
         [disabled]="!logged || !checkUser()"
         (onClick)="editJob()"
@@ -169,13 +163,7 @@
         icon="pi pi-trash"
         [rounded]="true"
         variant="text"
-        [pTooltip]="
-          logged
-            ? checkUser()
-              ? 'Delete'
-              : 'You can only delete jobs from your organization.'
-            : 'Login to be able to delete.'
-        "
+        [pTooltip]="deleteTooltip"
         tooltipPosition="top"
         [tooltipStyleClass]="logged && checkUser() ? 'danger-tooltip' : ''"
         [disabled]="!logged || !checkUser()"

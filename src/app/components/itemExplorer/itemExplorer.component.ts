@@ -23,6 +23,7 @@ import { CardComponent } from "../card/card.component";
 import { AuthService } from "@eo4geo/ngx-bok-utils";
 import { DividerModule } from 'primeng/divider';
 import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 
 @Component({
   standalone: true,
@@ -31,7 +32,7 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
   styleUrls: ['./itemExplorer.component.css'],
   imports: [CardComponent, FiltersComponent, SkeletonModule, CommonModule, 
             PaginatorModule, ToastModule, ButtonModule, MenuModule, ButtonGroupModule, 
-            DividerModule, TabsModule, ConfirmDialogModule],
+            DividerModule, TabsModule, ConfirmDialogModule, TranslateModule],
 })
 export class ItemExplorerComponent {
   educationalOffers: EducationalOffer[] = [];
@@ -68,6 +69,8 @@ export class ItemExplorerComponent {
   private userOrgIds: string[] = [];
   private userUid: string | undefined;
 
+  private langChangeSub: Subscription;
+
   // Services
 
   private educationalOfferService = inject(EducationalOfferService);
@@ -79,15 +82,15 @@ export class ItemExplorerComponent {
   private messageService = inject(MessageService);
   private route = inject(ActivatedRoute);
   private ngZone: NgZone = inject(NgZone);
+  private translate: TranslateService = inject(TranslateService);
 
   constructor() {
     this.skeletonElements = Array(16).fill(null);
-    this.sortOptions = [{ label: 'Title' }, { label: 'Date' }, {label: 'EQF'}];
+    this.langChangeSub = this.translate.onLangChange.subscribe(() => this.buildOptionsArrays());
+    this.buildOptionsArrays();
   }
 
   ngOnInit() {
-    this.filterUserItemOptions = [{ label: 'My Offers', value: true, icon: 'pi pi-user' },{ label: 'All Offers', value: false, icon: 'pi pi-globe' }];
-
     // Load filters value from FilterService
     this.filterService.getFilterOptions().pipe(take(1)).subscribe(filters => {
       this.filterOptions = filters;
@@ -134,8 +137,8 @@ export class ItemExplorerComponent {
           case 'delete':
             this.messageService.add({ 
               severity: 'info', 
-              summary: 'Info', 
-              detail: `Material deleted without problems.`,
+              summary: this.translate.instant('itemExplorer.toast.info.summary'), 
+              detail: this.translate.instant('itemExplorer.toast.info.detail'),
               life: 3000, 
               closable: true 
             }); 
@@ -161,6 +164,7 @@ export class ItemExplorerComponent {
     window.removeEventListener('scroll', this.updateButtonPosition);
     window.removeEventListener('resize', this.updateButtonPosition);
     this.educationalOffersSubscription.unsubscribe();
+    this.langChangeSub.unsubscribe()
   }
 
   switchSortOrientation() {
@@ -237,7 +241,7 @@ export class ItemExplorerComponent {
           if (offer.root.description.toLowerCase().includes(this.searchValue.toLowerCase())) newSearch.push(offer);
         });
         break;
-      case "Learning Outcome":
+      case "Learning Outcomes":
         sortedItems.forEach( offer => {
           if (offer.root.learningObjectives.join(';').toLowerCase().includes(this.searchValue.toLowerCase())) newSearch.push(offer);
         });
@@ -313,6 +317,19 @@ export class ItemExplorerComponent {
 
   trackById(index: number, item: any): string | number {
     return item._id ?? item.id ?? index;
+  }
+
+  private buildOptionsArrays() {
+    this.sortOptions = [
+      { label: this.translate.instant('itemExplorer.sortOptions.title'), value: 'Title' }, 
+      { label: this.translate.instant('itemExplorer.sortOptions.date'), value: 'Date' }, 
+      {label: this.translate.instant('itemExplorer.sortOptions.eqf'), value: 'EQF'}
+    ];
+
+    this.filterUserItemOptions = [
+      { label: this.translate.instant('itemExplorer.filterUserItemOptions.myOffers'), value: true, icon: 'pi pi-user' },
+      { label: this.translate.instant('itemExplorer.filterUserItemOptions.allOffers'), value: false, icon: 'pi pi-globe' }
+    ]
   }
 
 }

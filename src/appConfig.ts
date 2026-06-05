@@ -8,7 +8,7 @@ import { provideRouter, Routes } from '@angular/router';
 import { AuthGuard, exitWithoutSavingGuard, NotFoundPageComponent, OrganizationPageComponent, UserPageComponent } from '@eo4geo/ngx-bok-utils';
 import { environment } from './environments/environment';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { Auth, getAuth, provideAuth } from '@angular/fire/auth';
+import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { provideStorage, getStorage } from '@angular/fire/storage';
 import { ItemExplorerComponent } from './app/components/itemExplorer/itemExplorer.component';
@@ -16,6 +16,8 @@ import { OfferPageComponent } from './app/components/offerPage/offerPage.compone
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { OfferFormComponent } from './app/components/offerForm/offerForm.component';
 import { EditPageComponent } from './app/components/editPage/editPage.component';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideTranslateService } from '@ngx-translate/core';
 
 const routes: Routes = [
     { path: '', component: ItemExplorerComponent },
@@ -55,6 +57,14 @@ export const appConfig: ApplicationConfig = {
             }
         }),
         MessageService,
-        ConfirmationService
+        ConfirmationService,
+        provideTranslateService({
+            loader: provideTranslateHttpLoader({
+                prefix: 'assets/i18n/',
+                suffix: '.json'
+            }),
+            fallbackLang: 'en',
+            lang: 'en'
+        })
     ]
 };

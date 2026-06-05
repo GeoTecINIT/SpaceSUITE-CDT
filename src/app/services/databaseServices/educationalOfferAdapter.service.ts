@@ -184,7 +184,7 @@ export class EducationalOfferAdapterService {
         default:
           throw new DomainError(
           'NODE_TYPE_INVALID', 
-          `Unknown node type: ${node.constructor.name}. Cannot parse curriculum node with id ${node.id} to database model.`
+          `Unknown node type: ${node.nodeType}. Cannot parse curriculum node with id ${node.id} to database model.`
         );
       }
     }))
@@ -328,7 +328,7 @@ export class EducationalOfferAdapterService {
       default:
         throw new DomainError(
         'NODE_TYPE_INVALID',
-        `Unknown node type: ${nodeDB.constructor.name}. Cannot parse curriculum database node with id ${nodeDB.id} to core model.`
+        `Unknown node type: ${nodeDB.nodeType}. Cannot parse curriculum database node with id ${nodeDB.id} to core model.`
       );
     }
   }

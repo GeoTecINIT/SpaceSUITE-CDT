@@ -10,9 +10,8 @@ import { ConfirmationService, MessageService } from "primeng/api";
 import { FormsModule } from "@angular/forms";
 import { FloatLabelModule } from "primeng/floatlabel";
 import { SelectModule } from 'primeng/select';
-import { CurriculumNode } from "../../model/coreModel/curriculumNode";
+import { CurriculumNode, NodeType } from "../../model/coreModel/curriculumNode";
 import { OfferIndexComponent } from "../offerIndexComponent/offerIndexComponent.component";
-import { UtilsService } from "../../services/useCaseServices/utils.service";
 import { Module, ModuleType } from "../../model/coreModel/module";
 import { TooltipModule } from "primeng/tooltip";
 import { ButtonModule } from "primeng/button";
@@ -25,6 +24,7 @@ import { EducationalOfferService } from "../../services/useCaseServices/educatio
 import { OfferValidationService } from "../../services/useCaseServices/offerValidation.service";
 import { OrganizationDBService } from "../../services/databaseServices/organizationDB.service";
 import { SelectButtonModule } from "primeng/selectbutton";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 
 @Component({
   standalone: true,
@@ -32,11 +32,12 @@ import { SelectButtonModule } from "primeng/selectbutton";
   templateUrl: './offerForm.component.html',
   styleUrls: ['./offerForm.component.css'],
   imports: [ToastModule, ConfirmDialogModule, FloatLabelModule, FormsModule, PanelModule, OfferIndexComponent, SelectModule, TooltipModule, 
-            ButtonModule, DialogModule, CurriculumNodeFormComponent, SelectButtonModule],
+            ButtonModule, DialogModule, CurriculumNodeFormComponent, SelectButtonModule, TranslateModule],
 })
 export class OfferFormComponent {
-  @Input() pageName: string = 'Create New Educational Offer';
+  @Input() inputPageName?: string;
   @Input() inputOffer?: EducationalOffer;
+  pageName: string = 'Create New Educational Offer'
   offer: WritableSignal<EducationalOffer> = signal(new EducationalOffer(new StudyProgram(undefined, this.generateTimeBasedID())));
   selectedNode: WritableSignal<CurriculumNode> = signal<CurriculumNode>(this.offer().root);
   errorMap: Map<string, string> = new Map();
@@ -44,60 +45,19 @@ export class OfferFormComponent {
   rootNodeModalVisible: boolean = false;
   rootNodeModalClosable: boolean = false;
 
-  rootNodeType: string | undefined;
+  rootNodeType: NodeType | undefined;
   rootNodeModuleType: ModuleType | undefined;
 
-  newNodeType: string | undefined;
+  newNodeType: NodeType | undefined;
   newNodeModuleType: ModuleType | undefined;
 
-  private readonly CHILD_TYPES: Record<string, string[]> = {
-    'Root': ['Study Program', 'Module', 'Course', 'Lecture'],
-    'Study Program': ['Module', 'Course', 'Lecture'],
-    'Course': ['Module', 'Lecture'],
-    'Lecture': [],
-  };
+  private CHILD_TYPES?: Record<string, Object[]>;
 
-  private readonly MODULE_CHILD_TYPES: Record<ModuleType, string[]> = {
-    [ModuleType.StudyProgram]: ['Study Program'],
-    [ModuleType.Course]:       ['Course'],
-    [ModuleType.Lecture]:      ['Lecture'],
-  };
+  private MODULE_CHILD_TYPES?: Record<ModuleType, Object[]>;
 
-  private readonly MODULE_TYPES: Record<string, Object[]> = {
-    'Root': [
-      {
-        label: ModuleType.StudyProgram.charAt(0).toUpperCase() + ModuleType.StudyProgram.slice(1),
-        value: ModuleType.StudyProgram
-      },
-      {
-        label: ModuleType.Course.charAt(0).toUpperCase() + ModuleType.Course.slice(1),
-        value: ModuleType.Course
-      },
-      {
-        label: ModuleType.Lecture.charAt(0).toUpperCase() + ModuleType.Lecture.slice(1),
-        value: ModuleType.Lecture
-      }
-    ],
-    'Study Program': [
-      {
-        label: ModuleType.Course.charAt(0).toUpperCase() + ModuleType.Course.slice(1),
-        value: ModuleType.Course
-      },
-      {
-        label: ModuleType.Lecture.charAt(0).toUpperCase() + ModuleType.Lecture.slice(1),
-        value: ModuleType.Lecture
-      }
-    ],
-    'Course': [
-      {
-        label: ModuleType.Lecture.charAt(0).toUpperCase() + ModuleType.Lecture.slice(1),
-        value: ModuleType.Lecture
-      }
-    ],
-    'Lecture': [],
-  };
+  private MODULE_TYPES?: Record<string, Object[]>;
 
-  public readonly IS_PUBLIC: any[] = [{ label: 'Public', value: true },{ label: 'Private', value: false }];
+  public IS_PUBLIC?: any[];
 
   organizations: object[] = [];
   divisions: string[] = [];
@@ -108,6 +68,7 @@ export class OfferFormComponent {
 
   private sessionSubscription?: Subscription;
   private userOrgsSubscription?: Subscription;
+  private langChangeSub: Subscription;
 
   private authService: AuthService = inject(AuthService);
   private confirmationService: ConfirmationService = inject(ConfirmationService);
@@ -115,10 +76,15 @@ export class OfferFormComponent {
   private exitWithoutSavingService: ExitWithoutSavingService = inject(ExitWithoutSavingService);
   private router: Router = inject(Router);
   private route: ActivatedRoute = inject(ActivatedRoute);
-  private utilsService: UtilsService = inject(UtilsService);
   private educationalOfferService: EducationalOfferService = inject(EducationalOfferService);
   private offerValidationService: OfferValidationService = inject(OfferValidationService);
   private organizationDBService: OrganizationDBService = inject(OrganizationDBService);
+  private translate: TranslateService = inject(TranslateService);
+
+  constructor() {
+    this.langChangeSub = this.translate.onLangChange.subscribe(() => this.buildSelectOptions());
+    this.buildSelectOptions()
+  }
 
   ngOnInit() {
     this.route.paramMap.pipe(switchMap(paramMap => {
@@ -165,19 +131,20 @@ export class OfferFormComponent {
   ngOnDestroy() {
     this.sessionSubscription?.unsubscribe();
     this.userOrgsSubscription?.unsubscribe();
+    this.langChangeSub.unsubscribe();
   }
 
   confirmExitWithoutSaving() {
     this.confirmationService.confirm({
-      message: 'Are you sure that you want to exit without saving?',
-      header: 'Exit Without Saving',
+      message: this.translate.instant('offerForm.modal.exit.message'),
+      header: this.translate.instant('offerForm.modal.exit.header'),
       icon: 'pi pi-info-circle',
       rejectButtonProps: {
-        label: 'Cancel',
+        label: this.translate.instant('offerForm.modal.exit.reject'),
         severity: 'secondary',
       },
       acceptButtonProps: {
-        label: 'Exit',
+        label: this.translate.instant('offerForm.modal.exit.accept'),
         severity: 'primary',
       },
       accept: () => this.exitWithoutSavingService.exitSubject.next(true),
@@ -185,29 +152,29 @@ export class OfferFormComponent {
     });
   }
 
-  getValidChildTypes(): string[] {
+  getValidChildTypes(): Object[] {
     const node = this.selectedNode();
     if (!node) return [];
-    const nodeType = this.utilsService.getNodeType(node);
-    if (nodeType === 'Module' && node instanceof Module) {
-      return this.MODULE_CHILD_TYPES[node.moduleType] ?? [];
+    const nodeType = node.nodeType;
+    if (nodeType === NodeType.Module && node instanceof Module) {
+      return this.MODULE_CHILD_TYPES![node.moduleType] ?? [];
     }
-    return this.CHILD_TYPES[nodeType] ?? [];
+    return this.CHILD_TYPES![nodeType.toString()] ?? [];
   }
 
-  getRootNodeTypes(): string[] {
-    return this.CHILD_TYPES['Root'];
+  getRootNodeTypes(): Object[] {
+    return this.CHILD_TYPES!['Root'];
   }
 
   getValidModuleTypes(): object[] {
     const node = this.selectedNode();
     if (!node) return [];
-    const nodeType = this.utilsService.getNodeType(node);
-    return this.MODULE_TYPES[nodeType] ?? [];
+    const nodeType = node.nodeType
+    return this.MODULE_TYPES![nodeType.toString()] ?? [];
   }
 
   getRootModuleTypes(): object[] {
-    return this.MODULE_TYPES['Root'];
+    return this.MODULE_TYPES!['Root'];
   }
 
   updateSelectedNode() {
@@ -227,25 +194,25 @@ export class OfferFormComponent {
   addNewChild() {
     let newChild: CurriculumNode;
     switch(this.newNodeType) {
-      case 'Study Program':
+      case NodeType.StudyProgram:
         newChild = new StudyProgram(undefined, this.generateTimeBasedID());
         break;
-      case 'Module':
+      case NodeType.Module:
         const newModule = new Module(undefined, this.generateTimeBasedID());
         newModule.moduleType = this.newNodeModuleType || ModuleType.Course;
         newChild = newModule;
         break;
-      case 'Course':
+      case NodeType.Course:
         newChild = new Course(undefined, this.generateTimeBasedID());
         break;
-      case 'Lecture':
+      case NodeType.Lecture:
         newChild = new Lecture(undefined, this.generateTimeBasedID());
         break;
       default:
         this.messageService.add({ 
           severity: 'error', 
-          summary: 'Error', 
-          detail: 'Invalid node type. Try again with other node type.', 
+          summary: this.translate.instant('offerForm.toast.invalidTypeError.summary'), 
+          detail: this.translate.instant('offerForm.toast.invalidTypeError.detail'), 
           life: 3000, 
           closable: true 
         });
@@ -266,25 +233,25 @@ export class OfferFormComponent {
   addRootNode() {
     let newRoot: CurriculumNode;
     switch(this.rootNodeType) {
-      case 'Study Program':
+      case NodeType.StudyProgram:
         newRoot = new StudyProgram(undefined, this.generateTimeBasedID());
         break;
-      case 'Module':
+      case NodeType.Module:
         const newModule = new Module(undefined, this.generateTimeBasedID());
         newModule.moduleType = this.rootNodeModuleType || ModuleType.StudyProgram;
         newRoot = newModule;
         break;
-      case 'Course':
+      case NodeType.Course:
         newRoot = new Course(undefined, this.generateTimeBasedID());
         break;
-      case 'Lecture':
+      case NodeType.Lecture:
         newRoot = new Lecture(undefined, this.generateTimeBasedID());
         break;
       default:
         this.messageService.add({ 
           severity: 'error', 
-          summary: 'Error', 
-          detail: 'Invalid node type. Try again with other node type.', 
+          summary: this.translate.instant('offerForm.toast.invalidTypeError.summary'), 
+          detail: this.translate.instant('offerForm.toast.invalidTypeError.detail'), 
           life: 3000, 
           closable: true 
         });
@@ -314,8 +281,8 @@ export class OfferFormComponent {
     if (this.selectedNode().id === this.offer().root.id) {
       this.messageService.add({ 
         severity: 'error', 
-        summary: 'Error', 
-        detail: 'Invalid node selection. Root node cannot be deleted, try again with other node.', 
+        summary: this.translate.instant('offerForm.toast.deleteRootError.summary'), 
+        detail: this.translate.instant('offerForm.toast.deleteRootError.detail'), 
         life: 3000, 
         closable: true 
       });
@@ -323,16 +290,15 @@ export class OfferFormComponent {
     else {
       this.confirmationService.confirm({
         target: event.target as EventTarget,
-        message: 'Do you want to delete the selected curriculum node?',
-        header: 'Delete Node',
+        message: this.translate.instant('offerForm.modal.deleteNode.message'),
+        header: this.translate.instant('offerForm.modal.deleteNode.header'),
         icon: 'pi pi-info-circle',
-        rejectLabel: 'Cancel',
         rejectButtonProps: {
-          label: 'Cancel',
+          label: this.translate.instant('offerForm.modal.deleteNode.reject'),
           severity: 'secondary',
         },
         acceptButtonProps: {
-          label: 'Delete',
+          label: this.translate.instant('offerForm.modal.deleteNode.accept'),
           severity: 'primary',
         },
 
@@ -361,8 +327,8 @@ export class OfferFormComponent {
           console.log(error)
           this.messageService.add({ 
             severity: 'error', 
-            summary: 'Error', 
-            detail: 'Something went wrong. Try again later or contact the administrator.', 
+            summary: this.translate.instant('offerForm.toast.submitError.summary'), 
+            detail: this.translate.instant('offerForm.toast.submitError.detail'), 
             life: 3000, 
             closable: true 
           });
@@ -383,8 +349,8 @@ export class OfferFormComponent {
     else {
       this.messageService.add({ 
         severity: 'error', 
-        summary: 'Error', 
-        detail: 'There are incomplete mandatory fields. Please review the form and try to submit again.', 
+        summary: this.translate.instant('offerForm.toast.mandatoryFieldsError.summary'), 
+        detail: this.translate.instant('offerForm.toast.mandatoryFieldsError.detail'), 
         life: 3000, 
         closable: true 
       });
@@ -409,8 +375,8 @@ export class OfferFormComponent {
     this.selectedNode.set(this.offer().root);
     this.messageService.add({ 
       severity: 'info', 
-      summary: 'Info',
-      detail: 'Node deleted without problems.', 
+      summary: this.translate.instant('offerForm.toast.nodeDeleted.summary'), 
+        detail: this.translate.instant('offerForm.toast.nodeDeleted.detail'), 
       life: 3000, 
       closable: true 
     });
@@ -429,4 +395,71 @@ export class OfferFormComponent {
   
     return `${year}-${month}-${day}-${hour}-${minute}-${second}-${millisecond}`;  
   }  
+
+  private buildSelectOptions() {
+    if(this.inputPageName == undefined) this.pageName = this.translate.instant('offerForm.headers.pageName')
+    this.CHILD_TYPES = {
+      'Root': [
+        {value: NodeType.StudyProgram, label: this.translate.instant('nodeTypes.studyProgram')},
+        {value: NodeType.Module, label: this.translate.instant('nodeTypes.module')},
+        {value: NodeType.Course, label: this.translate.instant('nodeTypes.course')},
+        {value: NodeType.Lecture, label: this.translate.instant('nodeTypes.lecture')}
+      ],
+      'Study Program': [
+        {value: NodeType.Module, label: this.translate.instant('nodeTypes.module')},
+        {value: NodeType.Course, label: this.translate.instant('nodeTypes.course')},
+        {value: NodeType.Lecture, label: this.translate.instant('nodeTypes.lecture')}
+      ],
+      'Course': [
+        {value: NodeType.Module, label: this.translate.instant('nodeTypes.module')},
+        {value: NodeType.Lecture, label: this.translate.instant('nodeTypes.lecture')}
+      ],
+      'Lecture': [],
+    };
+
+    this.MODULE_CHILD_TYPES = {
+      [ModuleType.StudyProgram]: [{value: NodeType.StudyProgram, label: this.translate.instant('nodeTypes.studyProgram')}],
+      [ModuleType.Course]:       [{value: NodeType.Course, label: this.translate.instant('nodeTypes.course')}],
+      [ModuleType.Lecture]:      [{value: NodeType.Lecture, label: this.translate.instant('nodeTypes.lecture')}],
+    };
+
+    this.MODULE_TYPES = {
+      'Root': [
+        {
+          label: this.translate.instant('moduleTypes.studyProgram'),
+          value: ModuleType.StudyProgram
+        },
+        {
+          label: this.translate.instant('moduleTypes.course'),
+          value: ModuleType.Course
+        },
+        {
+          label: this.translate.instant('moduleTypes.lecture'),
+          value: ModuleType.Lecture
+        }
+      ],
+      'Study Program': [
+        {
+          label: this.translate.instant('moduleTypes.course'),
+          value: ModuleType.Course
+        },
+        {
+          label: this.translate.instant('moduleTypes.lecture'),
+          value: ModuleType.Lecture
+        }
+      ],
+      'Course': [
+        {
+          label: this.translate.instant('moduleTypes.lecture'),
+          value: ModuleType.Lecture
+        }
+      ],
+      'Lecture': [],
+    };
+
+    this.IS_PUBLIC = [
+      { label: this.translate.instant('offerForm.isPublic.public'), value: true },
+      { label: this.translate.instant('offerForm.isPublic.private'), value: false }
+    ];
+  }
 }

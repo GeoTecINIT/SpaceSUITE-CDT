@@ -9,13 +9,14 @@ import { ProgressSpinner } from "primeng/progressspinner";
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { UtilsService } from '../../services/useCaseServices/utils.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
   selector: 'bokModal',
   templateUrl: './bokModal.component.html',
   styleUrls: ['./bokModal.component.css'],
-  imports: [DialogModule, ButtonModule, ChipModule, CommonModule, TooltipModule, ProgressSpinner, ToastModule],
+  imports: [DialogModule, ButtonModule, ChipModule, CommonModule, TooltipModule, ProgressSpinner, ToastModule, TranslateModule],
 })
 export class BokModalComponent {
   visible = false;
@@ -41,6 +42,7 @@ export class BokModalComponent {
   private bokInfo = inject(BokInformationService);
   private utilsService = inject(UtilsService);
   private messageService = inject(MessageService);
+  private translate = inject(TranslateService);
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['selectedConcepts']) {
@@ -100,8 +102,8 @@ export class BokModalComponent {
       this.selectedConceptsChange.emit(this.selectedConcepts);
       this.messageService.add({ 
         severity: 'info', 
-        summary: 'Info', 
-        detail: 'Concept "' + concept +'" annotated!', 
+        summary: this.translate.instant('bokModal.toast.info.summary'), 
+        detail: this.translate.instant('bokModal.toast.info.detail', {concept: concept}), 
         life: 3000, 
         closable: true 
       });
@@ -109,8 +111,8 @@ export class BokModalComponent {
     else {
       this.messageService.add({ 
         severity: 'error', 
-        summary: 'Error', 
-        detail: 'Concept "' + concept +'" is already annotated!', 
+        summary: this.translate.instant('bokModal.toast.error.summary'), 
+        detail: this.translate.instant('bokModal.toast.error.detail', {concept: concept}), 
         life: 3000, 
         closable: true 
       });

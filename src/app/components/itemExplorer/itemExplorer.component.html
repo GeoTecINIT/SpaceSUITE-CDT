@@ -8,7 +8,7 @@
         [logged]="(isLogged() | async) ?? false" [showPrivate]="showPrivate" (showPrivateChange)="setShowPrivate($event)" class="flex justify-content-center"></filters>
     <div class="flex flex-column w-full">
         <p-buttongroup class="ml-auto mt-2 align-self-center">
-            <p-button severity="secondary" (click)="switchSortOrientation()" [icon]="sortAsc ? 'pi pi-sort-amount-up' : 'pi pi-sort-amount-down'" size="small" [label]="'Order By ' + selectedSortOption" class="custom-secondary-button"/>
+            <p-button severity="secondary" (click)="switchSortOrientation()" [icon]="sortAsc ? 'pi pi-sort-amount-up' : 'pi pi-sort-amount-down'" size="small" [label]="'itemExplorer.orderBy' | translate: {option: selectedSortOption}" class="custom-secondary-button"/>
             <p-button severity="secondary" (click)="menu.toggle($event)" icon="pi pi-chevron-down" class="flex custom-secondary-button" size="small"/>
         </p-buttongroup>
         <p-divider></p-divider>
@@ -22,20 +22,20 @@
             </div>
             <p-paginator *ngIf="filteredEducationalItems().length != 0 && !loadingCards()" (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="filteredEducationalItems().length" class="custom-paginator"/>
         </div>
-        <p *ngIf="filteredEducationalItems().length == 0 && !loadingCards()" class="font-italic flex mx-auto justify-content-center">No offer found</p>
+        <p *ngIf="filteredEducationalItems().length == 0 && !loadingCards()" class="font-italic flex mx-auto justify-content-center">{{'itemExplorer.noOfferMessage' | translate}}</p>
     </div>
 </div>
 
 @if(isLogged() | async) {
     <div class="floating-container flex flex-column gap-2 align-items-end" [ngStyle]="{ bottom: buttonBottom + 'px' }">
-        <p-button (click)="createTrainingItem()" icon="pi pi-plus" label="Add offer" class="custom-button floating-button"/>
+        <p-button (click)="createTrainingItem()" icon="pi pi-plus" [label]="'itemExplorer.addOffer' | translate" class="custom-button floating-button"/>
     </div>
 }
 
 <p-menu #menu [model]="sortOptions" popup styleClass="!min-w-fit" class="custom-menu">
     <ng-template #item let-item>
-        <a pRipple class="flex items-center p-menu-item-link" (click)="setSortOption(item.label)">
-            <i class="w-1rem" [ngClass]="item.label == selectedSortOption ? 'pi pi-check' : ''"></i>
+        <a pRipple class="flex items-center p-menu-item-link" (click)="setSortOption(item.value)">
+            <i class="w-1rem" [ngClass]="item.value == selectedSortOption ? 'pi pi-check' : ''"></i>
             <span class="ml-2">{{ item.label }}</span>
         </a>
     </ng-template>

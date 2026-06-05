@@ -1,6 +1,6 @@
 <p-toast class="custom-toast" position="bottom-right"/>
 <div class="flex flex-column">
-    {{label}}
+    {{ label }}
     <div class="flex align-items-start gap-2 mt-2 flex-wrap">
         <ng-container *ngFor="let concept of selectedConcepts">
             <div [pTooltip]="selectedConceptsTooltip.get(concept)" tooltipPosition="top">
@@ -18,8 +18,8 @@
     <div *ngIf="currentConcept() != ''" class="flex justify-content-between align-items-center">
         <div *ngIf="!invalidConcept()" class="mx-4">{{currentConcept()}} : {{currentConceptName()}}</div>
         <div *ngIf="invalidConcept()" [style.color]="'var(--danger-color)'" class="mx-4 text-sm">
-            <div>You cannot add top-level concepts.</div>
-            <div>Please navigate down and select more specific concepts.</div>
+            <div>{{ 'bokModal.errors.invalidConcept' | translate }}</div>
+            <div>{{ 'bokModal.errors.instructions' | translate }}</div>
         </div>
         <p-button (click)="addConcept()" [disabled]="invalidConcept()" label="Add" class="custom-button"/>
     </div>

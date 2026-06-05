@@ -1,6 +1,6 @@
 <p-floatlabel variant="on" class="custom-floatlabel" [class.invalid-floatlabel]="error">
     <p-select #pselect [options]="selectOptions" [ngModel]="selection" inputId="{{fieldName}}" [optionValue]="'value'" [optionLabel]="'id'"
-        class="w-full custom-select" (ngModelChange)="selectionChange.emit($event)" filterPlaceholder="Choose a {{fieldName}} or specify a custom value"
+        class="w-full custom-select" (ngModelChange)="selectionChange.emit($event)" [filterPlaceholder]="'customSelect.filterPlaceholder' | translate: {fieldName: fieldName}"
         [class.invalid-select]="error" [filter]="filter" resetFilterOnHide="true" (onFilter)="currentText = pselect.filterValue || ''" 
         (onShow)="onDropdownOpen()" [checkmark]="true">
         <ng-template #footer>

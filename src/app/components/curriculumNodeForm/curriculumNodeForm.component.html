@@ -12,11 +12,11 @@
                             <p-iconfield>
                                 <input pInputText id="name" autocomplete="off" class="w-full custom-input" 
                                     [class.ng-invalid]="errorMap.get(curriculumNode.id + '.name') != undefined" [class.ng-dirty]="errorMap.get(curriculumNode.id + '.name') != undefined" 
-                                    [ngModel]="curriculumNode.name" (ngModelChange)="onNameChange($event)" pTooltip="A name given to the {{getSelectedNodeType()}}"
-                                    tooltipPosition="right" showDelay="200" hideDelay="200" maxlength="200"/>
+                                    [ngModel]="curriculumNode.name" (ngModelChange)="onNameChange($event)" tooltipPosition="right" showDelay="200" hideDelay="200" maxlength="200"
+                                    [pTooltip]="'curriculumNodeForm.fields.title.tooltip' | translate: {nodeType: getNodeType()}"/>
                                 <p-inputicon class="pi pi-pencil" [style]="errorMap.get(curriculumNode.id + '.name') != undefined ? 'color: var(--danger-color)' : ''" />
                             </p-iconfield>
-                            <label for="title">Title *</label>
+                            <label for="title">{{ 'curriculumNodeForm.fields.title.label' | translate }} *</label>
                         </p-floatlabel>
                         @if(errorMap.get(curriculumNode.id + '.name')) {
                             <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.name')}}</p>
@@ -26,24 +26,23 @@
                         <p-floatlabel variant="on" class="custom-floatlabel">
                             <textarea id="description" pTextarea [(ngModel)]="curriculumNode.description"
                                 [class.ng-invalid]="errorMap.get(curriculumNode.id + '.description') != undefined" [class.ng-dirty]="errorMap.get(curriculumNode.id + '.description') != undefined"
-                                rows="4" class="w-full custom-textarea m-0"
-                                pTooltip="Provide a concise summary or overview of the {{getSelectedNodeType()}} content. Include key topics, purpose, scope, and any important features." 
-                                tooltipPosition="right" showDelay="200" hideDelay="200" maxlength="2000"></textarea>
+                                rows="4" class="w-full custom-textarea m-0" tooltipPosition="right" showDelay="200" hideDelay="200" maxlength="2000"
+                                [pTooltip]="'curriculumNodeForm.fields.description.tooltip' | translate: {nodeType: getNodeType()}"></textarea>
                             <div class="textarea-length" [style]="errorMap.get(curriculumNode.id + '.description') != undefined ? 'color: var(--danger-color)' : ''">
                                 <span>{{curriculumNode.description.length + ' '}}</span>
                                 <span>/ 2000</span>
                             </div>
-                            <label for="description">Description *</label>
+                            <label for="description">{{ 'curriculumNodeForm.fields.description.label' | translate }} *</label>
                         </p-floatlabel>
                         @if(errorMap.get(curriculumNode.id + '.description')) {
                             <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.description')}}</p>
                         }
                     </div>
                     <div>
-                        <div class="custom-border p-2" style="color: #64748b;" pTooltip="List of Body of Knowledge concepts addressed in the {{getSelectedNodeType()}}" 
+                        <div class="custom-border p-2" style="color: #64748b;" [pTooltip]="'curriculumNodeForm.fields.bok.tooltip' | translate: {nodeType: getNodeType()}" 
                             tooltipPosition="right" showDelay="200" hideDelay="200" 
                             [style.border-color]="errorMap.get(curriculumNode.id + '.bokConcepts') != undefined ? 'var(--danger-color)' : '' ">
-                            <bokModal [(selectedConcepts)]="curriculumNode.bokConcepts" [label]="'Knowledge Annotations *'"
+                            <bokModal [(selectedConcepts)]="curriculumNode.bokConcepts" [label]="('curriculumNodeForm.fields.bok.label' | translate) + ' *'"
                                 [style.color]="errorMap.get(curriculumNode.id + '.bokConcepts') != undefined ? 'var(--danger-color)' : '' "></bokModal>
                         </div>
                         @if(errorMap.get(curriculumNode.id + '.bokConcepts')) {
@@ -51,10 +50,9 @@
                         }
                     </div>
                     <div>
-                        <custom-select [fieldName]="'EQF Level *'" [selection]="selectedNodeEqf()" (selectionChange)="onEqfChange($event)"
-                                [error]="errorMap.get(curriculumNode.id + '.eqf') != undefined" [optionsName]="'EQF Level'" [filter]="false"
-                                pTooltip="The European Qualifications Framework. Indicates level of knowledge, skills and competences, from 1 (basic) to 8 (highly specialized)." 
-                                tooltipPosition="right" showDelay="200" hideDelay="200"></custom-select>
+                        <custom-select [fieldName]="('curriculumNodeForm.fields.eqf.label' | translate) + ' *'" [selection]="selectedNodeEqf()" (selectionChange)="onEqfChange($event)"
+                                [error]="errorMap.get(curriculumNode.id + '.eqf') != undefined" [optionsName]="'EQF Level'" [filter]="false" showDelay="200" hideDelay="200"
+                                [pTooltip]="'curriculumNodeForm.fields.eqf.tooltip' | translate" tooltipPosition="right"></custom-select>
                         @if(errorMap.get(curriculumNode.id + '.eqf')) {
                             <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.eqf')}}</p>
                         }
@@ -65,10 +63,10 @@
                                 <p-inputnumber id="workload" [min]="0" [useGrouping]="false" suffix=" ECTS"
                                     [class.ng-invalid]="errorMap.get(curriculumNode.id + '.ects') != undefined" [class.ng-dirty]="errorMap.get(curriculumNode.id + '.ects') != undefined" 
                                     class="custom-input" [(ngModel)]="curriculumNode.ects" fluid tooltipPosition="right" showDelay="200" hideDelay="200"
-                                    pTooltip="Amount of time expected to invest in order to meet the defined learning outcomes, quantified using ECTS"/>
+                                    [pTooltip]="'curriculumNodeForm.fields.workload.tooltip' | translate"/>
                                 <p-inputicon class="pi pi-clock" [style]="errorMap.get(curriculumNode.id + '.ects') != undefined ? 'color: var(--danger-color)' : ''"/>
                             </p-iconfield>
-                            <label for="workload">Workload *</label>
+                            <label for="workload">{{ 'curriculumNodeForm.fields.workload.label' | translate }} *</label>
                         </p-floatlabel>
                         @if(errorMap.get(curriculumNode.id + '.ects')) {
                             <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.ects')}}</p>
@@ -76,9 +74,9 @@
                     </div>
                     <div>
                         <div class="custom-border p-2" style="color: #64748b;" tooltipPosition="right" showDelay="200" hideDelay="200"
-                            pTooltip="The total time required to complete this {{getSelectedNodeType()}}." 
+                            [pTooltip]="'curriculumNodeForm.fields.duration.tooltip' | translate: {nodeType: getNodeType()}" 
                             [style.border-color]="errorMap.get(curriculumNode.id + '.timeRequired') != undefined ? 'var(--danger-color)' : '' ">
-                            <div class="ml-1" [style]="errorMap.get(curriculumNode.id + '.timeRequired') != undefined ? 'color: var(--danger-color);' : ''">Duration *</div>
+                            <div class="ml-1" [style]="errorMap.get(curriculumNode.id + '.timeRequired') != undefined ? 'color: var(--danger-color);' : ''">{{'curriculumNodeForm.fields.duration.label' | translate}} *</div>
                             <div class="flex flex-column sm:flex-row gap-3 p-3">
                                 <p-floatlabel variant="on" class="w-full custom-floatlabel">
                                     <p-iconfield>
@@ -88,12 +86,12 @@
                                             class="custom-input" [(ngModel)]="curriculumNode.timeRequired.value" fluid/>
                                         <p-inputicon class="pi pi-calculator" [style]="errorMap.get(curriculumNode.id + '.timeRequired') != undefined ? 'color: var(--danger-color)' : ''"/>
                                     </p-iconfield>
-                                    <label for="durationValue">Value</label>
+                                    <label for="durationValue">{{'curriculumNodeForm.fields.duration.durationValue' | translate}}</label>
                                 </p-floatlabel>
                                 <p-floatlabel variant="on" class="custom-floatlabel w-full">
                                     <p-select [inputId]="'durationUnit'" [options]="DURATION_UNIT" [(ngModel)]="curriculumNode.timeRequired.unit"  class="w-full custom-select" 
                                         [checkmark]="true" optionLabel="label" optionValue="value"/>
-                                    <label [for]="'durationUnit'">Unit</label>
+                                    <label [for]="'durationUnit'">{{'curriculumNodeForm.fields.duration.durationUnit' | translate}}</label>
                                 </p-floatlabel>
                             </div>
                         </div>
@@ -102,8 +100,8 @@
                         }
                     </div>
                     <div>
-                        <multiselect-chips optionsName="Study Areas" fieldName="Study Areas *" [(chips)]="selectedStudyAreas"  icon="pi pi-bookmark"
-                            pTooltip="Specific area(s) of study of the profile. Maintained by the UNESCO Institute for Statistics"
+                        <multiselect-chips optionsName="Study Areas" fieldName="{{'curriculumNodeForm.fields.studyAreas.label' | translate}} *" [(chips)]="selectedStudyAreas"  icon="pi pi-bookmark"
+                            [pTooltip]="'curriculumNodeForm.fields.studyAreas.tooltip' | translate: {nodeType: getNodeType()}" 
                             tooltipPosition="top" showDelay="200" hideDelay="200" (chipsChange)="onStudyAreasChange()" [error]="errorMap.get(curriculumNode.id + '.studyAreas') != undefined">
                         </multiselect-chips>
                         @if(errorMap.get(curriculumNode.id + '.studyAreas')) {
@@ -112,7 +110,7 @@
                     </div>
                 </div>
                 <div class="flex justify-content-end mt-3">
-                    <p-button class="custom-button" label="Next" icon="pi pi-arrow-right" iconPos="right" (onClick)="goToNextStep(activateCallback, 2)" />
+                    <p-button class="custom-button" [label]="'curriculumNodeForm.buttons.next' | translate" icon="pi pi-arrow-right" iconPos="right" (onClick)="goToNextStep(activateCallback, 2)" />
                 </div>
             </ng-template>
         </p-step-panel>
@@ -124,8 +122,8 @@
                             <p-floatlabel variant="on" class="custom-floatlabel w-full">
                                 <p-select [inputId]="'courseType'" [options]="COURSE_TYPE" [(ngModel)]="selectedCourse.courseType"  class="w-full custom-select" 
                                     [checkmark]="true" optionLabel="label" optionValue="value" tooltipPosition="right" showDelay="200" hideDelay="200"
-                                    pTooltip="Select the type of course. This classification determines how the course fits within the curriculum structure."/>
-                                <label [for]="'courseType'">Course Type</label>
+                                    [pTooltip]="'curriculumNodeForm.fields.courseType.tooltip' | translate" />
+                                <label [for]="'courseType'">{{'curriculumNodeForm.fields.courseType.label' | translate}}</label>
                             </p-floatlabel>
                         </div>
                     }
@@ -135,13 +133,13 @@
                                 <textarea id="assesment" pTextarea [(ngModel)]="selectedCourse.assesment"
                                     [class.ng-invalid]="errorMap.get(curriculumNode.id + '.assesment') != undefined" [class.ng-dirty]="errorMap.get(curriculumNode.id + '.assesment') != undefined"
                                     rows="4" class="w-full custom-textarea m-0"
-                                    pTooltip="Describe how students will be evaluated in this course. Include assessment methods (exams, projects, participation), grading criteria, and any relevant deadlines or requirements." 
+                                    [pTooltip]="'curriculumNodeForm.fields.assesment.tooltip' | translate" 
                                     tooltipPosition="right" showDelay="200" hideDelay="200" maxlength="1000"></textarea>
                                 <div class="textarea-length" [style]="errorMap.get(curriculumNode.id + '.assesment') != undefined ? 'color: var(--danger-color)' : ''">
                                     <span>{{selectedCourse.assesment.length + ' '}}</span>
                                     <span>/ 1000</span>
                                 </div>
-                                <label for="assesment">Assesment *</label>
+                                <label for="assesment">{{'curriculumNodeForm.fields.assesment.label' | translate}} *</label>
                             </p-floatlabel>
                             @if(errorMap.get(curriculumNode.id + '.assesment')) {
                                 <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.assesment')}}</p>
@@ -151,16 +149,16 @@
                     @if(selectedLecture) {
                         <div class="flex w-full">
                             <p-selectbutton [options]="LECTURE_ISPRACTICAL" [(ngModel)]="selectedLecture.isPractical" optionLabel="label" optionValue="value"
-                                pTooltip="Specifies whether this lecture is theoretical or practical. Practical lectures involve hands-on activities, labs, or exercises." allowEmpty="false"
+                                [pTooltip]="'curriculumNodeForm.fields.lecturePractical.tooltip' | translate" allowEmpty="false"
                                 tooltipPosition="right" showDelay="200" hideDelay="200"/>
                         </div>
                     }
                     <div>
                         <div class="custom-border p-2" style="color: #64748b;" tooltipPosition="right" showDelay="200" hideDelay="200"
-                            pTooltip="Institutions or organizations associated with this {{getSelectedNodeType()}}."
+                            [pTooltip]="'curriculumNodeForm.fields.affiliations.tooltip' | translate: {nodeType: getNodeType()}"
                             [style.border-color]="errorMap.get(curriculumNode.id + '.affiliations') != undefined ? 'var(--danger-color)' : '' ">
                             <div class="ml-1" [style]="errorMap.get(curriculumNode.id + '.affiliations') != undefined ? 'color: var(--danger-color);' : ''">
-                                Affiliations *
+                                {{'curriculumNodeForm.fields.affiliations.label' | translate}} *
                             </div>
                             @for(mat of curriculumNode.affiliations; track mat.name; let idx = $index) {
                                 <div class="flex flex-column sm:flex-row gap-3 p-3">
@@ -169,14 +167,14 @@
                                             <input pInputText [id]="'affiliationName' + idx" autocomplete="off" class="w-full custom-input" [(ngModel)]="mat.name"/>
                                             <p-inputicon class="pi pi-pencil"/>
                                         </p-iconfield>
-                                        <label [for]="'affiliationName' + idx">Name *</label>
+                                        <label [for]="'affiliationName' + idx">{{'curriculumNodeForm.fields.affiliations.affiliationName' | translate}} *</label>
                                     </p-floatlabel>
                                     <p-floatlabel variant="on" class="custom-floatlabel flex-1">
                                         <p-iconfield>
                                             <input pInputText [id]="'affiliationUrl' + idx" autocomplete="off" class="w-full custom-input" [(ngModel)]="mat.url"/>
                                             <p-inputicon class="pi pi-pencil"/>
                                         </p-iconfield>
-                                        <label [for]="'affiliationUrl' + idx">URL</label>
+                                        <label [for]="'affiliationUrl' + idx">{{'curriculumNodeForm.fields.affiliations.affiliationUrl' | translate}}</label>
                                     </p-floatlabel>
                                     <p-button icon="pi pi-trash" rounded class="delete-button" (onClick)="deleteAffiliation(idx)"></p-button>
                                 </div>
@@ -193,8 +191,8 @@
                         }
                     </div>
                     <div class="custom-border p-2" style="color: #64748b;" tooltipPosition="right" showDelay="200" hideDelay="200"
-                        pTooltip="Resources and materials used to support the teaching of this {{getSelectedNodeType()}}.">
-                        <div class="ml-1">Training Materials</div>
+                        [pTooltip]="'curriculumNodeForm.fields.trainingMaterials.tooltip' | translate: {nodeType: getNodeType()}">
+                        <div class="ml-1">{{'curriculumNodeForm.fields.trainingMaterials.label' | translate}}</div>
                         @for(mat of curriculumNode.trainingMaterials; track mat.title; let idx = $index) {
                             <div class="flex flex-column sm:flex-row gap-3 p-3">
                                 <p-floatlabel variant="on" class="custom-floatlabel flex-1">
@@ -203,7 +201,7 @@
                                             [(ngModel)]="mat.title"/>
                                         <p-inputicon class="pi pi-pencil"/>
                                     </p-iconfield>
-                                    <label [for]="'matName' + idx">Title</label>
+                                    <label [for]="'matName' + idx">{{'curriculumNodeForm.fields.trainingMaterials.materialName' | translate}}</label>
                                 </p-floatlabel>
                                 <p-floatlabel variant="on" class="custom-floatlabel flex-1">
                                     <p-iconfield>
@@ -211,7 +209,7 @@
                                             [(ngModel)]="mat.url"/>
                                         <p-inputicon class="pi pi-pencil"/>
                                     </p-iconfield>
-                                    <label [for]="'matUrl' + idx">URL</label>
+                                    <label [for]="'matUrl' + idx">{{'curriculumNodeForm.fields.trainingMaterials.materialUrl' | translate}}</label>
                                 </p-floatlabel>
                                 <p-button icon="pi pi-trash" rounded class="delete-button" (onClick)="deleteTrainingMaterial(idx)"></p-button>
                             </div>
@@ -224,49 +222,49 @@
                         </div>
                     </div>
                     <div>
-                        <text-chips [fieldName]="'Prerequisites'" [icon]="'pi pi-list-check'" [(chips)]="curriculumNode.prerequisites"
+                        <text-chips [fieldName]="'curriculumNodeForm.fields.prerequisites.label' | translate" [icon]="'pi pi-list-check'" [(chips)]="curriculumNode.prerequisites"
                                 [error]="errorMap.get(curriculumNode.id + '.prerequisites') != undefined" 
-                                pTooltip="Prerequisites describe the knowledge, skills, qualifications, or experiences that a learner is expected to have before starting this {{getSelectedNodeType()}}" 
+                                [pTooltip]="'curriculumNodeForm.fields.prerequisites.tooltip' | translate: {nodeType: getNodeType()}" 
                                 tooltipPosition="right" showDelay="200" hideDelay="200"></text-chips>
                         @if(errorMap.get(curriculumNode.id + '.prerequisites')) {
                             <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.prerequisites')}}</p>
                         }
                     </div>
                     <div>
-                        <text-chips [fieldName]="'Learning Outcomes *'" [icon]="'pi pi-graduation-cap'" [(chips)]="curriculumNode.learningObjectives"
+                        <text-chips [fieldName]="('curriculumNodeForm.fields.learningOutcomes.label' | translate) + ' *'" [icon]="'pi pi-graduation-cap'" [(chips)]="curriculumNode.learningObjectives"
                                 [error]="errorMap.get(curriculumNode.id + '.learningObjectives') != undefined" 
-                                pTooltip="Learning outcomes describe the knowledge, skills, qualifications, or experiences that a learner is expected to have after completing this {{getSelectedNodeType()}}" 
+                                [pTooltip]="'curriculumNodeForm.fields.learningOutcomes.tooltip' | translate: {nodeType: getNodeType()}"
                                 tooltipPosition="right" showDelay="200" hideDelay="200"></text-chips>
                         @if(errorMap.get(curriculumNode.id + '.learningObjectives')) {
                             <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.learningObjectives')}}</p>
                         }
                     </div>
                     <div>
-                        <text-chips [fieldName]="'Bibliography'" [icon]="'pi pi-book'" [(chips)]="curriculumNode.bibliography"
-                            pTooltip="Bibliography describe the recommended reading materials, resources, or references related to this {{getSelectedNodeType()}}" 
+                        <text-chips [fieldName]="'curriculumNodeForm.fields.bibliography.label' | translate" [icon]="'pi pi-book'" [(chips)]="curriculumNode.bibliography"
+                            [pTooltip]="'curriculumNodeForm.fields.bibliography.tooltip' | translate: {nodeType: getNodeType()}" 
                             tooltipPosition="right" showDelay="200" hideDelay="200"></text-chips>
                     </div>
                     <div class="flex flex-column">
                         <treeselect-chips
-                            [(treeSelection)]="selectedTransversalSkills" (treeSelectionChange)="onTransversalSkillChange()" [treeselectOptions]="transversalSkills" fieldName="Transversal Skills"
-                            pTooltip="Skills considered unrelated to a particular job, task, academic discipline or area of knowledge but that can be used in a wide variety of situations and work settings. Based on the ESCO transversal and cross-sector skills."
+                            [(treeSelection)]="selectedTransversalSkills" (treeSelectionChange)="onTransversalSkillChange()" [treeselectOptions]="transversalSkills"
+                            [pTooltip]="'curriculumNodeForm.fields.transversalSkills.tooltip' | translate" [fieldName]="'curriculumNodeForm.fields.transversalSkills.label' | translate"
                             tooltipPosition="top" showDelay="200" hideDelay="200"
                         ></treeselect-chips>
                         @if(!showCustomTransversalSkills) {
                             <p-button [rounded]="true" [text]="true" size="small" (onClick)="showCustomTransversalSkills = true"
-                                class="text-button ml-auto mt-1 p-0 text-xs font-italic">Add custom Transversal Skills</p-button>
+                                class="text-button ml-auto mt-1 p-0 text-xs font-italic">{{'curriculumNodeForm.fields.transversalSkills.addCustom' | translate}}</p-button>
                         }
                     </div>
                     @if(showCustomTransversalSkills) {
                         <div>
-                            <text-chips [fieldName]="'Custom Transversal Skills'" [icon]="'pi pi-chart-bar'" [(chips)]="curriculumNode.customTransversalSkills"
-                                    pTooltip="Custom transversal skills related to this {{getSelectedNodeType()}}" 
-                                    tooltipPosition="right" showDelay="200" hideDelay="200"></text-chips>
+                            <text-chips [fieldName]="'curriculumNodeForm.fields.customTransversalSkills.label' | translate" [icon]="'pi pi-chart-bar'" [(chips)]="curriculumNode.customTransversalSkills"
+                                [pTooltip]="'curriculumNodeForm.fields.customTransversalSkills.tooltip' | translate: {nodeType: getNodeType()}" 
+                                tooltipPosition="right" showDelay="200" hideDelay="200"></text-chips>
                         </div>
                     }
                 </div>
                 <div class="flex justify-content-start mt-3">
-                    <p-button class="custom-secondary-button" label="Back" severity="secondary" icon="pi pi-arrow-left" (onClick)="goToNextStep(activateCallback, 1)" />
+                    <p-button class="custom-secondary-button" [label]="'curriculumNodeForm.buttons.next' | translate" severity="secondary" icon="pi pi-arrow-left" (onClick)="goToNextStep(activateCallback, 1)" />
                 </div>
             </ng-template>
         </p-step-panel>

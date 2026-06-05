@@ -1,7 +1,7 @@
 import { Component, EventEmitter, inject, Input, Output, SimpleChanges } from "@angular/core";
 import { ToastModule } from "primeng/toast";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { take } from "rxjs";
+import { Subscription, take } from "rxjs";
 import { TreeNode } from "primeng/api";
 import { InputTextModule } from "primeng/inputtext";
 import { FormsModule } from "@angular/forms";
@@ -26,7 +26,6 @@ import { ISCEDFArea } from "../../model/coreModel/iscedfArea";
 import { TreeselectChipsComponent } from "../treeselectChips/treeselectChips.component";
 import { ESCOService } from "../../services/useCaseServices/esco.service";
 import { DurationUnit } from "../../model/coreModel/duration";
-import { UtilsService } from "../../services/useCaseServices/utils.service";
 import { DividerModule } from "primeng/divider";
 import { TrainingMaterial } from "../../model/coreModel/trainingMaterial";
 import { Affiliation } from "../../model/coreModel/affiliation";
@@ -34,6 +33,8 @@ import { Course, CourseType } from "../../model/coreModel/course";
 import { Lecture } from "../../model/coreModel/lecture";
 import { SelectButtonModule } from "primeng/selectbutton";
 import { ESCOSkill } from "../../model/coreModel/escoSkill";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { UtilsService } from "../../services/useCaseServices/utils.service";
 
 @Component({
   standalone: true,
@@ -41,7 +42,7 @@ import { ESCOSkill } from "../../model/coreModel/escoSkill";
   templateUrl: './curriculumNodeForm.component.html',
   styleUrls: ['./curriculumNodeForm.component.css'],
   imports: [ToastModule, ConfirmDialogModule, InputTextModule, FloatLabelModule, FormsModule, InputIconModule, IconFieldModule, PanelModule, InputNumberModule,
-            StepperModule, SelectModule, TooltipModule, ButtonModule, DialogModule, TextareaModule, BokModalComponent, TextChipsComponent,
+            StepperModule, SelectModule, TooltipModule, ButtonModule, DialogModule, TextareaModule, BokModalComponent, TextChipsComponent, TranslateModule,
             CustomSelectComponent, MultiselectChipsComponent, TreeselectChipsComponent, DividerModule, SelectButtonModule],
 })
 export class CurriculumNodeFormComponent {
@@ -55,61 +56,21 @@ export class CurriculumNodeFormComponent {
   public selectedTransversalSkills: TreeNode[] = [];
   public selectedStudyAreas: string[] = [];
 
-  public readonly DURATION_UNIT: object[] = [
-    {
-      label: 'Years',
-      value: DurationUnit.Years
-    },
-    {
-      label: 'Semesters',
-      value: DurationUnit.Semesters
-    },
-    {
-      label: 'Trimesters',
-      value: DurationUnit.Trimesters
-    },
-    {
-      label: 'Months',
-      value: DurationUnit.Months
-    },
-    {
-      label: 'Weeks',
-      value: DurationUnit.Weeks
-    },
-    {
-      label: 'Days',
-      value: DurationUnit.Days
-    },
-    {
-      label: 'Hours',
-      value: DurationUnit.Hours
-    },
-    {
-      label: 'Minutes',
-      value: DurationUnit.Minutes
-    },
-  ];
+  public DURATION_UNIT: object[] = [];
+  public COURSE_TYPE: object[] = [];
+  public LECTURE_ISPRACTICAL: any[] = [];
 
-  public readonly COURSE_TYPE: object[] = [
-    {
-      label: 'Common',
-      value: CourseType.Common
-    },
-    {
-      label: 'Elective',
-      value: CourseType.Elective
-    },
-    {
-      label: 'Specialization',
-      value: CourseType.Specialization
-    }
-  ];
+  private langChangeSub: Subscription;
 
-  public readonly LECTURE_ISPRACTICAL: any[] = [{ label: 'Practical', value: true },{ label: 'Theoretical', value: false }];
-
+  private translate = inject(TranslateService);
   private iscedfAreaService: IscedfAreaService = inject(IscedfAreaService);
   private escoService: ESCOService = inject(ESCOService);
   private utilsService: UtilsService = inject(UtilsService);
+
+  constructor() {
+    this.langChangeSub = this.translate.onLangChange.subscribe(() => this.buildSelectFields());
+    this.buildSelectFields();
+  }
 
   ngOnInit() {
     this.escoService.getTransversalSkillsFromJson().pipe(take(1)).subscribe(
@@ -119,6 +80,10 @@ export class CurriculumNodeFormComponent {
           .map(skill => this.findTransversalSkill(skill.preferredLabel, this.transversalSkills)).filter(value => value != undefined);
       }
     );
+  }
+
+  ngOnDestroy() {
+    this.langChangeSub.unsubscribe();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -132,6 +97,63 @@ export class CurriculumNodeFormComponent {
         this.showCustomTransversalSkills = newNode.customTransversalSkills.length > 0;
       }
     }
+  }
+
+  private buildSelectFields() {
+    this.DURATION_UNIT= [
+      {
+        label: this.translate.instant('curriculumNodeForm.durationUnit.years'),
+        value: DurationUnit.Years
+      },
+      {
+        label: this.translate.instant('curriculumNodeForm.durationUnit.semesters'),
+        value: DurationUnit.Semesters
+      },
+      {
+        label: this.translate.instant('curriculumNodeForm.durationUnit.trimesters'),
+        value: DurationUnit.Trimesters
+      },
+      {
+        label: this.translate.instant('curriculumNodeForm.durationUnit.months'),
+        value: DurationUnit.Months
+      },
+      {
+        label: this.translate.instant('curriculumNodeForm.durationUnit.weeks'),
+        value: DurationUnit.Weeks
+      },
+      {
+        label: this.translate.instant('curriculumNodeForm.durationUnit.days'),
+        value: DurationUnit.Days
+      },
+      {
+        label: this.translate.instant('curriculumNodeForm.durationUnit.hours'),
+        value: DurationUnit.Hours
+      },
+      {
+        label: this.translate.instant('curriculumNodeForm.durationUnit.minutes'),
+        value: DurationUnit.Minutes
+      },
+    ];
+
+    this.COURSE_TYPE = [
+      {
+        label: this.translate.instant('courseTypes.common'),
+        value: CourseType.Common
+      },
+      {
+        label: this.translate.instant('courseTypes.elective'),
+        value: CourseType.Elective
+      },
+      {
+        label: this.translate.instant('courseTypes.specialization'),
+        value: CourseType.Specialization
+      }
+    ];
+
+    this.LECTURE_ISPRACTICAL = [
+      { label: this.translate.instant('curriculumNodeForm.lecturePractical.practical'), value: true },
+      { label: this.translate.instant('curriculumNodeForm.lecturePractical.theorical'), value: false }
+    ];
   }
 
   private findTransversalSkill(label: string, nodes: TreeNode[]): TreeNode | undefined {
@@ -173,10 +195,6 @@ export class CurriculumNodeFormComponent {
     });
   }
 
-  getSelectedNodeType(): string {
-    return this.utilsService.getNodeType(this.curriculumNode);
-  }
-
   addTrainingMaterial() {
     const newMat = new TrainingMaterial();
     this.curriculumNode.trainingMaterials.push(newMat);
@@ -212,5 +230,9 @@ export class CurriculumNodeFormComponent {
     return this.curriculumNode instanceof Lecture 
       ? this.curriculumNode as Lecture 
       : null;
+  }
+
+  getNodeType(): string {
+    return this.utilsService.getTranslatedNodeType(this.curriculumNode.nodeType);
   }
 }

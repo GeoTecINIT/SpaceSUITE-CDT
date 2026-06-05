@@ -5,14 +5,15 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Component, inject } from "@angular/core";
 import { AuthService, ExitWithoutSavingService } from "@eo4geo/ngx-bok-utils";
 import { EducationalOfferService } from "../../services/useCaseServices/educationalOffer.service";
-import { combineLatest, concatMap, forkJoin } from "rxjs";
+import { combineLatest, concatMap } from "rxjs";
 import { OrganizationDBService } from "../../services/databaseServices/organizationDB.service";
+import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
   standalone: true,
   selector: 'edit-page',
-  template: '<offer-form *ngIf="educationalOffer" [inputOffer]="educationalOffer" pageName="Edit Educational Offer">',
-  imports: [OfferFormComponent, CommonModule],
+  template: '<offer-form *ngIf="educationalOffer" [inputOffer]="educationalOffer" [inputPageName]="`editPage.pageName` | translate">',
+  imports: [OfferFormComponent, CommonModule, TranslateModule],
 })
 export class EditPageComponent {
   educationalOffer?: EducationalOffer;

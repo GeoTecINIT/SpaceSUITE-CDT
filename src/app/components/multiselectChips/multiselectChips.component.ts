@@ -10,13 +10,14 @@ import { BokInformationService } from "@eo4geo/ngx-bok-visualization";
 import { UtilsService } from "../../services/useCaseServices/utils.service";
 import { CardFilterService } from "../../services/useCaseServices/cardFilter.service";
 import { IscedfAreaService } from "../../services/useCaseServices/iscedfArea.service";
+import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
   standalone: true,
   selector: 'multiselect-chips',
   templateUrl: './multiselectChips.component.html',
   styleUrls: ['./multiselectChips.component.css'],
-  imports: [FloatLabelModule, FormsModule, IconFieldModule, ButtonModule, ChipModule, CommonModule, MultiSelectModule],
+  imports: [FloatLabelModule, FormsModule, IconFieldModule, ButtonModule, ChipModule, CommonModule, MultiSelectModule, TranslateModule],
 })
 export class MultiselectChipsComponent {
 
@@ -142,7 +143,9 @@ export class MultiselectChipsComponent {
   }
 
   getSingularFieldName(): string {
-    const value = this.fieldName.toLowerCase();
+    let value = this.fieldName.toLowerCase();
+    value = value.replace("*","");
+    value = value.trim();
     const rules: Array<[RegExp, string]> = [
       [/ies$/, 'y'],
       [/ses$/, 's'],

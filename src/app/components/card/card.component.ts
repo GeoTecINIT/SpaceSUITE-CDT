@@ -23,6 +23,7 @@ import { UtilsService } from '../../services/useCaseServices/utils.service';
 import { OrganizationDBService } from '../../services/databaseServices/organizationDB.service';
 import { EducationalOfferService } from '../../services/useCaseServices/educationalOffer.service';
 import { EducationalOffer } from '../../model/coreModel/educationalOffer';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
@@ -38,6 +39,7 @@ import { EducationalOffer } from '../../model/coreModel/educationalOffer';
     PopoverModule,
     SkeletonModule,
     SkillTagComponent,
+    TranslateModule
   ],
 })
 export class CardComponent implements OnInit {
@@ -74,6 +76,7 @@ export class CardComponent implements OnInit {
   private messageService = inject(MessageService);
   //private pdfService = inject(PdfService);
   //private rdfService = inject(RdfService);
+  private translate = inject(TranslateService);
 
   constructor() {
     this.skeletonElements = Array(10).fill(null);
@@ -136,16 +139,16 @@ export class CardComponent implements OnInit {
   deleteModal(event: Event) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
-      message: 'Do you want to delete this job offer?',
-      header: 'Delete Job',
+      message: this.translate.instant('card.deleteModal.message'),
+      header: this.translate.instant('card.deleteModal.header'),
       icon: 'pi pi-info-circle',
-      rejectLabel: 'Cancel',
+      rejectLabel: this.translate.instant('card.deleteModal.reject'),
       rejectButtonProps: {
-        label: 'Cancel',
+        label: this.translate.instant('card.deleteModal.reject'),
         severity: 'secondary',
       },
       acceptButtonProps: {
-        label: 'Delete',
+        label: this.translate.instant('card.deleteModal.accept'),
         severity: 'primary',
       },
 
@@ -164,10 +167,8 @@ export class CardComponent implements OnInit {
         catchError((error) => {
           this.messageService.add({
             severity: 'error',
-            summary: 'Error',
-            detail:
-              error.message ??
-              'Something went wrong. Try again later or contact the administrator.',
+            summary: this.translate.instant('card.toast.delete.error.summary'),
+            detail: this.translate.instant('card.toast.delete.error.detail'),
             life: 3000,
             closable: true,
           });
@@ -178,8 +179,8 @@ export class CardComponent implements OnInit {
           if (!deleteError)
             this.messageService.add({
               severity: 'info',
-              summary: 'Info',
-              detail: `Job successfully deleted!`,
+              summary: this.translate.instant('card.toast.delete.info.summary'),
+              detail: this.translate.instant('card.toast.delete.info.detail'),
               life: 3000,
               closable: true,
             });
@@ -193,15 +194,11 @@ export class CardComponent implements OnInit {
 
     this.messageService.add({
       severity: 'info',
-      summary: 'Info',
-      detail: `You copied the job url to clipboard!`,
+      summary: this.translate.instant('card.toast.copy.info.summary'),
+      detail: this.translate.instant('card.toast.copy.info.detail'),
       life: 3000,
       closable: true,
     });
-  }
-
-  getOfferTypeString() {
-    return this.utilsService.getNodeType(this.educationalOffer.root)
   }
 
   /*
@@ -259,4 +256,23 @@ export class CardComponent implements OnInit {
     link.click();
   }
   **/
+
+  get duplicateTooltip(): string {
+    const action = this.translate.instant('card.tooltips.duplicate');
+    return this.logged ? action : this.translate.instant('card.tooltips.loginRequired', { action: action.toLowerCase() });
+  }
+
+  get editTooltip(): string {
+    const action = this.translate.instant('card.tooltips.edit');
+    const access = this.translate.instant('card.tooltips.accessRequired', { action: action.toLowerCase() });
+    const login = this.translate.instant('card.tooltips.loginRequired', { action: action.toLowerCase() });
+    return this.logged ? (this.checkUser() ? action : access) : login;
+  }
+
+  get deleteTooltip(): string {
+    const action = this.translate.instant('card.tooltips.delete');
+    const access = this.translate.instant('card.tooltips.accessRequired', { action: action.toLowerCase() });
+    const login = this.translate.instant('card.tooltips.loginRequired', { action: action.toLowerCase() });
+    return this.logged ? (this.checkUser() ? action : access) : login;
+  }
 }

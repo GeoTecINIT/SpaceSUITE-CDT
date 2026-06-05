@@ -16,20 +16,21 @@ import { UtilsService } from "../../services/useCaseServices/utils.service";
 import { EducationalOffer } from "../../model/coreModel/educationalOffer";
 import { EducationalOfferService } from "../../services/useCaseServices/educationalOffer.service";
 import { OrganizationDBService } from "../../services/databaseServices/organizationDB.service";
-import { CurriculumNode } from "../../model/coreModel/curriculumNode";
+import { CurriculumNode, NodeType } from "../../model/coreModel/curriculumNode";
 import { SkeletonModule } from "primeng/skeleton";
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { OfferIndexComponent } from "../offerIndexComponent/offerIndexComponent.component";
 import { Module } from "../../model/coreModel/module";
 import { Course } from "../../model/coreModel/course";
 import { Lecture } from "../../model/coreModel/lecture";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 
 @Component({
   standalone: true,
   selector: 'offer-page',
   templateUrl: './offerPage.component.html',
   styleUrls: ['./offerPage.component.css'],
-  imports: [CommonModule, ProgressSpinnerModule, ButtonModule, PanelModule, TabsModule, DividerModule, BreadcrumbModule,
+  imports: [CommonModule, ProgressSpinnerModule, ButtonModule, PanelModule, TabsModule, DividerModule, BreadcrumbModule, TranslateModule,
             ConfirmDialogModule, ToastModule, PopoverModule, SkillTagComponent, SkeletonModule, DividerModule, OfferIndexComponent],
 })
 export class OfferPageComponent {
@@ -62,6 +63,7 @@ export class OfferPageComponent {
   private messageService = inject(MessageService);
   private educationalOfferService = inject(EducationalOfferService);
   private organizationService = inject(OrganizationDBService);
+  private translate = inject(TranslateService);
 
   ngOnInit() {
     let nodeId: string = '';
@@ -129,8 +131,8 @@ export class OfferPageComponent {
           case 'update':
             this.messageService.add({ 
               severity: 'info', 
-              summary: 'Info', 
-              detail: `Educational offer successfully updated!`,
+              summary: this.translate.instant('offerPage.toast.update.summary'), 
+              detail: this.translate.instant('offerPage.toast.update.detail'), 
               life: 3000, 
               closable: true 
             }); 
@@ -138,8 +140,8 @@ export class OfferPageComponent {
           case 'create':
             this.messageService.add({ 
               severity: 'info', 
-              summary: 'Info', 
-              detail: `Educational offer successfully created!`,
+              summary: this.translate.instant('offerPage.toast.create.summary'), 
+              detail: this.translate.instant('offerPage.toast.create.detail'), 
               life: 3000, 
               closable: true 
             }); 
@@ -166,7 +168,7 @@ export class OfferPageComponent {
     this.location.replaceState('offer/' + this.offer()!.id + "/" + selectedNode.id);
 
     
-    this.selectedNodeType.set(this.utilsService.getNodeType(selectedNode));
+    this.selectedNodeType.set(this.getNodeType(selectedNode.nodeType));
     this.selectedNode.set(selectedNode);
     this.bokConcepts.set([]);
     this.studyAreas.set([]);
@@ -194,7 +196,7 @@ export class OfferPageComponent {
   getModuleType(): string {
     const selectedNode = this.selectedNode();
     if (selectedNode instanceof Module) {
-      return selectedNode.moduleType.toString();
+      return this.utilsService.getTranslatedModuleType(selectedNode.moduleType);
     }
     return "";
   }
@@ -210,7 +212,7 @@ export class OfferPageComponent {
   getCourseType(): string | undefined {
     const selectedNode = this.selectedNode();
     if (selectedNode instanceof Course && selectedNode.courseType) {
-      return selectedNode.courseType.toString();
+      return this.utilsService.getTranslatedCourseType(selectedNode.courseType);
     }
     return undefined;
   }
@@ -218,10 +220,9 @@ export class OfferPageComponent {
   getIsPractical(): string {
     const selectedNode = this.selectedNode();
     if (selectedNode instanceof Lecture) {
-      const value = selectedNode.isPractical.toString();
-      return value.charAt(0).toUpperCase() + value.slice(1);
+      if(selectedNode.isPractical) this.translate.instant('boolean.true');
     }
-    return 'False';
+    return this.translate.instant('boolean.false');
   }
 
   changeSelectedNode(nodeId: string) {
@@ -280,16 +281,15 @@ export class OfferPageComponent {
   deleteModal(event: Event) {
     this.confirmationService.confirm({
         target: event.target as EventTarget,
-        message: 'Do you want to delete this training material?',
-        header: 'Delete Material',
+        message: this.translate.instant('offerPage.modal.delete.message'),
+        header: this.translate.instant('offerPage.modal.delete.header'),
         icon: 'pi pi-info-circle',
-        rejectLabel: 'Cancel',
         rejectButtonProps: {
-            label: 'Cancel',
+            label: this.translate.instant('offerPage.modal.delete.reject'),
             severity: 'secondary',
         },
         acceptButtonProps: {
-            label: 'Delete',
+            label: this.translate.instant('offerPage.modal.delete.accept'),
             severity: 'primary',
         },
 
@@ -308,8 +308,8 @@ export class OfferPageComponent {
       catchError((error) => {
         this.messageService.add({ 
           severity: 'error', 
-          summary: 'Error', 
-          detail: error.message ?? 'Something went wrong. Try again later or contact the administrator.', 
+          summary: this.translate.instant('offerPage.toast.error.summary'),
+          detail: error.message ?? this.translate.instant('offerPage.toast.error.detail'),
           life: 3000, 
           closable: true 
         });
@@ -369,10 +369,14 @@ export class OfferPageComponent {
     navigator.clipboard.writeText(window.location.href);
     this.messageService.add({ 
       severity: 'info', 
-      summary: 'Info', 
-      detail: `You copied the offer url to clipboard!`,
+      summary: this.translate.instant('offerPage.toast.copy.summary'),
+      detail: this.translate.instant('offerPage.toast.copy.detail'),
       life: 3000, 
       closable: true 
     });
+  }
+
+  getNodeType(type: NodeType): string {
+    return this.utilsService.getTranslatedNodeType(type);
   }
 }

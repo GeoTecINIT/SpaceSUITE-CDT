@@ -7,13 +7,14 @@ import { ChipModule } from 'primeng/chip';
 import { CommonModule } from "@angular/common";
 import { TreeSelectModule } from "primeng/treeselect";
 import { TreeNode } from "primeng/api";
+import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
   standalone: true,
   selector: 'treeselect-chips',
   templateUrl: './treeselectChips.component.html',
   styleUrls: ['./treeselectChips.component.css'],
-  imports: [FloatLabelModule, FormsModule, IconFieldModule, ButtonModule, ChipModule, CommonModule, TreeSelectModule],
+  imports: [FloatLabelModule, FormsModule, IconFieldModule, ButtonModule, ChipModule, CommonModule, TreeSelectModule, TranslateModule],
 })
 export class TreeselectChipsComponent {
 
