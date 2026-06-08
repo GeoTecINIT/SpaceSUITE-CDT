@@ -49,6 +49,7 @@
     "attributes": {
       "type": "Type",
       "eqf": "EQF level",
+      "private": "Private",
       "updated": "Last updated"
     },
     "tooltips": {

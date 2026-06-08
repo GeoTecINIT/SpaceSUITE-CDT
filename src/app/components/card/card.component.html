@@ -33,6 +33,12 @@
 
             {{ educationalOffer.root.eqf }}
           </span>
+          @if(!educationalOffer.isPublic) {
+            |
+            <div class="text-sm flex align-items-center gap-1">
+              <i class="pi pi-eye-slash"></i><strong>{{ 'card.attributes.private' | translate }}</strong>
+            </div>
+          }
           |
           <span class="white-space-nowrap">
             <strong>{{ 'card.attributes.updated' | translate }}:</strong>
