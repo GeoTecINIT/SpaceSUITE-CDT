@@ -1,15 +1,16 @@
 [
   {
-    "label": "EQF Level",
+    "id": "EQF Level",
+    "label": "filters.eqf.label",
     "tags": [
-      "EQF 1 - Basic general knowledge",
-      "EQF 2 - Basic factual knowledge",
-      "EQF 3 - Operational knowledge",
-      "EQF 4 - Intermediate knowledge",
-      "EQF 5 - Advanced knowledge",
-      "EQF 6 - Professional knowledge",
-      "EQF 7 - Expert knowledge",
-      "EQF 8 - Authority knowledge"
+      "filters.eqf.tags.eqf1",
+      "filters.eqf.tags.eqf2",
+      "filters.eqf.tags.eqf3",
+      "filters.eqf.tags.eqf4",
+      "filters.eqf.tags.eqf5",
+      "filters.eqf.tags.eqf6",
+      "filters.eqf.tags.eqf7",
+      "filters.eqf.tags.eqf8"
     ],
     "values": [
       "EQF 1",
@@ -22,10 +23,28 @@
       "EQF 8"
     ],
     "selection": [],
-    "tooltip": "The European Qualifications Framework. Indicates level of knowledge, skills and competences, from 1 (basic) to 8 (highly specialized)."
+    "tooltip": "filters.eqf.tooltip"
   },
   {
-    "label": "Organizations",
+    "id": "Offer Type",
+    "label": "filters.offerType.label",
+    "tags": [
+      "nodeTypes.studyProgram",
+      "nodeTypes.module",
+      "nodeTypes.course",
+      "nodeTypes.lecture"
+    ],
+    "values": [
+      "Study Program",
+      "Module",
+      "Course",
+      "Lecture"
+    ],
+    "selection": []
+  },
+  {
+    "id": "Organizations",
+    "label": "filters.organizations.label",
     "values": [],
     "selection": []
   }

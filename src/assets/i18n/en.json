@@ -62,16 +62,6 @@
     }
   },
   "curriculumNodeForm": {
-    "durationUnit": {
-      "years": "Years",
-      "semesters": "Semesters",
-      "trimesters": "Trimesters",
-      "months": "Months",
-      "weeks": "Weeks",
-      "days": "Days",
-      "hours": "Hours",
-      "minutes": "Minutes"
-    },
     "lecturePractical": {
       "practical": "Practical",
       "theorical": "Theorical"
@@ -185,6 +175,26 @@
     },
     "bok": {
       "label": "Filter by Knowledge / BoK Concept"
+    },
+    "eqf": {
+      "label": "EQF Level",
+      "tags": {
+        "eqf1": "EQF 1 - Basic general knowledge",
+        "eqf2": "EQF 2 - Basic factual knowledge",
+        "eqf3": "EQF 3 - Operational knowledge",
+        "eqf4": "EQF 4 - Intermediate knowledge",
+        "eqf5": "EQF 5 - Advanced knowledge",
+        "eqf6": "EQF 6 - Professional knowledge",
+        "eqf7": "EQF 7 - Expert knowledge",
+        "eqf8": "EQF 8 - Authority knowledge"
+      },
+      "tooltip": "The European Qualifications Framework. Indicates level of knowledge, skills and competences, from 1 (basic) to 8 (highly specialized)."
+    },
+    "offerType": {
+      "label": "Educational Offer Type"
+    },
+    "organizations": {
+      "label": "Organizations"
     }
   },
   "itemExplorer": {
@@ -226,6 +236,16 @@
     "common": "Common",
     "elective": "Elective",
     "specialization": "Specialization"
+  },
+  "durationUnit": {
+    "years": "Years",
+    "semesters": "Semesters",
+    "trimesters": "Trimesters",
+    "months": "Months",
+    "weeks": "Weeks",
+    "days": "Days",
+    "hours": "Hours",
+    "minutes": "Minutes"
   },
   "offerForm": {
     "headers": {
@@ -316,7 +336,8 @@
     "tablist": {
       "index": "Index",
       "tree": "Tree"
-    }
+    },
+    "newNodeName": "New {{nodeType}}"
   },
   "offerPage": {
     "toast": {

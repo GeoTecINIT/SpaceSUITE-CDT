@@ -65,6 +65,8 @@ export class OfferFormComponent {
 
   loggedUserId!: string;
 
+  expandPanel: boolean = false;
+
   private previousNavigationUrl?: UrlTree;
 
   private sessionSubscription?: Subscription;

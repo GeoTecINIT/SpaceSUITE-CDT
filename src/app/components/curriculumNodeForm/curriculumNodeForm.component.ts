@@ -102,35 +102,35 @@ export class CurriculumNodeFormComponent {
   private buildSelectFields() {
     this.DURATION_UNIT= [
       {
-        label: this.translate.instant('curriculumNodeForm.durationUnit.years'),
+        label: this.translate.instant('durationUnit.years'),
         value: DurationUnit.Years
       },
       {
-        label: this.translate.instant('curriculumNodeForm.durationUnit.semesters'),
+        label: this.translate.instant('durationUnit.semesters'),
         value: DurationUnit.Semesters
       },
       {
-        label: this.translate.instant('curriculumNodeForm.durationUnit.trimesters'),
+        label: this.translate.instant('durationUnit.trimesters'),
         value: DurationUnit.Trimesters
       },
       {
-        label: this.translate.instant('curriculumNodeForm.durationUnit.months'),
+        label: this.translate.instant('durationUnit.months'),
         value: DurationUnit.Months
       },
       {
-        label: this.translate.instant('curriculumNodeForm.durationUnit.weeks'),
+        label: this.translate.instant('durationUnit.weeks'),
         value: DurationUnit.Weeks
       },
       {
-        label: this.translate.instant('curriculumNodeForm.durationUnit.days'),
+        label: this.translate.instant('durationUnit.days'),
         value: DurationUnit.Days
       },
       {
-        label: this.translate.instant('curriculumNodeForm.durationUnit.hours'),
+        label: this.translate.instant('durationUnit.hours'),
         value: DurationUnit.Hours
       },
       {
-        label: this.translate.instant('curriculumNodeForm.durationUnit.minutes'),
+        label: this.translate.instant('durationUnit.minutes'),
         value: DurationUnit.Minutes
       },
     ];

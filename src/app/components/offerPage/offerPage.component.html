@@ -1,7 +1,7 @@
 <p-toast class="custom-toast" position="bottom-right"/>
 <p-confirmdialog />
 <div *ngIf="offer(); else spinner" class="flex flex-column lg:flex-row justify-content-between lg:gap-4">
-    <div class="flex flex-column overflow-auto flex-auto">
+    <div class="flex flex-column overflow-auto left-panel" [class.expanded]="expandPanel">
         <p-breadcrumb [model]="breadcrumbItems()" class="custom-breadcrumb mt-3"></p-breadcrumb>
         <h1 class="mb-2 mt-1">
             {{selectedNode()?.name}}
@@ -29,7 +29,7 @@
             |
             <div class="text-sm"><strong>{{'offerPage.workload' | translate}}:</strong> {{selectedNode()?.ects}} ECTS</div>
             |
-            <div class="text-sm"><strong>{{'offerPage.duration' | translate}}:</strong> {{selectedNode()?.timeRequired?.value + " " + selectedNode()?.timeRequired?.unit}}</div>
+            <div class="text-sm"><strong>{{'offerPage.duration' | translate}}:</strong> {{selectedNode()?.timeRequired?.value + " " + getTimeRequiredUnit(selectedNode()?.timeRequired)}}</div>
             |
             <div class="text-sm"><strong>{{'offerPage.created' | translate}}:</strong> {{offer()?.createdAt?.toLocaleDateString()}}</div>
             |
@@ -124,9 +124,9 @@
             </div>
         </div>
     </div>
-    <div class="flex flex-column">
-        <div class="flex flex-column gap-1 offer-index-column">
-            <offer-index-component class="mt-3 mb-2" [offer]="offer()!" [selectedNode]="selectedNode()?.id!" (selectedNodeChanged)="changeSelectedNode($event)"></offer-index-component>
+    <div class="flex flex-column right-panel" [class.expanded]="expandPanel">
+        <div class="flex flex-column gap-1">
+            <offer-index-component class="mt-3 mb-2" [offer]="offer()!" [selectedNode]="selectedNode()?.id!" (selectedNodeChanged)="changeSelectedNode($event)" (expandedChanged)="expandPanel = $event"></offer-index-component>
             <p-panel #affiliationsPanel [header]="('offerPage.affiliations' | translate) + ' (' + affiliations().length + ')'" toggleable="true" collapsed="false" class="my-2 custom-panel">
                 <ng-template #headericons>
                     <p-button *ngIf="!conceptsPanel.collapsed" icon="pi pi-chevron-up" severity="secondary" rounded text/>

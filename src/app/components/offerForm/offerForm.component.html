@@ -1,16 +1,16 @@
 <p-toast class="custom-toast" position="bottom-right"/>
 <p-confirmdialog />
-<div class="flex flex-column lg:flex-row lg:justify-content-between align-items-center lg:align-items-start p-4 gap-4">
-    <div class="w-full lg:w-auto">
+<div class="flex flex-column lg:flex-row justify-content-between mt-3 gap-4">
+    <div class="left-panel" [class.expanded]="expandPanel">
         <h2 class="flex justify-content-center m-0">{{pageName}}</h2>
         <h3 class="flex font-italic font-light justify-content-center m-0">
             {{selectedNode().name == '' ? ('offerForm.headers.newNodeName' | translate: {nodeType: getSelectedNodeType()}) : selectedNode().name}}
         </h3>
-        <curriuclum-node-form class="flex mt-3" [curriculumNode]="this.selectedNode()" (nodeNameChange)="updateSelectedNode()" 
+        <curriuclum-node-form class="flex mt-3 w-full" [curriculumNode]="this.selectedNode()" (nodeNameChange)="updateSelectedNode()" 
             [errorMap]="this.errorMap"></curriuclum-node-form>
     </div>
-    <div class="offer-index-column flex flex-column gap-3">
-        <offer-index-component [offer]="offer()" [selectedNode]="selectedNode().id" (selectedNodeChanged)="changeSelectedNode($event)"></offer-index-component>
+    <div class="flex flex-column gap-3 right-panel" [class.expanded]="expandPanel">
+        <offer-index-component [offer]="offer()" [selectedNode]="selectedNode().id" (selectedNodeChanged)="changeSelectedNode($event)" (expandedChanged)="expandPanel = $event"></offer-index-component>
         <p-panel class="custom-panel">
             <div class="font-bold mb-3">{{'offerForm.headers.addNode' | translate}}</div>
             <div class="flex flex-column sm:flex-row gap-3 mb-4">

@@ -58,16 +58,6 @@
     --p-breadcrumb-item-focus-ring-color: var(--primary-color);
 }
 
-.offer-index-column {
-  width: 100%;
-}
-
-@media screen and (min-width: 992px) {
-  .offer-index-column {
-    width: 35vw;
-  }
-}
-
 .icon-link {
     text-decoration: none;
     color: var(--secondary-color)

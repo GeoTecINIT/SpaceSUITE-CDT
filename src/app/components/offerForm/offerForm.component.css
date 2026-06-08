@@ -19,13 +19,3 @@
     --p-button-primary-active-background: color-mix(in srgb, var(--danger-color) 70%, black 30%);
     --p-button-primary-active-border-color: color-mix(in srgb, var(--danger-color) 80%, black 20%);
 }
-
-.offer-index-column {
-  width: 100%;
-}
-
-@media screen and (min-width: 992px) {
-  .offer-index-column {
-    width: 35vw;
-  }
-}

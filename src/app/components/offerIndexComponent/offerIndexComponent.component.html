@@ -3,7 +3,7 @@
         <div class="flex flex-column">
             <div class="font-italic">{{getNodeType(offer.root.nodeType)}}</div>
             <div class="font-bold text-xl">
-                {{offer.root.name}}
+                {{offer.root.name == '' ? ('offerIndex.newNodeName' | translate: {nodeType: getNodeType(offer.root.nodeType)}) : offer.root.name}}
             </div>
         </div>
     </ng-template> 
@@ -17,8 +17,8 @@
                 <p-tree [value]="treeNodeRoot()" [selection]="selectedTreeNode()" selectionMode="single" class="w-full custom-tree" 
                     (selectionChange)="onTreeNodeSelection($event)" (onNodeUnselect)="preventTreeNodeUnselect($event)">
                     <ng-template let-node pTemplate="default">
-                        <div class="flex column-gap-2 justify-content-start flex-wrap align-items-end">
-                            {{node.label}}
+                        <div class="flex column-gap-2 justify-content-start flex-wrap align-items-baseline">
+                            {{node.label == '' ? ('offerIndex.newNodeName' | translate: {nodeType: getNodeType(node.data)}) : node.label}}
                             <div class="type-text text-xs font-italic">{{getNodeType(node.data)}}</div>
                         </div>
                     </ng-template>
@@ -31,7 +31,7 @@
                         <i class="pi pi-search-plus align-content-center" style="font-size: 1rem"></i>
                         <p-slider [ngModel]="scale()" (ngModelChange)="updateScale($event)" orientation="vertical" min="0.25" max="1.5" step="0.05" class="flex justify-content-center custom-slider"/>
                         <i class="pi pi-search-minus" style="font-size: 1rem"></i>
-                        <p-button icon="pi pi-expand" size="small" variant="text" class="custom-button"></p-button>
+                        <p-button [icon]="getExpandedIcon()" variant="text" class="custom-button expand-button" (onClick)="updateExpanded()"></p-button>
                     </div>
                     <div class="zoom-wrapper">
                         <div class="zoom-content" [style.zoom]="scale()">
@@ -39,7 +39,7 @@
                                 class="custom-org-chart" [value]="treeNodeRoot()" [collapsible]="true" selectionMode="single" 
                                 [selection]="selectedTreeNode()" (selectionChange)="onTreeNodeSelection($event)" (onNodeUnselect)="preventTreeNodeUnselect($event)">
                                 <ng-template let-node pTemplate="default">
-                                    <div>{{node.label}}</div>
+                                    <div>{{node.label == '' ? ('offerIndex.newNodeName' | translate: {nodeType: getNodeType(node.data)}) : node.label}}</div>
                                     <div class="text-xs font-italic">{{getNodeType(node.data)}}</div>
                                 </ng-template>
                                 <ng-template let-nodeTogler #togglericon>

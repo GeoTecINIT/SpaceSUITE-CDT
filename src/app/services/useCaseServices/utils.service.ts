@@ -6,6 +6,7 @@ import { CurriculumNode, NodeType } from "../../model/coreModel/curriculumNode";
 import { TranslateService } from "@ngx-translate/core";
 import { ModuleType } from "../../model/coreModel/module";
 import { CourseType } from "../../model/coreModel/course";
+import { DurationUnit } from "../../model/coreModel/duration";
 
 @Injectable({
     providedIn: 'root',
@@ -114,6 +115,29 @@ export class UtilsService {
                 return this.translate.instant('courseTypes.elective');
             case CourseType.Specialization:
                 return this.translate.instant('courseTypes.specialization');
+            default:
+                return '';
+        }
+    }
+
+    getTranslatedDurationUnit(type: DurationUnit): string {
+        switch(type) {
+            case DurationUnit.Years:
+                return this.translate.instant('durationUnit.years');
+            case DurationUnit.Semesters:
+                return this.translate.instant('durationUnit.semesters');
+            case DurationUnit.Trimesters:
+                return this.translate.instant('durationUnit.trimesters');
+            case DurationUnit.Months:
+                return this.translate.instant('durationUnit.months');
+            case DurationUnit.Weeks:
+                return this.translate.instant('durationUnit.weeks');
+            case DurationUnit.Days:
+                return this.translate.instant('durationUnit.days');
+            case DurationUnit.Hours:
+                return this.translate.instant('durationUnit.hours');
+            case DurationUnit.Minutes:
+                return this.translate.instant('durationUnit.minutes');
             default:
                 return '';
         }

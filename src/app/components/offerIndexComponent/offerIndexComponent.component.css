@@ -54,8 +54,12 @@
   padding-bottom: 0rem;
 }
 
-::ng-deep .p-tree-node-content.p-tree-node-selected {
+::ng-deep .p-tree-node-content.p-tree-node-selected .p-tree-node-label{
   font-weight: 700;
+}
+
+::ng-deep .p-tree-node-content.p-tree-node-selected .p-tree-node-icon {
+  font-size: 1.125rem;
 }
 
 .type-text {
@@ -75,4 +79,14 @@
     var(--secondary-color) 20%,
     rgba(255, 255, 255, 0) 80%
   );
+}
+
+.expand-button {
+  display: none;
+}
+
+@media screen and (min-width: 992px) {
+  .expand-button {
+    display: flex;
+  }
 }

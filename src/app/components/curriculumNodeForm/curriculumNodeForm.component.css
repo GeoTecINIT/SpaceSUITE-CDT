@@ -24,13 +24,7 @@
     --p-stepper-step-number-active-color: var(--hover-color);
     --p-stepper-step-title-active-color: var(--hover-color);
     --p-stepper-separator-active-background: var(--hover-color);
-    width: 50vw;
-}
-
-@media (max-width: 992px) {
-    .custom-stepper {
-        width: 100%;
-    }
+    width: 100%;
 }
 
 .custom-textarea {

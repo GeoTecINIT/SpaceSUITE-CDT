@@ -66,7 +66,7 @@ export class MultiselectChipsComponent {
       });
     }
     else {
-      this.filterService.getOptionByLabel(this.optionsName).subscribe( filterOption =>
+      this.filterService.getOption(this.optionsName).subscribe( filterOption =>
         this.multiselectOptions = filterOption.values.filter(value => value != 'Other').map(x => ({ id: x, value: x }))
       );
     }

@@ -2,9 +2,10 @@ import { inject, Injectable } from "@angular/core";
 import { FilterOption } from "../../model/viewModel/filterOption";
 import { PaginatorState } from "primeng/paginator";
 import { HttpClient } from "@angular/common/http";
-import {  concatMap, map, Observable, ReplaySubject, take } from "rxjs";
+import {  combineLatest, concatMap, map, Observable, ReplaySubject, startWith, Subscription, switchMap, take, tap } from "rxjs";
 import { EducationalOffer } from "../../model/coreModel/educationalOffer";
 import { EducationalOfferService } from "./educationalOffer.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Injectable({
     providedIn: 'root',
@@ -21,6 +22,7 @@ export class CardFilterService {
 
   private educationalOfferService: EducationalOfferService = inject(EducationalOfferService);
   private http: HttpClient = inject(HttpClient);
+  private translate: TranslateService = inject(TranslateService);
 
   constructor(){
     this.http.get<FilterOption[]>('/assets/filters.json').pipe(
@@ -32,19 +34,30 @@ export class CardFilterService {
       })
     ).subscribe(({ filters, organizations }) => {
       const updatedFilters = [...filters];
-      updatedFilters[updatedFilters.length - 1].values = organizations
+      updatedFilters[updatedFilters.length - 1].values = [...organizations];
       this.filterOptions.next(updatedFilters);
     });
   }
 
+  private get translatedFilters$(): Observable<FilterOption[]> {
+    return combineLatest([
+      this.filterOptions.asObservable(),
+      this.translate.onLangChange.pipe(startWith(null))
+    ]).pipe(
+      map(([filters]) => this.translateFilters(filters))
+    );
+  }
+
   public getFilterOptions(): Observable<FilterOption[]> {
-    return this.filterOptions.asObservable();
+    return this.translatedFilters$;
   }
 
   public checkItem(item: EducationalOffer, filter: FilterOption): boolean {
-    switch(filter.label) {
+    switch(filter.id) {
       case 'EQF Level':
         return filter.selection.some(selection => item.root.eqf.toString() === selection.slice(-1));
+      case 'Offer Type':
+        return filter.selection.some(selection => item.root.nodeType === selection);
       case 'Organizations':
         return filter.selection.some(selection => item.orgName?.toLowerCase() == selection.toLowerCase());
       default:
@@ -52,17 +65,35 @@ export class CardFilterService {
     }
   }
 
-  public getOptionByLabel(label: string): Observable<FilterOption> {
-    return this.filterOptions.pipe(
+  public getOption(id: string): Observable<FilterOption> {
+    return this.translatedFilters$.pipe(
       map(value => {
-        const option = value.filter( option => option.label == label)
+        const option = value.filter( option => option.id == id)
         if (option.length > 0) return option[0];
         return {
-          label: label,
+          id: id,
+          label: id,
           values: [],
           selection: []
         };
       })
     );
+  }
+
+  private translateFilters(filters: FilterOption[]): FilterOption[] {
+    return filters.map(value => {
+      return {
+        id: value.id,
+        label: this.translate.instant(value.label),
+        values: [...value.values],
+        selection: [],
+        ...(value.tags ? {
+          tags: value.tags.map(tag => this.translate.instant(tag))
+        } : {}),
+        ...(value.tooltip ? {
+          tooltip: this.translate.instant(value.tooltip)
+        } : {})
+      }
+    })
   }
 }

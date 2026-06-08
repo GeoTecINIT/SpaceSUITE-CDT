@@ -66,6 +66,7 @@ export class ItemExplorerComponent {
   sortAsc: boolean = false;
 
   private educationalOffersSubscription!: Subscription;
+  private filterOptionsSubscription!: Subscription;
   private userOrgIds: string[] = [];
   private userUid: string | undefined;
 
@@ -92,7 +93,7 @@ export class ItemExplorerComponent {
 
   ngOnInit() {
     // Load filters value from FilterService
-    this.filterService.getFilterOptions().pipe(take(1)).subscribe(filters => {
+    this.filterOptionsSubscription = this.filterService.getFilterOptions().subscribe(filters => {
       this.filterOptions = filters;
       this.loadingFilters = false;
     });
@@ -164,7 +165,8 @@ export class ItemExplorerComponent {
     window.removeEventListener('scroll', this.updateButtonPosition);
     window.removeEventListener('resize', this.updateButtonPosition);
     this.educationalOffersSubscription.unsubscribe();
-    this.langChangeSub.unsubscribe()
+    this.langChangeSub.unsubscribe();
+    this.filterOptionsSubscription.unsubscribe();
   }
 
   switchSortOrientation() {

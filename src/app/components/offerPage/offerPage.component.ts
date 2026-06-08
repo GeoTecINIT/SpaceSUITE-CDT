@@ -24,6 +24,7 @@ import { Module } from "../../model/coreModel/module";
 import { Course } from "../../model/coreModel/course";
 import { Lecture } from "../../model/coreModel/lecture";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { Duration } from "../../model/coreModel/duration";
 
 @Component({
   standalone: true,
@@ -45,6 +46,8 @@ export class OfferPageComponent {
   affiliations: WritableSignal<Tag[]> = signal<Tag[]>([]);
 
   breadcrumbItems: WritableSignal<MenuItem[]> = signal([]);
+
+  expandPanel: boolean = false;
 
   private userOrgIdsSubscription!: Subscription;
   private userOrgIds: string[] = [];
@@ -378,5 +381,10 @@ export class OfferPageComponent {
 
   getNodeType(type: NodeType): string {
     return this.utilsService.getTranslatedNodeType(type);
+  }
+
+  getTimeRequiredUnit(timeRequired: Duration | undefined) {
+    if (!timeRequired) return '';
+    return this.utilsService.getTranslatedDurationUnit(timeRequired.unit);
   }
 }
