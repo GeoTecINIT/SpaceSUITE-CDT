@@ -166,8 +166,8 @@
     "filterUserItem": {
       "loginRequired": "You must be logged in to use this field"
     },
-    "showPrivateItems": {
-      "label": "Show private profiles?"
+    "hidePrivateItems": {
+      "label": "Hide private profiles?"
     },
     "searchByField": {
       "label": "Search by",

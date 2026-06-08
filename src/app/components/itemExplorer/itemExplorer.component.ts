@@ -2,7 +2,7 @@ import { Component, ElementRef, inject, NgZone, signal, ViewChild, WritableSigna
 import { SkeletonModule } from 'primeng/skeleton';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { CommonModule } from "@angular/common";
-import { combineLatest, filter, map, Observable, Subscription, take, tap } from "rxjs";
+import { BehaviorSubject, combineLatest, filter, map, Observable, Subscription, take, tap } from "rxjs";
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from "primeng/api";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -45,7 +45,7 @@ export class ItemExplorerComponent {
   searchOption: string = "Title";
   bokConcepts: string[] = [];
   loadingFilters: boolean = true;
-  showPrivate: boolean = false;
+  hidePrivate: boolean = true;
 
   loadingCards = signal(true);
 
@@ -71,6 +71,8 @@ export class ItemExplorerComponent {
   private userUid: string | undefined;
 
   private langChangeSub: Subscription;
+
+  isLogged: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   // Services
 
@@ -105,7 +107,19 @@ export class ItemExplorerComponent {
     this.bokConcepts = this.filterService.bokConcepts;
     this.sortAsc = this.sortingService.sortAsc;
     this.selectedSortOption = this.sortingService.sortOption;
-    this.showPrivate = this.filterService.showPrivate;
+    
+    this.authService.getUserState().pipe(
+      tap(state => this.userUid = state?.uid), 
+      map(state => state?.logged || false)
+    ).subscribe(value => {
+      this.isLogged.next(value);
+      if (value) {
+        this.hidePrivate = this.filterService.hidePrivate;
+      }
+      else {
+        this.hidePrivate = true;
+      }
+    });
 
     // Load Items & User orgs
     this.educationalOffersSubscription = combineLatest([
@@ -205,9 +219,9 @@ export class ItemExplorerComponent {
     this.filterPipeline();
   }
 
-  setShowPrivate(showPrivate: boolean) {
-    this.showPrivate = showPrivate;
-    this.filterService.showPrivate = showPrivate;
+  setHidePrivate(hidePrivate: boolean) {
+    this.hidePrivate = hidePrivate;
+    if (this.isLogged.value) this.filterService.hidePrivate = hidePrivate;
     this.filterPipeline();
   }
 
@@ -221,9 +235,9 @@ export class ItemExplorerComponent {
   }
 
   private handlePrivateItems(inputItems: EducationalOffer[]): EducationalOffer[] {
-    return this.showPrivate
-      ? inputItems
-      : inputItems.filter((offer) => offer.isPublic === true);
+    return this.hidePrivate
+      ? inputItems.filter((offer) => offer.isPublic === true)
+      : inputItems;
   }
 
   sortItems(inputItems: EducationalOffer[]): EducationalOffer[] {
@@ -300,10 +314,6 @@ export class ItemExplorerComponent {
       }
     }
     return false;
-  }
-
-  isLogged(): Observable<boolean> {
-    return this.authService.getUserState().pipe(tap(state => this.userUid = state?.uid), map(state => state?.logged || false));
   }
 
   onPageChange(event: PaginatorState) {

@@ -5,7 +5,7 @@
         (multiSelectOptionsChange)="filterPipeline()" (advancedMultiSelectOptionsChange)="filterPipeline()" [filterUserItemOptions]="filterUserItemOptions"
         [searchValue]="searchValue" (searchValueChange)="setSearchValue($event)" [selectedOption]="searchOption" (selectedOptionChange)="setSearchOption($event)"
         [bokConcepts]="bokConcepts" (bokConceptsChange)="setBoKConcepts($event)" [filterUserItem]="filterByUserItem" (filterUserItemChange)="setFilterByUserMaterial($event)" 
-        [logged]="(isLogged() | async) ?? false" [showPrivate]="showPrivate" (showPrivateChange)="setShowPrivate($event)" class="flex justify-content-center"></filters>
+        [logged]="(isLogged.asObservable()| async) ?? false" [hidePrivate]="hidePrivate" (hidePrivateChange)="setHidePrivate($event)" class="flex justify-content-center"></filters>
     <div class="flex flex-column w-full">
         <p-buttongroup class="ml-auto mt-2 align-self-center">
             <p-button severity="secondary" (click)="switchSortOrientation()" [icon]="sortAsc ? 'pi pi-sort-amount-up' : 'pi pi-sort-amount-down'" size="small" [label]="'itemExplorer.orderBy' | translate: {option: selectedSortOption}" class="custom-secondary-button"/>
@@ -16,7 +16,7 @@
             <div class="flex gap-3 flex-column align-content-start justify-content-center mb-4">
                 <ng-container *ngIf="!loadingCards() else cardSkeleton">
                     <ng-container *ngFor="let item of paginationEducationalItems; trackBy: trackById">
-                        <card [educationalOffer]="item" [logged]="(isLogged() | async) || false"></card>
+                        <card [educationalOffer]="item" [logged]="(isLogged.asObservable()| async) || false"></card>
                     </ng-container>
                 </ng-container>
             </div>
@@ -26,7 +26,7 @@
     </div>
 </div>
 
-@if(isLogged() | async) {
+@if(isLogged.asObservable()| async) {
     <div class="floating-container flex flex-column gap-2 align-items-end" [ngStyle]="{ bottom: buttonBottom + 'px' }">
         <p-button (click)="createTrainingItem()" icon="pi pi-plus" [label]="'itemExplorer.addOffer' | translate" class="custom-button floating-button"/>
     </div>

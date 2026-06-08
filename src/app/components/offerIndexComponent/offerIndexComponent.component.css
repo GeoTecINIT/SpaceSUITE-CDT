@@ -52,6 +52,7 @@
 
 ::ng-deep .p-tree {
   padding-bottom: 0rem;
+  padding-left: 0rem;
 }
 
 ::ng-deep .p-tree-node-content.p-tree-node-selected .p-tree-node-label{
@@ -87,6 +88,6 @@
 
 @media screen and (min-width: 992px) {
   .expand-button {
-    display: flex;
+    display: block;
   }
 }

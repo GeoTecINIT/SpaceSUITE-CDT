@@ -128,12 +128,12 @@ body {
   }
 
   .left-panel.expanded {
-    flex: 0 0 53%;
-    max-width: 53%;
+    flex: 0 0 48%;
+    max-width: 48%;
   }
 
   .right-panel.expanded {
-    flex: 0 0 45%;
-    max-width: 45%;
+    flex: 0 0 50%;
+    max-width: 50%;
   }
 }

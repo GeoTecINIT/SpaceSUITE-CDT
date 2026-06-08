@@ -46,8 +46,8 @@ export class FiltersComponent {
   @Input() filterUserItem: boolean = false;
   @Output() filterUserItemChange: EventEmitter<boolean> = new EventEmitter();
 
-  @Input() showPrivate: boolean = false;
-  @Output() showPrivateChange: EventEmitter<boolean> = new EventEmitter();
+  @Input() hidePrivate: boolean = true;
+  @Output() hidePrivateChange: EventEmitter<boolean> = new EventEmitter();
 
   @Input() logged: boolean = false;
 
@@ -66,7 +66,7 @@ export class FiltersComponent {
   ngOnChanges(changes: SimpleChanges) {
     if (changes["logged"] && !changes["logged"].isFirstChange() && changes['logged'].currentValue == false) { 
       this.filterUserItemChange.emit(false);
-      this.showPrivateChange.emit(false);
+      this.hidePrivateChange.emit(true);
     }
   }
 
@@ -91,8 +91,8 @@ export class FiltersComponent {
     this.filterUserItemChange.emit(this.filterUserItem);
   }
 
-  updateShowPrivate(): void {
-    this.showPrivateChange.emit(this.showPrivate);
+  updateHidePrivate(): void {
+    this.hidePrivateChange.emit(this.hidePrivate);
   }
 
   clearOptions(label: string) {

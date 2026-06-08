@@ -17,11 +17,11 @@
             </div>
             @if (logged) {
                 <div class="my-4 flex align-items-center gap-3">
-                    {{'filters.showPrivateItems.label' | translate}}
+                    {{'filters.hidePrivateItems.label' | translate}}
                     <p-checkbox
                         class="flex custom-checkbox"
-                        [(ngModel)]="showPrivate"
-                        (ngModelChange)="updateShowPrivate()"
+                        [(ngModel)]="hidePrivate"
+                        (ngModelChange)="updateHidePrivate()"
                         [binary]="true"
                     />
                 </div>

@@ -14,15 +14,18 @@
         </p-tablist>
         <p-tabpanels class="p-0 overflow-auto">
             <p-tabpanel value="0">
-                <p-tree [value]="treeNodeRoot()" [selection]="selectedTreeNode()" selectionMode="single" class="w-full custom-tree" 
-                    (selectionChange)="onTreeNodeSelection($event)" (onNodeUnselect)="preventTreeNodeUnselect($event)">
-                    <ng-template let-node pTemplate="default">
-                        <div class="flex column-gap-2 justify-content-start flex-wrap align-items-baseline">
-                            {{node.label == '' ? ('offerIndex.newNodeName' | translate: {nodeType: getNodeType(node.data)}) : node.label}}
-                            <div class="type-text text-xs font-italic">{{getNodeType(node.data)}}</div>
-                        </div>
-                    </ng-template>
-                </p-tree>
+                <div class="flex align-items-baseline">
+                    <p-button [icon]="getExpandedIcon()" variant="text" class="custom-button expand-button" (onClick)="updateExpanded()"></p-button>
+                    <p-tree [value]="treeNodeRoot()" [selection]="selectedTreeNode()" selectionMode="single" class="w-full custom-tree ml-0" 
+                        (selectionChange)="onTreeNodeSelection($event)" (onNodeUnselect)="preventTreeNodeUnselect($event)">
+                        <ng-template let-node pTemplate="default">
+                            <div class="flex column-gap-2 justify-content-start flex-wrap align-items-baseline">
+                                {{node.label == '' ? ('offerIndex.newNodeName' | translate: {nodeType: getNodeType(node.data)}) : node.label}}
+                                <div class="type-text text-xs font-italic">{{getNodeType(node.data)}}</div>
+                            </div>
+                        </ng-template>
+                    </p-tree>
+                </div>
             </p-tabpanel>
             <p-tabpanel value="1">
                 <br>
