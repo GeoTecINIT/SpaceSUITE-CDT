@@ -338,7 +338,9 @@
       "index": "Index",
       "tree": "Tree"
     },
-    "newNodeName": "New {{nodeType}}"
+    "newNodeName": "New {{nodeType}}",
+    "expandTooltip": "Expand {{selectedTab}} panel",
+    "collapseTooltip": "Collapse {{selectedTab}} panel"
   },
   "offerPage": {
     "toast": {

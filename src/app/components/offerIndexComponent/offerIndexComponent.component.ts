@@ -12,14 +12,15 @@ import { FormsModule } from "@angular/forms";
 import { ButtonModule } from "primeng/button";
 import { DialogModule } from "primeng/dialog";
 import { UtilsService } from "../../services/useCaseServices/utils.service";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { Tooltip } from "primeng/tooltip";
 
 @Component({
   standalone: true,
   selector: 'offer-index-component',
   templateUrl: './offerIndexComponent.component.html',
   styleUrls: ['./offerIndexComponent.component.css'],
-  imports: [CommonModule, PanelModule, TabsModule, OrganizationChartModule, SliderModule, FormsModule, TreeModule, ButtonModule, DialogModule, TranslateModule],
+  imports: [CommonModule, PanelModule, TabsModule, OrganizationChartModule, SliderModule, FormsModule, TreeModule, ButtonModule, DialogModule, TranslateModule, Tooltip],
 })
 export class OfferIndexComponent {
   @Input() offer!: EducationalOffer;
@@ -36,6 +37,7 @@ export class OfferIndexComponent {
   updateScale = (newValue: number) => this.scale.set(newValue);
 
   private utilsService: UtilsService = inject(UtilsService);
+  private translate: TranslateService = inject(TranslateService);
 
   onMenuItemSelection(nodeId: string) {
     this.selectedNodeChanged.emit(nodeId);
@@ -117,5 +119,16 @@ export class OfferIndexComponent {
   getExpandedIcon() {
     if (this.expanded) return 'pi pi-angle-double-right'
     return 'pi pi-angle-double-left'
+  }
+
+  getExpandedTooltip(selectedTabIndex: number) {
+    const selectedTabText: string = 
+      selectedTabIndex == 0 ? 
+      this.translate.instant('offerIndex.tablist.index') : 
+      this.translate.instant('offerIndex.tablist.tree'); 
+    if (this.expanded) {
+      return this.translate.instant('offerIndex.collapseTooltip', {selectedTab: selectedTabText});
+    }
+    else return this.translate.instant('offerIndex.expandTooltip', {selectedTab: selectedTabText});
   }
 }

@@ -15,7 +15,8 @@
         <p-tabpanels class="p-0 overflow-auto">
             <p-tabpanel value="0">
                 <div class="flex align-items-baseline">
-                    <p-button [icon]="getExpandedIcon()" variant="text" class="custom-button expand-button" (onClick)="updateExpanded()"></p-button>
+                    <p-button [icon]="getExpandedIcon()" variant="text" class="custom-button expand-button" (onClick)="updateExpanded()"
+                        [pTooltip]="getExpandedTooltip(0)" tooltipPosition="bottom"></p-button>
                     <p-tree [value]="treeNodeRoot()" [selection]="selectedTreeNode()" selectionMode="single" class="w-full custom-tree ml-0" 
                         (selectionChange)="onTreeNodeSelection($event)" (onNodeUnselect)="preventTreeNodeUnselect($event)">
                         <ng-template let-node pTemplate="default">
@@ -34,7 +35,8 @@
                         <i class="pi pi-search-plus align-content-center" style="font-size: 1rem"></i>
                         <p-slider [ngModel]="scale()" (ngModelChange)="updateScale($event)" orientation="vertical" min="0.25" max="1.5" step="0.05" class="flex justify-content-center custom-slider"/>
                         <i class="pi pi-search-minus" style="font-size: 1rem"></i>
-                        <p-button [icon]="getExpandedIcon()" variant="text" class="custom-button expand-button" (onClick)="updateExpanded()"></p-button>
+                        <p-button [icon]="getExpandedIcon()" variant="text" class="custom-button expand-button" (onClick)="updateExpanded()"
+                            [pTooltip]="getExpandedTooltip(1)" tooltipPosition="bottom"></p-button>
                     </div>
                     <div class="zoom-wrapper">
                         <div class="zoom-content" [style.zoom]="scale()">
