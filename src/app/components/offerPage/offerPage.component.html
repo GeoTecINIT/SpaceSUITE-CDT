@@ -31,10 +31,10 @@
             |
             <div class="text-sm"><strong>{{'offerPage.duration' | translate}}:</strong> {{selectedNode()?.timeRequired?.value + " " + getTimeRequiredUnit(selectedNode()?.timeRequired)}}</div>
             |
-            <div class="text-sm"><strong>{{'offerPage.created' | translate}}:</strong> {{offer()?.createdAt?.toLocaleDateString()}}</div>
+            <div class="text-sm"><strong>{{'offerPage.created' | translate}}:</strong> {{offer()?.createdAt?.toLocaleDateString('en-UK')}}</div>
             |
             <div *ngIf="offer()?.updatedAt" class="flex align-items-center flex-wrap gap-2 white-space-nowrap">
-                <div class="text-sm"><strong>{{'offerPage.updated' | translate}}:</strong> {{offer()?.updatedAt?.toLocaleDateString()}}</div>
+                <div class="text-sm"><strong>{{'offerPage.updated' | translate}}:</strong> {{offer()?.updatedAt?.toLocaleDateString('en-UK')}}</div>
                 |
             </div>
             <div class="text-sm"><strong>{{'offerPage.visibility' | translate}}:</strong> {{offer()?.isPublic ? 'Public' : 'Private'}}</div>

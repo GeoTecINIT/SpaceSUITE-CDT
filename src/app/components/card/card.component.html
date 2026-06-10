@@ -43,7 +43,7 @@
           <span class="white-space-nowrap">
             <strong>{{ 'card.attributes.updated' | translate }}:</strong>
 
-            {{ educationalOffer.updatedAt?.toLocaleDateString() }}
+            {{ educationalOffer.updatedAt?.toLocaleDateString('en-UK') ?? educationalOffer.createdAt.toLocaleDateString('en-UK') }}
           </span>
         </div>
 
