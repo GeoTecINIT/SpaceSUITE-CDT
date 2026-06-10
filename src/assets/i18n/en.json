@@ -308,6 +308,12 @@
         "header": "Delete Node",
         "reject": "Cancel",
         "accept": "Delete"
+      },
+      "promoteNode": {
+        "message": "Do you want to create a new educational offer from the selected curriculum node?",
+        "header": "Promote Node",
+        "reject": "Cancel",
+        "accept": "Promote"
       }
     },
     "toast": {
@@ -329,6 +335,10 @@
       },
       "nodeDeleted": {
         "detail": "Node deleted without problems.",
+        "summary": "Info"
+      },
+      "nodePromoted": {
+        "detail": "Node promoted successfully. Link copied to clipboard.",
         "summary": "Info"
       }
     }

@@ -149,7 +149,7 @@ export class CardComponent implements OnInit {
       },
       acceptButtonProps: {
         label: this.translate.instant('card.deleteModal.accept'),
-        severity: 'primary',
+        severity: 'danger',
       },
 
       accept: () => {

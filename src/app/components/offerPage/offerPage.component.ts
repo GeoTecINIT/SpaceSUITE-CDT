@@ -293,7 +293,7 @@ export class OfferPageComponent {
         },
         acceptButtonProps: {
             label: this.translate.instant('offerPage.modal.delete.accept'),
-            severity: 'primary',
+            severity: 'danger',
         },
 
         accept: () => {

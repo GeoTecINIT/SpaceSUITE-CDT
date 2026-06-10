@@ -149,7 +149,7 @@ export class OfferFormComponent {
       },
       acceptButtonProps: {
         label: this.translate.instant('offerForm.modal.exit.accept'),
-        severity: 'primary',
+        severity: 'danger',
       },
       accept: () => this.exitWithoutSavingService.exitSubject.next(true),
       reject: () => this.exitWithoutSavingService.exitSubject.next(false),
@@ -303,7 +303,7 @@ export class OfferFormComponent {
         },
         acceptButtonProps: {
           label: this.translate.instant('offerForm.modal.deleteNode.accept'),
-          severity: 'primary',
+          severity: 'danger',
         },
 
         accept: () => {
@@ -328,7 +328,7 @@ export class OfferFormComponent {
       this.educationalOfferService.submitEducationalOffer(this.offer(), this.inputOffer).pipe(
         take(1),
         catchError( error => {
-          console.log(error)
+          console.error(error)
           this.messageService.add({ 
             severity: 'error', 
             summary: this.translate.instant('offerForm.toast.submitError.summary'), 
@@ -340,14 +340,14 @@ export class OfferFormComponent {
         })
       ).subscribe(eduOfferId => {
         this.router.navigate(
-            ['offer/' + eduOfferId], 
-            { 
-              queryParams: { 
-                submited: true, 
-                mode: this.inputOffer != undefined ? 'update' : 'create' 
-              } 
-            }
-          );
+          ['offer/' + eduOfferId], 
+          { 
+            queryParams: { 
+              submited: true, 
+              mode: this.inputOffer != undefined ? 'update' : 'create' 
+            } 
+          }
+        );
       });
     }
     else {
@@ -473,5 +473,93 @@ export class OfferFormComponent {
 
   getNewNodeType(): string {
     return this.newNodeType ? this.utilsService.getTranslatedNodeType(this.newNodeType) : '';
+  }
+
+  showPromoteModal(event: Event) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: this.translate.instant('offerForm.modal.promoteNode.message'),
+      header: this.translate.instant('offerForm.modal.promoteNode.header'),
+      icon: 'pi pi-info-circle',
+      rejectButtonProps: {
+        label: this.translate.instant('offerForm.modal.promoteNode.reject'),
+        severity: 'secondary',
+      },
+      acceptButtonProps: {
+        label: this.translate.instant('offerForm.modal.promoteNode.accept'),
+        severity: 'primary',
+      },
+
+      accept: () => {
+        this.promoteSelectedNode();
+      },
+      reject: () => {},
+    });
+  }
+
+  private promoteSelectedNode() {
+    let newNode: CurriculumNode;
+    switch(this.selectedNode().nodeType) {
+      case NodeType.StudyProgram:
+        newNode = new StudyProgram(this.selectedNode());
+        break;
+      case NodeType.Course:
+        newNode = new Course(this.selectedNode());
+        break;
+      case NodeType.Module:
+        newNode = new Module(this.selectedNode());
+        break;
+      case NodeType.Lecture:
+        newNode = new Lecture(this.selectedNode());
+        break;
+      default:
+        newNode = new StudyProgram(this.selectedNode());
+    }
+    const newOffer = new EducationalOffer(newNode);
+    newOffer.isPublic = this.offer().isPublic;
+    newOffer.userId = this.loggedUserId;
+    newOffer.orgId = this.offer().orgId;
+    newOffer.orgName = this.offer().orgName;
+    newOffer.division = this.offer().division;
+
+    this.errorMap = this.offerValidationService.validateEducationalOffer(newOffer);
+    if (this.errorMap.size == 0) {
+      this.educationalOfferService.submitEducationalOffer(newOffer).pipe(
+        take(1),
+        catchError( error => {
+          console.error(error)
+          this.messageService.add({ 
+            severity: 'error', 
+            summary: this.translate.instant('offerForm.toast.submitError.summary'), 
+            detail: this.translate.instant('offerForm.toast.submitError.detail'), 
+            life: 3000, 
+            closable: true 
+          });
+          return EMPTY;
+        })
+      ).subscribe(eduOfferId => {
+        const path = this.router.serializeUrl(
+          this.router.createUrlTree([`/offer/${eduOfferId}`])
+        );
+        const url = `${window.location.origin}${path}`;
+        navigator.clipboard.writeText(url);
+        this.messageService.add({ 
+          severity: 'info', 
+          summary: this.translate.instant('offerForm.toast.nodePromoted.summary'), 
+          detail: this.translate.instant('offerForm.toast.nodePromoted.detail'), 
+          life: 3000, 
+          closable: true 
+        });
+      });
+    }
+    else {
+      this.messageService.add({ 
+        severity: 'error', 
+        summary: this.translate.instant('offerForm.toast.mandatoryFieldsError.summary'), 
+        detail: this.translate.instant('offerForm.toast.mandatoryFieldsError.detail'), 
+        life: 3000, 
+        closable: true 
+      });
+    }
   }
 }

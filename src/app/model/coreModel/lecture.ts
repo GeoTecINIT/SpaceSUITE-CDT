@@ -12,7 +12,7 @@ export class Lecture extends CurriculumNode {
     this.nodeType = NodeType.Lecture;
   }
 
-  public override validateChildCandidate(_: CurriculumNode): void {
+  protected override validateChildCandidate(_: CurriculumNode): void {
     throw new DomainError(
       'LECTURE_HAS_CHILDREN', 
       `Lectures are leaf nodes and cannot have children. Move content up to a Course or Module.`

@@ -33,8 +33,12 @@
                     <p-button icon="pi pi-refresh" class="delete-button" [label]="'offerForm.buttons.resetOffer' | translate" (onClick)="replaceRootNode()"></p-button>
                 }
                 @else { 
-                    <p-button icon="pi pi-trash" class="delete-button" [label]="'offerForm.buttons.deleteNode' | translate: {nodeType: getSelectedNodeType()}" (onClick)="deleteModal($event)"></p-button>
+                    <div class="flex gap-2">
+                        <p-button icon="pi pi-trash" class="delete-button" [label]="'offerForm.buttons.deleteNode' | translate: {nodeType: getSelectedNodeType()}" (onClick)="deleteModal($event)"></p-button>
+                        <p-button icon="pi pi-file-export" severity="secondary" class="custom-secondary-button" (onClick)="showPromoteModal($event)" label="Promote"></p-button>
+                    </div>
                 }
+                
                 <p-button icon="pi pi-plus" [disabled]="newNodeType == undefined || (newNodeType == 'Module' && newNodeModuleType == undefined)" 
                     class="custom-button" (onClick)="addNewChild()" [label]="'offerForm.buttons.addNode' | translate: {nodeType: getNewNodeType()}"></p-button>
             </div>
