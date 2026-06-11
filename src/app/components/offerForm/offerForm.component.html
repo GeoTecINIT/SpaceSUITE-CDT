@@ -6,7 +6,7 @@
         <h3 class="flex font-italic font-light justify-content-center m-0">
             {{selectedNode().name == '' ? ('offerForm.headers.newNodeName' | translate: {nodeType: getSelectedNodeType()}) : selectedNode().name}}
         </h3>
-        <curriuclum-node-form class="flex mt-3 w-full" [curriculumNode]="this.selectedNode()" (nodeNameChange)="updateSelectedNode()" 
+        <curriuclum-node-form class="flex mt-3 w-full" [curriculumNode]="this.selectedNode()" (curriculumNodeChanged)="updateSelectedNode()" 
             [errorMap]="this.errorMap"></curriuclum-node-form>
     </div>
     <div class="flex flex-column gap-3 right-panel" [class.expanded]="expandPanel">

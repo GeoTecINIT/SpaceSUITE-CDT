@@ -42,7 +42,7 @@
                         <div class="custom-border p-2" style="color: #64748b;" [pTooltip]="'curriculumNodeForm.fields.bok.tooltip' | translate: {nodeType: getNodeType()}" 
                             tooltipPosition="right" showDelay="200" hideDelay="200" 
                             [style.border-color]="errorMap.get(curriculumNode.id + '.bokConcepts') != undefined ? 'var(--danger-color)' : '' ">
-                            <bokModal [(selectedConcepts)]="curriculumNode.bokConcepts" [label]="('curriculumNodeForm.fields.bok.label' | translate) + ' *'"
+                            <bokModal [(selectedConcepts)]="curriculumNode.bokConcepts" (selectedConceptsChange)="curriculumNodeChanged.emit()" [label]="('curriculumNodeForm.fields.bok.label' | translate) + ' *'"
                                 [style.color]="errorMap.get(curriculumNode.id + '.bokConcepts') != undefined ? 'var(--danger-color)' : '' "></bokModal>
                         </div>
                         @if(errorMap.get(curriculumNode.id + '.bokConcepts')) {

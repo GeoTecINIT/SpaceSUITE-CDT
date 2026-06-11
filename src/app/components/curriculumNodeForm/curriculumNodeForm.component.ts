@@ -48,7 +48,7 @@ import { UtilsService } from "../../services/useCaseServices/utils.service";
 export class CurriculumNodeFormComponent {
   @Input() errorMap: Map<string, string | undefined> = new Map();
   @Input() curriculumNode!: CurriculumNode;
-  @Output() nodeNameChange: EventEmitter<undefined> = new EventEmitter();
+  @Output() curriculumNodeChanged: EventEmitter<undefined> = new EventEmitter();
 
   public showCustomTransversalSkills: boolean = false;
   public transversalSkills: TreeNode<any>[] = [];
@@ -168,7 +168,7 @@ export class CurriculumNodeFormComponent {
 
   onNameChange(newName: string) {
     this.curriculumNode.name = newName;
-    this.nodeNameChange.emit();
+    this.curriculumNodeChanged.emit();
   }
 
   selectedNodeEqf(): string | undefined {
