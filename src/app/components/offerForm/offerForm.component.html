@@ -43,7 +43,7 @@
                     class="custom-button" (onClick)="addNewChild()" [label]="'offerForm.buttons.addNode' | translate: {nodeType: getNewNodeType()}"></p-button>
             </div>
             @if(promotedNode) {
-                <p-message class="block pt-3 custom-message-info">
+                <p-message class="block pt-4 custom-message-info">
                     <div>
                         {{'offerForm.nodePromoted.message' | translate}}
                         <a class="custom-link" [href]="this.promotedNode" target="_blank">{{'offerForm.nodePromoted.url' | translate}}</a>
