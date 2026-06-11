@@ -54,10 +54,9 @@
                                                     @for(meterItem of value; track meterItem.label) {
                                                         <p-badge [pTooltip]="tooltipContent" tooltipPosition="bottom" [value]="meterItem.label" [style]="{ 'background-color': meterItem.color, color: '#ffffff' }"></p-badge>
                                                         <ng-template #tooltipContent>
-                                                            <div class="flex gap-1 align-items-baseline">
+                                                            <div class="flex gap-2 align-items-baseline">
                                                                 <p-badge [style]="{ 'background-color': meterItem.color, color: '#ffffff' }"></p-badge>
-                                                                <span>{{ knowledgeNames().get(meterItem.label) }}</span>
-                                                                <span>({{ meterItem.value }}%)</span>
+                                                                <span>{{ knowledgeNames().get(meterItem.label) }} ({{ meterItem.value }}%)</span>
                                                             </div>
                                                         </ng-template>
                                                     }
