@@ -137,3 +137,12 @@ body {
     max-width: 50%;
   }
 }
+
+.custom-link {
+    color: var(--secondary-color);
+    cursor: pointer;
+}
+
+.custom-link:hover {
+    color: var(--hover-color);
+}

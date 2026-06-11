@@ -290,7 +290,8 @@
       "deleteNode": "Delete {{nodeType}}",
       "return": "Return",
       "save": "Save",
-      "addNode": "Add {{nodeType}}"
+      "addNode": "Add {{nodeType}}",
+      "promoteNode": "Promote {{nodeType}}"
     },
     "isPublic": {
       "public": "Public",
@@ -336,12 +337,12 @@
       "nodeDeleted": {
         "detail": "Node deleted without problems.",
         "summary": "Info"
-      },
-      "nodePromoted": {
-        "detail": "Node promoted successfully. Link copied to clipboard.",
-        "summary": "Info"
       }
-    }
+    },
+    "nodePromoted": {
+      "message": "This node has been promoted! Now available as independent educational offer.",
+      "url": "Take a look here!"
+    }  
   },
   "offerIndex": {
     "tablist": {

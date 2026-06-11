@@ -26,6 +26,7 @@ import { OrganizationDBService } from "../../services/databaseServices/organizat
 import { SelectButtonModule } from "primeng/selectbutton";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { UtilsService } from "../../services/useCaseServices/utils.service";
+import { MessageModule } from 'primeng/message';
 
 @Component({
   standalone: true,
@@ -33,7 +34,7 @@ import { UtilsService } from "../../services/useCaseServices/utils.service";
   templateUrl: './offerForm.component.html',
   styleUrls: ['./offerForm.component.css'],
   imports: [ToastModule, ConfirmDialogModule, FloatLabelModule, FormsModule, PanelModule, OfferIndexComponent, SelectModule, TooltipModule, 
-            ButtonModule, DialogModule, CurriculumNodeFormComponent, SelectButtonModule, TranslateModule],
+            ButtonModule, DialogModule, CurriculumNodeFormComponent, SelectButtonModule, TranslateModule, MessageModule],
 })
 export class OfferFormComponent {
   @Input() inputPageName?: string;
@@ -67,6 +68,8 @@ export class OfferFormComponent {
 
   expandPanel: boolean = false;
 
+  promotedNode?: string;
+
   private previousNavigationUrl?: UrlTree;
 
   private sessionSubscription?: Subscription;
@@ -94,7 +97,7 @@ export class OfferFormComponent {
     this.route.paramMap.pipe(switchMap(paramMap => {
       const offerId = paramMap.get('offerId');
       if (!offerId) return of(undefined)
-      else return this.educationalOfferService.getEducationalOffer(offerId);
+      else return this.educationalOfferService.getEducationalOffer(offerId).pipe(take(1));
     })).subscribe((duplicatedOffer: EducationalOffer | undefined) => {
       if (this.inputOffer) {
         this.offer.set(new EducationalOffer(this.inputOffer.root, this.inputOffer));
@@ -190,6 +193,7 @@ export class OfferFormComponent {
   changeSelectedNode(nodeId: string) {
     this.newNodeType = undefined;
     this.newNodeModuleType = undefined;
+    this.promotedNode = undefined;
     const newNode = this.offer().getNodeById(nodeId);
     if (newNode == undefined) return;
     this.selectedNode.set(newNode);
@@ -541,15 +545,7 @@ export class OfferFormComponent {
         const path = this.router.serializeUrl(
           this.router.createUrlTree([`/offer/${eduOfferId}`])
         );
-        const url = `${window.location.origin}${path}`;
-        navigator.clipboard.writeText(url);
-        this.messageService.add({ 
-          severity: 'info', 
-          summary: this.translate.instant('offerForm.toast.nodePromoted.summary'), 
-          detail: this.translate.instant('offerForm.toast.nodePromoted.detail'), 
-          life: 3000, 
-          closable: true 
-        });
+        this.promotedNode = `${window.location.origin}${path}`;
       });
     }
     else {

@@ -32,16 +32,24 @@
                 @if(selectedNode().id == offer().root.id) {
                     <p-button icon="pi pi-refresh" class="delete-button" [label]="'offerForm.buttons.resetOffer' | translate" (onClick)="replaceRootNode()"></p-button>
                 }
-                @else { 
+                @else {
                     <div class="flex gap-2">
                         <p-button icon="pi pi-trash" class="delete-button" [label]="'offerForm.buttons.deleteNode' | translate: {nodeType: getSelectedNodeType()}" (onClick)="deleteModal($event)"></p-button>
-                        <p-button icon="pi pi-file-export" severity="secondary" class="custom-secondary-button" (onClick)="showPromoteModal($event)" label="Promote"></p-button>
+                        <p-button icon="pi pi-file-export" severity="secondary" class="custom-secondary-button" (onClick)="showPromoteModal($event)" [label]="'offerForm.buttons.promoteNode' | translate: {nodeType: getSelectedNodeType()}"></p-button>
                     </div>
                 }
                 
                 <p-button icon="pi pi-plus" [disabled]="newNodeType == undefined || (newNodeType == 'Module' && newNodeModuleType == undefined)" 
                     class="custom-button" (onClick)="addNewChild()" [label]="'offerForm.buttons.addNode' | translate: {nodeType: getNewNodeType()}"></p-button>
             </div>
+            @if(promotedNode) {
+                <p-message class="block pt-3 custom-message-info">
+                    <div>
+                        {{'offerForm.nodePromoted.message' | translate}}
+                        <a class="custom-link" [href]="this.promotedNode" target="_blank">{{'offerForm.nodePromoted.url' | translate}}</a>
+                    </div>
+                </p-message>
+            }
         </p-panel>
         <p-panel class="custom-panel">
             <div class="font-bold mb-3">{{'offerForm.headers.organization' | translate}}</div>

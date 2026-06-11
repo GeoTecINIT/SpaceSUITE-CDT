@@ -30,3 +30,13 @@
     --p-button-secondary-hover-color: color-mix(in srgb, var(--primary-color) 90%, white 10%);
     --p-button-secondary-active-color: var(--primary-color);
 }
+
+.custom-message-info {
+    --p-message-info-background: color-mix(in srgb, var(--secondary-color) 10%, rgba(255, 255, 255, 0.9) 90%);
+    --p-message-info-border-color: var(--secondary-color);
+    --p-message-info-color: var(--secondary-color);
+    --p-message-info-close-button-focus-ring-color: var(--secondary-color);
+    --p-message-info-outlined-color: var(--secondary-color);
+    --p-message-info-outlined-border-color: var(--secondary-color);
+    --p-message-info-simple-color: var(--secondary-color);
+}

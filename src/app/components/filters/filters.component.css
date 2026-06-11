@@ -54,16 +54,6 @@
     color: var(--p-inputtext-disabled-color);
 }
 
-.custom-link {
-    text-decoration: none;
-    color: var(--secondary-color);
-    cursor: pointer;
-}
-
-.custom-link:hover {
-    color: var(--hover-color);
-}
-
 ::ng-deep .p-selectbutton {
     flex: auto;
 }
