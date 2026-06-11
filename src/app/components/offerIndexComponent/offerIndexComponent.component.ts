@@ -43,6 +43,7 @@ export class OfferIndexComponent {
   updateScale = (newValue: number) => this.scale.set(newValue);
 
   knowledgeDistributions: WritableSignal<Map<string, MeterItem[]>> = signal(new Map());
+  knowledgeNames: WritableSignal<Map<string, string>> = signal(new Map())
 
   private utilsService: UtilsService = inject(UtilsService);
   private translate: TranslateService = inject(TranslateService);
@@ -69,6 +70,17 @@ export class OfferIndexComponent {
       this.knowledgeDistributions.set(new Map());
       const newOffer: EducationalOffer = changes['offer'].currentValue
       newOffer.getAllNodes().forEach((node: CurriculumNode) => {
+        // Get knowledge areas name
+        node.bokConcepts.forEach(concept => {
+          let area: string;
+          if (concept === 'GIST') area = concept;
+          else area = concept.substring(0, 2).toUpperCase();
+          if (!this.knowledgeNames().has(area)) {
+            this.bokInfo.getConceptName(area).subscribe(areaName => this.knowledgeNames.update(map => map.set(area, areaName)));
+          }
+        })
+
+        // Get knowledge areas distribution
         this.getKnowledgeAreaDistribution(node).subscribe(newDistribution => this.knowledgeDistributions.update(map => map.set(node.id, newDistribution)));
       })
     }

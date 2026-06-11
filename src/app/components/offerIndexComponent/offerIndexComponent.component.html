@@ -56,7 +56,7 @@
                                                         <ng-template #tooltipContent>
                                                             <div class="flex gap-1 align-items-baseline">
                                                                 <p-badge [style]="{ 'background-color': meterItem.color, color: '#ffffff' }"></p-badge>
-                                                                <span>{{ meterItem.label }}</span>
+                                                                <span>{{ knowledgeNames().get(meterItem.label) }}</span>
                                                                 <span>({{ meterItem.value }}%)</span>
                                                             </div>
                                                         </ng-template>

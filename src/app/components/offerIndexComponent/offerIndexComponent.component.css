@@ -91,3 +91,9 @@
     display: block;
   }
 }
+
+::ng-deep .p-tooltip {
+    --p-tooltip-background: var(--primary-color);
+    --p-tooltip-color: white;
+    --p-tooltip-max-width: 60rem;
+}
