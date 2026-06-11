@@ -14,13 +14,19 @@ import { DialogModule } from "primeng/dialog";
 import { UtilsService } from "../../services/useCaseServices/utils.service";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { Tooltip } from "primeng/tooltip";
+import { MeterGroup, MeterItem } from 'primeng/metergroup';
+import { Divider } from "primeng/divider";
+import { BokInformationService } from "@eo4geo/ngx-bok-visualization";
+import { forkJoin, map, Observable, of, take } from "rxjs";
+import { BadgeModule } from 'primeng/badge';
 
 @Component({
   standalone: true,
   selector: 'offer-index-component',
   templateUrl: './offerIndexComponent.component.html',
   styleUrls: ['./offerIndexComponent.component.css'],
-  imports: [CommonModule, PanelModule, TabsModule, OrganizationChartModule, SliderModule, FormsModule, TreeModule, ButtonModule, DialogModule, TranslateModule, Tooltip],
+  imports: [CommonModule, PanelModule, TabsModule, OrganizationChartModule, SliderModule, FormsModule, TreeModule, ButtonModule, DialogModule,
+    TranslateModule, Tooltip, MeterGroup, Divider, BadgeModule],
 })
 export class OfferIndexComponent {
   @Input() offer!: EducationalOffer;
@@ -36,8 +42,11 @@ export class OfferIndexComponent {
   scale: WritableSignal<number> = signal(1);
   updateScale = (newValue: number) => this.scale.set(newValue);
 
+  knowledgeDistributions: WritableSignal<Map<string, MeterItem[]>> = signal(new Map());
+
   private utilsService: UtilsService = inject(UtilsService);
   private translate: TranslateService = inject(TranslateService);
+  private bokInfo: BokInformationService = inject(BokInformationService);
 
   onMenuItemSelection(nodeId: string) {
     this.selectedNodeChanged.emit(nodeId);
@@ -57,6 +66,11 @@ export class OfferIndexComponent {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['offer']) {
       this.treeNodeRoot.set(this.buildTreeNode(changes['offer'].currentValue.root));
+      this.knowledgeDistributions.set(new Map());
+      const newOffer: EducationalOffer = changes['offer'].currentValue
+      newOffer.getAllNodes().forEach((node: CurriculumNode) => {
+        this.getKnowledgeAreaDistribution(node).subscribe(newDistribution => this.knowledgeDistributions.update(map => map.set(node.id, newDistribution)));
+      })
     }
 
     if (changes['selectedNode'] && changes['selectedNode'].currentValue !== changes['selectedNode'].previousValue) {
@@ -73,9 +87,48 @@ export class OfferIndexComponent {
       children: children,
       leaf: leaf,
       expanded: !leaf,
-      data: node.nodeType,
+      data: {
+        type: node.nodeType
+      },
       icon: this.getTreeNodeIcon(node.nodeType)
     }]);
+  }
+
+  private getKnowledgeAreaDistribution(node: CurriculumNode): Observable<MeterItem[]> {
+    const conceptsAreas = node.bokConcepts.map((concept) => {
+      if (concept === 'GIST') return concept;
+      return concept.substring(0, 2).toUpperCase();
+    });
+
+    const counts = new Map<string, number>();
+    const total = node.bokConcepts.length;
+
+    conceptsAreas.forEach((area) => {
+      counts.set(area, (counts.get(area) || 0) + 1);
+    });
+
+    const knowledgeDistribution = Array.from(counts.entries()).map(
+      ([label, count]) => {
+        return {
+          label: label,
+          value: Math.round((count / total) * 100),
+          color$: this.bokInfo.getConceptColor(label).pipe(take(1))
+        }
+      }
+    );
+    
+
+    return forkJoin(
+      knowledgeDistribution.sort((a, b) => a.label.localeCompare(b.label)).map(item =>
+        item.color$.pipe(
+          map(color => ({
+            label: item.label,
+            value: item.value,
+            color: color
+          }))
+        )
+      )
+    );
   }
 
   private getTreeNodeById(nodeId: string): TreeNode | undefined {
