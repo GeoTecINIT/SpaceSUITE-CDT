@@ -25,6 +25,7 @@ import { Course } from "../../model/coreModel/course";
 import { Lecture } from "../../model/coreModel/lecture";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { Duration } from "../../model/coreModel/duration";
+import { PdfService } from "../../services/exportServices/pdf.service";
 
 @Component({
   standalone: true,
@@ -67,6 +68,7 @@ export class OfferPageComponent {
   private educationalOfferService = inject(EducationalOfferService);
   private organizationService = inject(OrganizationDBService);
   private translate = inject(TranslateService);
+  private pdfService = inject(PdfService);
 
   ngOnInit() {
     let nodeId: string = '';
@@ -341,6 +343,18 @@ export class OfferPageComponent {
   toggle(event: any) {
     this.op.toggle(event);
   }
+
+  downloadPDF(): void {
+    document.body.style.cursor = 'wait';
+    this.op.hide();
+
+    this.pdfService
+      .generateOfferPdf(new EducationalOffer(this.offer()!.root, this.offer()))
+      .subscribe((pdf) => {
+        this.downloadURI(pdf.url, pdf.filename);
+        document.body.style.cursor = '';
+      });
+  }
 /*
   downloadMaterialXML() {
     const url = this.rdfConverter.getRdfXmlUrl(this.material!);
@@ -359,6 +373,7 @@ export class OfferPageComponent {
     this.downloadURI(url, this.material?._id + '_metadata.html');
     this.op.hide();
   }
+  */
 
   private downloadURI(uri: string, name: string) {
     let link = document.createElement("a");
@@ -366,7 +381,6 @@ export class OfferPageComponent {
     link.href = uri;
     link.click();
   }
-  */
 
   copyURIToClipboard() {
     navigator.clipboard.writeText(window.location.href);

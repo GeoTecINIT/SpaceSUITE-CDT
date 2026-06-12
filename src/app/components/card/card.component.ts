@@ -24,6 +24,7 @@ import { OrganizationDBService } from '../../services/databaseServices/organizat
 import { EducationalOfferService } from '../../services/useCaseServices/educationalOffer.service';
 import { EducationalOffer } from '../../model/coreModel/educationalOffer';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { PdfService } from '../../services/exportServices/pdf.service';
 
 @Component({
   standalone: true,
@@ -74,7 +75,7 @@ export class CardComponent implements OnInit {
   private router = inject(Router);
   private confirmationService = inject(ConfirmationService);
   private messageService = inject(MessageService);
-  //private pdfService = inject(PdfService);
+  private pdfService = inject(PdfService);
   //private rdfService = inject(RdfService);
   private translate = inject(TranslateService);
 
@@ -201,19 +202,19 @@ export class CardComponent implements OnInit {
     });
   }
 
-  /*
   downloadPDF(): void {
     document.body.style.cursor = 'wait';
     this.op.hide();
 
     this.pdfService
-      .generatePortfolioPdf(new EducationalOffer(this.educationalOffer.root, this.educationalOffer))
+      .generateOfferPdf(new EducationalOffer(this.educationalOffer.root, this.educationalOffer))
       .subscribe((pdf) => {
         this.downloadURI(pdf.url, pdf.filename);
         document.body.style.cursor = '';
       });
   }
 
+  /*
   downloadRDF(format: 'ttl' | 'xml' | 'rdfa'): void {
     document.body.style.cursor = 'wait';
     this.op.hide();
@@ -248,6 +249,7 @@ export class CardComponent implements OnInit {
 
     document.body.style.cursor = '';
   }
+  **/
 
   private downloadURI(uri: string, name: string): void {
     const link = document.createElement('a');
@@ -255,7 +257,6 @@ export class CardComponent implements OnInit {
     link.href = uri;
     link.click();
   }
-  **/
 
   get duplicateTooltip(): string {
     const action = this.translate.instant('card.tooltips.duplicate');
