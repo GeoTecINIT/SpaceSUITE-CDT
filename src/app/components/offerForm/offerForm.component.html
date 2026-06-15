@@ -35,7 +35,7 @@
                 @else {
                     <div class="flex gap-2">
                         <p-button icon="pi pi-trash" class="delete-button" [label]="'offerForm.buttons.deleteNode' | translate: {nodeType: getSelectedNodeType()}" (onClick)="deleteModal($event)"></p-button>
-                        <p-button icon="pi pi-file-export" severity="secondary" class="custom-secondary-button" (onClick)="showPromoteModal($event)" [label]="'offerForm.buttons.promoteNode' | translate: {nodeType: getSelectedNodeType()}"></p-button>
+                        <!-- <p-button icon="pi pi-file-export" severity="secondary" class="custom-secondary-button" (onClick)="showPromoteModal($event)" [label]="'offerForm.buttons.promoteNode' | translate: {nodeType: getSelectedNodeType()}"></p-button> -->
                     </div>
                 }
                 
