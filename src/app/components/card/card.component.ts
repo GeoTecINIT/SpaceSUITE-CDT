@@ -25,6 +25,7 @@ import { EducationalOfferService } from '../../services/useCaseServices/educatio
 import { EducationalOffer } from '../../model/coreModel/educationalOffer';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PdfService } from '../../services/exportServices/pdf.service';
+import { RdfService } from '../../services/exportServices/rdf.service';
 
 @Component({
   standalone: true,
@@ -76,7 +77,7 @@ export class CardComponent implements OnInit {
   private confirmationService = inject(ConfirmationService);
   private messageService = inject(MessageService);
   private pdfService = inject(PdfService);
-  //private rdfService = inject(RdfService);
+  private rdfService = inject(RdfService);
   private translate = inject(TranslateService);
 
   constructor() {
@@ -214,7 +215,6 @@ export class CardComponent implements OnInit {
       });
   }
 
-  /*
   downloadRDF(format: 'ttl' | 'xml' | 'rdfa'): void {
     document.body.style.cursor = 'wait';
     this.op.hide();
@@ -249,7 +249,6 @@ export class CardComponent implements OnInit {
 
     document.body.style.cursor = '';
   }
-  **/
 
   private downloadURI(uri: string, name: string): void {
     const link = document.createElement('a');

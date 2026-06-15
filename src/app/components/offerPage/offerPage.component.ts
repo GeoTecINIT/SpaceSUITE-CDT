@@ -26,6 +26,7 @@ import { Lecture } from "../../model/coreModel/lecture";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { Duration } from "../../model/coreModel/duration";
 import { PdfService } from "../../services/exportServices/pdf.service";
+import { RdfService } from "../../services/exportServices/rdf.service";
 
 @Component({
   standalone: true,
@@ -69,6 +70,7 @@ export class OfferPageComponent {
   private organizationService = inject(OrganizationDBService);
   private translate = inject(TranslateService);
   private pdfService = inject(PdfService);
+  private rdfService = inject(RdfService);
 
   ngOnInit() {
     let nodeId: string = '';
@@ -355,25 +357,23 @@ export class OfferPageComponent {
         document.body.style.cursor = '';
       });
   }
-/*
   downloadMaterialXML() {
-    const url = this.rdfConverter.getRdfXmlUrl(this.material!);
-    this.downloadURI(url, this.material?._id + '_metadata.xml');
+    const url = this.rdfService.getRdfXmlUrl(this.offer()!);
+    this.downloadURI(url, this.offer()!.id + '_metadata.xml');
     this.op.hide();
   }
 
   downloadMaterialTTL() {
-    const url = this.rdfConverter.getRdfTtlUrl(this.material!);
-    this.downloadURI(url, this.material?._id + '_metadata.ttl');
+    const url = this.rdfService.getRdfTtlUrl(this.offer()!);
+    this.downloadURI(url, this.offer()!.id + '_metadata.ttl');
     this.op.hide();
   }
 
   downloadMaterialRDFa() {
-    const url = this.rdfConverter.getRdfaUrl(this.material!);
-    this.downloadURI(url, this.material?._id + '_metadata.html');
+    const url = this.rdfService.getRdfaUrl(this.offer()!);
+    this.downloadURI(url, this.offer()!.id + '_metadata.html');
     this.op.hide();
   }
-  */
 
   private downloadURI(uri: string, name: string) {
     let link = document.createElement("a");
