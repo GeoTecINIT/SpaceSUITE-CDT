@@ -13,8 +13,8 @@
         <div class="flex align-items-center gap-2 flex-wrap white-space-nowrap mb-2">
             <div class="text-sm"><strong>{{'offerPage.type' | translate}}:</strong> {{selectedNodeType()}}</div>
             |
-            <div *ngIf="selectedNodeType() === 'Module'" class="flex align-items-center flex-wrap gap-2 white-space-nowrap">
-                <div class="text-sm"><strong>{{'offerPage.moduleType' | translate}}:</strong> {{getModuleType()}}</div>
+            <div *ngIf="selectedNodeType() === 'Grouping'" class="flex align-items-center flex-wrap gap-2 white-space-nowrap">
+                <div class="text-sm"><strong>{{'offerPage.groupingType' | translate}}:</strong> {{getGroupingType()}}</div>
                 |
             </div>
             <div *ngIf="selectedNodeType() === 'Course' && getCourseType() != undefined" class="flex align-items-center flex-wrap gap-2 white-space-nowrap">

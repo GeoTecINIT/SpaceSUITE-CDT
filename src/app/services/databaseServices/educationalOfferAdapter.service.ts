@@ -2,8 +2,8 @@ import { inject, Injectable } from "@angular/core";
 import { DomainError } from "../../model/domainError";
 import { StudyProgram } from "../../model/coreModel/studyProgram";
 import { StudyProgramDB } from "../../model/databaseModel/studyProgramDB";
-import { ModuleDB } from "../../model/databaseModel/moduleDB";
-import { Module } from "../../model/coreModel/module";
+import { GroupingDB } from "../../model/databaseModel/groupingDB";
+import { Grouping } from "../../model/coreModel/grouping";
 import { CourseDB } from "../../model/databaseModel/courseDB";
 import { Course } from "../../model/coreModel/course";
 import { LectureDB } from "../../model/databaseModel/lectureDB";
@@ -136,27 +136,27 @@ export class EducationalOfferAdapterService {
               courseType: courseNode.courseType
             }
           );
-        case node instanceof Module:
-          const moduleNode = node as Module;
-          return new ModuleDB(
+        case node instanceof Grouping:
+          const groupingNode = node as Grouping;
+          return new GroupingDB(
             {
-              id: moduleNode.id,
-              name: moduleNode.name,
-              description: moduleNode.description,
-              children: moduleNode.getChildren().map(child => child.id),
+              id: groupingNode.id,
+              name: groupingNode.name,
+              description: groupingNode.description,
+              children: groupingNode.getChildren().map(child => child.id),
               bokConcepts: formatedBokConcepts,
-              prerequisites: moduleNode.prerequisites,
-              eqf: moduleNode.eqf,
-              ects: moduleNode.ects,
-              transversalSkills: moduleNode.transversalSkills.map(skill => skill.toPlainObject()),
-              customTransversalSkills: moduleNode.customTransversalSkills,
-              learningObjectives: moduleNode.learningObjectives,
-              bibliography: moduleNode.bibliography,
-              affiliations: moduleNode.affiliations.map(affiliation => affiliation.toPlainObject()),
-              trainingMaterials: moduleNode.trainingMaterials.map(material => material.toPlainObject()),
-              timeRequired: moduleNode.timeRequired.toPlainObject(),
-              studyAreas: moduleNode.studyAreas.map(area => area.toPlainObject()),
-              moduleType: moduleNode.moduleType
+              prerequisites: groupingNode.prerequisites,
+              eqf: groupingNode.eqf,
+              ects: groupingNode.ects,
+              transversalSkills: groupingNode.transversalSkills.map(skill => skill.toPlainObject()),
+              customTransversalSkills: groupingNode.customTransversalSkills,
+              learningObjectives: groupingNode.learningObjectives,
+              bibliography: groupingNode.bibliography,
+              affiliations: groupingNode.affiliations.map(affiliation => affiliation.toPlainObject()),
+              trainingMaterials: groupingNode.trainingMaterials.map(material => material.toPlainObject()),
+              timeRequired: groupingNode.timeRequired.toPlainObject(),
+              studyAreas: groupingNode.studyAreas.map(area => area.toPlainObject()),
+              groupingType: groupingNode.groupingType
             }
           );
         case node instanceof StudyProgram:
@@ -282,26 +282,26 @@ export class EducationalOfferAdapterService {
             courseType: courseDB.courseType
           }
         );
-      case nodeDB instanceof ModuleDB:
-        const moduleDB = nodeDB as ModuleDB;
-        return new Module(
+      case nodeDB instanceof GroupingDB:
+        const groupingDB = nodeDB as GroupingDB;
+        return new Grouping(
           {
-            id: moduleDB.id,
-            name: moduleDB.name,
-            description: moduleDB.description,
-            bokConcepts: this.formatConceptsFromFirestore(moduleDB.bokConcepts),
-            prerequisites: moduleDB.prerequisites,
-            eqf: moduleDB.eqf,
-            ects: moduleDB.ects,
-            transversalSkills: moduleDB.transversalSkills.map(value => new ESCOSkill(value)),
-            customTransversalSkills: moduleDB.customTransversalSkills,
-            learningObjectives: moduleDB.learningObjectives,
-            bibliography: moduleDB.bibliography,
-            affiliations: moduleDB.affiliations.map(value => new Affiliation(value)),
-            trainingMaterials: moduleDB.trainingMaterials.map(value => new TrainingMaterial(value)),
-            timeRequired: new Duration(moduleDB.timeRequired),
-            studyAreas: moduleDB.studyAreas.map(value => new ISCEDFArea(value)),
-            moduleType: moduleDB.moduleType
+            id: groupingDB.id,
+            name: groupingDB.name,
+            description: groupingDB.description,
+            bokConcepts: this.formatConceptsFromFirestore(groupingDB.bokConcepts),
+            prerequisites: groupingDB.prerequisites,
+            eqf: groupingDB.eqf,
+            ects: groupingDB.ects,
+            transversalSkills: groupingDB.transversalSkills.map(value => new ESCOSkill(value)),
+            customTransversalSkills: groupingDB.customTransversalSkills,
+            learningObjectives: groupingDB.learningObjectives,
+            bibliography: groupingDB.bibliography,
+            affiliations: groupingDB.affiliations.map(value => new Affiliation(value)),
+            trainingMaterials: groupingDB.trainingMaterials.map(value => new TrainingMaterial(value)),
+            timeRequired: new Duration(groupingDB.timeRequired),
+            studyAreas: groupingDB.studyAreas.map(value => new ISCEDFArea(value)),
+            groupingType: groupingDB.groupingType
           }
         );
       case nodeDB instanceof StudyProgramDB:

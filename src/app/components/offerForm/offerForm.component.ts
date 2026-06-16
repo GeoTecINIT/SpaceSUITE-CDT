@@ -12,7 +12,6 @@ import { FloatLabelModule } from "primeng/floatlabel";
 import { SelectModule } from 'primeng/select';
 import { CurriculumNode, NodeType } from "../../model/coreModel/curriculumNode";
 import { OfferIndexComponent } from "../offerIndexComponent/offerIndexComponent.component";
-import { Module, ModuleType } from "../../model/coreModel/module";
 import { TooltipModule } from "primeng/tooltip";
 import { ButtonModule } from "primeng/button";
 import { Course } from "../../model/coreModel/course";
@@ -27,6 +26,7 @@ import { SelectButtonModule } from "primeng/selectbutton";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { UtilsService } from "../../services/utils.service";
 import { MessageModule } from 'primeng/message';
+import { Grouping, GroupingType } from "../../model/coreModel/grouping";
 
 @Component({
   standalone: true,
@@ -48,16 +48,16 @@ export class OfferFormComponent {
   rootNodeModalClosable: boolean = false;
 
   rootNodeType: NodeType | undefined;
-  rootNodeModuleType: ModuleType | undefined;
+  rootNodeGroupingType: GroupingType | undefined;
 
   newNodeType: NodeType | undefined;
-  newNodeModuleType: ModuleType | undefined;
+  newNodeGroupingType: GroupingType | undefined;
 
   private CHILD_TYPES?: Record<string, Object[]>;
 
-  private MODULE_CHILD_TYPES?: Record<ModuleType, Object[]>;
+  private GROUPING_CHILD_TYPES?: Record<GroupingType, Object[]>;
 
-  private MODULE_TYPES?: Record<string, Object[]>;
+  private GROUPING_TYPES?: Record<string, Object[]>;
 
   public IS_PUBLIC?: any[];
 
@@ -163,8 +163,8 @@ export class OfferFormComponent {
     const node = this.selectedNode();
     if (!node) return [];
     const nodeType = node.nodeType;
-    if (nodeType === NodeType.Module && node instanceof Module) {
-      return this.MODULE_CHILD_TYPES![node.moduleType] ?? [];
+    if (nodeType === NodeType.Grouping && node instanceof Grouping) {
+      return this.GROUPING_CHILD_TYPES![node.groupingType] ?? [];
     }
     return this.CHILD_TYPES![nodeType.toString()] ?? [];
   }
@@ -173,15 +173,15 @@ export class OfferFormComponent {
     return this.CHILD_TYPES!['Root'];
   }
 
-  getValidModuleTypes(): object[] {
+  getValidGroupingTypes(): object[] {
     const node = this.selectedNode();
     if (!node) return [];
     const nodeType = node.nodeType
-    return this.MODULE_TYPES![nodeType.toString()] ?? [];
+    return this.GROUPING_TYPES![nodeType.toString()] ?? [];
   }
 
-  getRootModuleTypes(): object[] {
-    return this.MODULE_TYPES!['Root'];
+  getRootGroupingTypes(): object[] {
+    return this.GROUPING_TYPES!['Root'];
   }
 
   updateSelectedNode() {
@@ -192,7 +192,7 @@ export class OfferFormComponent {
 
   changeSelectedNode(nodeId: string) {
     this.newNodeType = undefined;
-    this.newNodeModuleType = undefined;
+    this.newNodeGroupingType = undefined;
     this.promotedNode = undefined;
     const newNode = this.offer().getNodeById(nodeId);
     if (newNode == undefined) return;
@@ -205,10 +205,10 @@ export class OfferFormComponent {
       case NodeType.StudyProgram:
         newChild = new StudyProgram(undefined, this.generateTimeBasedID());
         break;
-      case NodeType.Module:
-        const newModule = new Module(undefined, this.generateTimeBasedID());
-        newModule.moduleType = this.newNodeModuleType || ModuleType.Course;
-        newChild = newModule;
+      case NodeType.Grouping:
+        const newGrouping = new Grouping(undefined, this.generateTimeBasedID());
+        newGrouping.groupingType = this.newNodeGroupingType || GroupingType.Course;
+        newChild = newGrouping;
         break;
       case NodeType.Course:
         newChild = new Course(undefined, this.generateTimeBasedID());
@@ -244,10 +244,10 @@ export class OfferFormComponent {
       case NodeType.StudyProgram:
         newRoot = new StudyProgram(undefined, this.generateTimeBasedID());
         break;
-      case NodeType.Module:
-        const newModule = new Module(undefined, this.generateTimeBasedID());
-        newModule.moduleType = this.rootNodeModuleType || ModuleType.StudyProgram;
-        newRoot = newModule;
+      case NodeType.Grouping:
+        const newGrouping = new Grouping(undefined, this.generateTimeBasedID());
+        newGrouping.groupingType = this.rootNodeGroupingType || GroupingType.StudyProgram;
+        newRoot = newGrouping;
         break;
       case NodeType.Course:
         newRoot = new Course(undefined, this.generateTimeBasedID());
@@ -274,7 +274,7 @@ export class OfferFormComponent {
       );
     });
     this.rootNodeType = undefined;
-    this.rootNodeModuleType = undefined;
+    this.rootNodeGroupingType = undefined;
     this.selectedNode.set(this.offer().root);
     this.rootNodeModalVisible = false;
     this.rootNodeModalClosable = false;
@@ -409,57 +409,57 @@ export class OfferFormComponent {
     this.CHILD_TYPES = {
       'Root': [
         {value: NodeType.StudyProgram, label: this.translate.instant('nodeTypes.studyProgram')},
-        {value: NodeType.Module, label: this.translate.instant('nodeTypes.module')},
+        {value: NodeType.Grouping, label: this.translate.instant('nodeTypes.grouping')},
         {value: NodeType.Course, label: this.translate.instant('nodeTypes.course')},
         {value: NodeType.Lecture, label: this.translate.instant('nodeTypes.lecture')}
       ],
       'Study Program': [
-        {value: NodeType.Module, label: this.translate.instant('nodeTypes.module')},
+        {value: NodeType.Grouping, label: this.translate.instant('nodeTypes.grouping')},
         {value: NodeType.Course, label: this.translate.instant('nodeTypes.course')},
         {value: NodeType.Lecture, label: this.translate.instant('nodeTypes.lecture')}
       ],
       'Course': [
-        {value: NodeType.Module, label: this.translate.instant('nodeTypes.module')},
+        {value: NodeType.Grouping, label: this.translate.instant('nodeTypes.grouping')},
         {value: NodeType.Lecture, label: this.translate.instant('nodeTypes.lecture')}
       ],
       'Lecture': [],
     };
 
-    this.MODULE_CHILD_TYPES = {
-      [ModuleType.StudyProgram]: [{value: NodeType.StudyProgram, label: this.translate.instant('nodeTypes.studyProgram')}],
-      [ModuleType.Course]:       [{value: NodeType.Course, label: this.translate.instant('nodeTypes.course')}],
-      [ModuleType.Lecture]:      [{value: NodeType.Lecture, label: this.translate.instant('nodeTypes.lecture')}],
+    this.GROUPING_CHILD_TYPES = {
+      [GroupingType.StudyProgram]: [{value: NodeType.StudyProgram, label: this.translate.instant('nodeTypes.studyProgram')}],
+      [GroupingType.Course]:       [{value: NodeType.Course, label: this.translate.instant('nodeTypes.course')}],
+      [GroupingType.Lecture]:      [{value: NodeType.Lecture, label: this.translate.instant('nodeTypes.lecture')}],
     };
 
-    this.MODULE_TYPES = {
+    this.GROUPING_TYPES = {
       'Root': [
         {
-          label: this.translate.instant('moduleTypes.studyProgram'),
-          value: ModuleType.StudyProgram
+          label: this.translate.instant('groupingTypes.studyProgram'),
+          value: GroupingType.StudyProgram
         },
         {
-          label: this.translate.instant('moduleTypes.course'),
-          value: ModuleType.Course
+          label: this.translate.instant('groupingTypes.course'),
+          value: GroupingType.Course
         },
         {
-          label: this.translate.instant('moduleTypes.lecture'),
-          value: ModuleType.Lecture
+          label: this.translate.instant('groupingTypes.lecture'),
+          value: GroupingType.Lecture
         }
       ],
       'Study Program': [
         {
-          label: this.translate.instant('moduleTypes.course'),
-          value: ModuleType.Course
+          label: this.translate.instant('groupingTypes.course'),
+          value: GroupingType.Course
         },
         {
-          label: this.translate.instant('moduleTypes.lecture'),
-          value: ModuleType.Lecture
+          label: this.translate.instant('groupingTypes.lecture'),
+          value: GroupingType.Lecture
         }
       ],
       'Course': [
         {
-          label: this.translate.instant('moduleTypes.lecture'),
-          value: ModuleType.Lecture
+          label: this.translate.instant('groupingTypes.lecture'),
+          value: GroupingType.Lecture
         }
       ],
       'Lecture': [],
@@ -510,8 +510,8 @@ export class OfferFormComponent {
       case NodeType.Course:
         newNode = new Course(this.selectedNode());
         break;
-      case NodeType.Module:
-        newNode = new Module(this.selectedNode());
+      case NodeType.Grouping:
+        newNode = new Grouping(this.selectedNode());
         break;
       case NodeType.Lecture:
         newNode = new Lecture(this.selectedNode());

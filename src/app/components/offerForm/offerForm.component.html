@@ -19,12 +19,12 @@
                         [pTooltip]="'offerForm.fields.newNodeType.tooltip' | translate" tooltipPosition="bottom" showDelay="200" hideDelay="200" [disabled]="getValidChildTypes().length <= 0"/>
                     <label [for]="'newNodeType'">{{'offerForm.fields.newNodeType.label' | translate}}</label>
                 </p-floatlabel>
-                @if(newNodeType == 'Module') {
+                @if(newNodeType == 'Grouping') {
                     <p-floatlabel variant="on" class="custom-floatlabel w-full">
-                        <p-select [inputId]="'newNodeModuleType'" [options]="getValidModuleTypes()" [(ngModel)]="newNodeModuleType"  class="w-full custom-select" 
-                            [checkmark]="true" [pTooltip]="'offerForm.fields.newNodeModuleType.tooltip' | translate" tooltipPosition="bottom" showDelay="200" hideDelay="200" 
+                        <p-select [inputId]="'newNodeGroupingType'" [options]="getValidGroupingTypes()" [(ngModel)]="newNodeGroupingType"  class="w-full custom-select" 
+                            [checkmark]="true" [pTooltip]="'offerForm.fields.newNodeGroupingType.tooltip' | translate" tooltipPosition="bottom" showDelay="200" hideDelay="200" 
                             optionLabel="label" optionValue="value"/>
-                        <label [for]="'newNodeModuleType'">{{'offerForm.fields.newNodeModuleType.label' | translate}}</label>
+                        <label [for]="'newNodeGroupingType'">{{'offerForm.fields.newNodeGroupingType.label' | translate}}</label>
                     </p-floatlabel>
                 }
             </div>
@@ -39,7 +39,7 @@
                     </div>
                 }
                 
-                <p-button icon="pi pi-plus" [disabled]="newNodeType == undefined || (newNodeType == 'Module' && newNodeModuleType == undefined)" 
+                <p-button icon="pi pi-plus" [disabled]="newNodeType == undefined || (newNodeType == 'Grouping' && newNodeGroupingType == undefined)" 
                     class="custom-button" (onClick)="addNewChild()" [label]="'offerForm.buttons.addNode' | translate: {nodeType: getNewNodeType()}"></p-button>
             </div>
             @if(promotedNode) {
@@ -93,15 +93,15 @@
                 [pTooltip]="'offerForm.fields.rootNodeType.tooltip' | translate" tooltipPosition="bottom" showDelay="200" hideDelay="200" appendTo="body"/>
             <label [for]="'newNodeType'">{{'offerForm.fields.rootNodeType.label' | translate}}</label>
         </p-floatlabel>
-        @if(rootNodeType == 'Module') {
+        @if(rootNodeType == 'Grouping') {
             <p-floatlabel variant="on" class="custom-floatlabel w-full">
-                <p-select [inputId]="'newNodeModuleType'" [options]="getRootModuleTypes()" [(ngModel)]="rootNodeModuleType"  class="w-full custom-select" 
-                    [checkmark]="true" [pTooltip]="'offerForm.fields.rootNodeModuleType.tooltip' | translate" tooltipPosition="bottom" 
+                <p-select [inputId]="'newNodeGroupingType'" [options]="getRootGroupingTypes()" [(ngModel)]="rootNodeGroupingType"  class="w-full custom-select" 
+                    [checkmark]="true" [pTooltip]="'offerForm.fields.rootNodeGroupingType.tooltip' | translate" tooltipPosition="bottom" 
                     showDelay="200" hideDelay="200" optionLabel="label" optionValue="value" appendTo="body"/>
-                <label [for]="'newNodeModuleType'">{{'offerForm.fields.rootNodeModuleType.label' | translate}}</label>
+                <label [for]="'newNodeGroupingType'">{{'offerForm.fields.rootNodeGroupingType.label' | translate}}</label>
             </p-floatlabel>
         }
-        <p-button icon="pi pi-plus" rounded [disabled]="rootNodeType == undefined || (rootNodeType == 'Module' && rootNodeModuleType == undefined)" 
+        <p-button icon="pi pi-plus" rounded [disabled]="rootNodeType == undefined || (rootNodeType == 'Grouping' && rootNodeGroupingType == undefined)" 
             class="custom-button" (onClick)="addRootNode()"></p-button>
     </div>
 </p-dialog>

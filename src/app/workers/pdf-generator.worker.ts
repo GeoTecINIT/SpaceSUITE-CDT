@@ -6,7 +6,7 @@ import { EducationalOffer } from '../model/coreModel/educationalOffer';
 import { CurriculumNode, NodeType } from '../model/coreModel/curriculumNode';
 import { StudyProgram } from '../model/coreModel/studyProgram';
 import { Course } from '../model/coreModel/course';
-import { Module } from '../model/coreModel/module';
+import { Grouping } from '../model/coreModel/grouping';
 import { Lecture } from '../model/coreModel/lecture';
 
 addEventListener('message', ({data}: {data: PdfWorkerPayload}) => {
@@ -258,7 +258,7 @@ function renderCurriculumNodes(doc: jsPDF, p: CurriculumNode, y: number, assets:
   doc.text(
     [
       'Type: ' + p.nodeType, 
-      p instanceof Module ? ('Module Type: ' + p.moduleType ) : undefined,
+      p instanceof Grouping ? ('Grouping Type: ' + p.groupingType ) : undefined,
       p instanceof Course && p.courseType ? ('Course Type: ' + p.courseType ) : undefined,
       p instanceof Lecture ? (p.isPractical ? 'Practical' : 'Theorical') : undefined,
       'EQF ' + p.eqf,
@@ -534,8 +534,8 @@ function buildNode(node: CurriculumNode): CurriculumNode {
     case NodeType.StudyProgram:
       newNode = new StudyProgram(node, node.id);
       break;
-    case NodeType.Module:
-      newNode = new Module(node, node.id);
+    case NodeType.Grouping:
+      newNode = new Grouping(node, node.id);
       break;
     case NodeType.Course:
       newNode = new Course(node, node.id);

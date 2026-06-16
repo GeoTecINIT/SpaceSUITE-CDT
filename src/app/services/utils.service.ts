@@ -2,9 +2,9 @@ import { inject, Injectable } from "@angular/core";
 import { Tag } from "@eo4geo/ngx-bok-utils";
 import { BokInformationService } from "@eo4geo/ngx-bok-visualization";
 import { combineLatest, forkJoin, map, Observable, of, take } from "rxjs";
-import { CurriculumNode, NodeType } from "../model/coreModel/curriculumNode";
+import { NodeType } from "../model/coreModel/curriculumNode";
 import { TranslateService } from "@ngx-translate/core";
-import { ModuleType } from "../model/coreModel/module";
+import { GroupingType } from "../model/coreModel/grouping";
 import { CourseType } from "../model/coreModel/course";
 import { DurationUnit } from "../model/coreModel/duration";
 
@@ -83,8 +83,8 @@ export class UtilsService {
         switch(type) {
             case NodeType.StudyProgram:
                 return this.translate.instant('nodeTypes.studyProgram');
-            case NodeType.Module:
-                return this.translate.instant('nodeTypes.module');
+            case NodeType.Grouping:
+                return this.translate.instant('nodeTypes.grouping');
             case NodeType.Course:
                 return this.translate.instant('nodeTypes.course');
             case NodeType.Lecture:
@@ -94,14 +94,14 @@ export class UtilsService {
         }
     }
 
-    getTranslatedModuleType(type: ModuleType): string {
+    getTranslatedGroupingType(type: GroupingType): string {
         switch(type) {
-            case ModuleType.StudyProgram:
-                return this.translate.instant('moduleTypes.studyProgram');
-            case ModuleType.Course:
-                return this.translate.instant('moduleTypes.course');
-            case ModuleType.Lecture:
-                return this.translate.instant('moduleTypes.lecture');
+            case GroupingType.StudyProgram:
+                return this.translate.instant('groupingTypes.studyProgram');
+            case GroupingType.Course:
+                return this.translate.instant('groupingTypes.course');
+            case GroupingType.Lecture:
+                return this.translate.instant('groupingTypes.lecture');
             default:
                 return '';
         }

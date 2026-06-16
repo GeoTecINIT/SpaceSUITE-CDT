@@ -15,7 +15,7 @@ export class Lecture extends CurriculumNode {
   protected override validateChildCandidate(_: CurriculumNode): void {
     throw new DomainError(
       'LECTURE_HAS_CHILDREN', 
-      `Lectures are leaf nodes and cannot have children. Move content up to a Course or Module.`
+      `Lectures are leaf nodes and cannot have children. Move content up to a Course or Grouping.`
     );
   }
 

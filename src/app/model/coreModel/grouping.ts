@@ -4,20 +4,20 @@ import { StudyProgram } from "./studyProgram";
 import { Course } from "./course";
 import { Lecture } from "./lecture";
 
-export enum ModuleType {
+export enum GroupingType {
   StudyProgram = 'Study Program',
   Course = 'Course',
   Lecture = 'Lecture'
 }
 
-export class Module extends CurriculumNode {
-  public moduleType: ModuleType;
+export class Grouping extends CurriculumNode {
+  public groupingType: GroupingType;
   public override nodeType: NodeType;
 
-  constructor(currentNode?: Partial<Module>, id?: string) {
+  constructor(currentNode?: Partial<Grouping>, id?: string) {
     super(currentNode, id);
-    this.moduleType = currentNode?.moduleType || ModuleType.Course;
-    this.nodeType = NodeType.Module;
+    this.groupingType = currentNode?.groupingType || GroupingType.Course;
+    this.nodeType = NodeType.Grouping;
   }
 
   protected override validateChildCandidate(child: CurriculumNode): void {
@@ -25,13 +25,13 @@ export class Module extends CurriculumNode {
 
     switch (true) {
       case child instanceof StudyProgram:
-        isValid = this.moduleType === ModuleType.StudyProgram;
+        isValid = this.groupingType === GroupingType.StudyProgram;
         break;
       case child instanceof Course:
-        isValid = this.moduleType === ModuleType.Course;
+        isValid = this.groupingType === GroupingType.Course;
         break;
       case child instanceof Lecture:
-        isValid = this.moduleType === ModuleType.Lecture;
+        isValid = this.groupingType === GroupingType.Lecture;
         break;
       default:
         isValid = false;
@@ -40,12 +40,12 @@ export class Module extends CurriculumNode {
     if (!isValid) {
       throw new DomainError(
         'HIERARCHY_INVALID', 
-        `Cannot add a child of type ${child.nodeType} to a Module of type ${this.moduleType}.`
+        `Cannot add a child of type ${child.nodeType} to a Grouping of type ${this.groupingType}.`
       );
     }
   }
 
   public override clone(): CurriculumNode {
-    return new Module(this);
+    return new Grouping(this);
   }
 }

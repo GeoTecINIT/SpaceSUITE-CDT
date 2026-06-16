@@ -45,7 +45,7 @@ export class RdfService {
 
     ttl += `geospacebok:EducationalOffer rdf:type rdfs:Class .\n`;
     ttl += `geospacebok:StudyProgram rdf:type rdfs:Class .\n`;
-    ttl += `geospacebok:Module rdf:type rdfs:Class .\n`;
+    ttl += `geospacebok:Grouping rdf:type rdfs:Class .\n`;
     ttl += `geospacebok:Course rdf:type rdfs:Class .\n`;
     ttl += `geospacebok:Lecture rdf:type rdfs:Class .\n\n`;
 
@@ -178,8 +178,8 @@ export class RdfService {
     switch (node.nodeType) {
       case NodeType.StudyProgram:
         return 'geospacebok:StudyProgram';
-      case NodeType.Module:
-        return 'geospacebok:Module';
+      case NodeType.Grouping:
+        return 'geospacebok:Grouping';
       case NodeType.Course:
         return 'geospacebok:Course';
       case NodeType.Lecture:
@@ -204,7 +204,7 @@ export class RdfService {
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
     xml += `<rdf:RDF xmlns:rdf="${rdfNS}" xmlns:rdfs="${rdfsNS}" xmlns:dcterms="${dctermsNS}" xmlns:elm="${elmNS}" xmlns:geospacebok="${geospacebokNS}">\n\n`;
 
-    ['EducationalOffer', 'StudyProgram', 'Module', 'Course', 'Lecture', 'CurriculumNode'].forEach(c => {
+    ['EducationalOffer', 'StudyProgram', 'Grouping', 'Course', 'Lecture', 'CurriculumNode'].forEach(c => {
       xml += `  <rdf:Description rdf:about="${geospacebokNS}${c}">\n`;
       xml += `    <rdf:type rdf:resource="${rdfsNS}Class"/>\n`;
       xml += `  </rdf:Description>\n\n`;
@@ -360,8 +360,8 @@ export class RdfService {
     switch (node.nodeType) {
       case NodeType.StudyProgram:
         return `${geospacebokNS}StudyProgram`;
-      case NodeType.Module:
-        return `${geospacebokNS}Module`;
+      case NodeType.Grouping:
+        return `${geospacebokNS}Grouping`;
       case NodeType.Course:
         return `${geospacebokNS}Course`;
       case NodeType.Lecture:
@@ -523,8 +523,8 @@ export class RdfService {
     switch (node.nodeType) {
       case NodeType.StudyProgram:
         return 'geospacebok:StudyProgram';
-      case NodeType.Module:
-        return 'geospacebok:Module';
+      case NodeType.Grouping:
+        return 'geospacebok:Grouping';
       case NodeType.Course:
         return 'geospacebok:Course';
       case NodeType.Lecture:

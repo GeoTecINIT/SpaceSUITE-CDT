@@ -161,7 +161,7 @@ export class OfferIndexComponent {
     switch(type) {
       case NodeType.StudyProgram:
         return 'pi pi-building-columns';
-      case NodeType.Module:
+      case NodeType.Grouping:
         return 'pi pi-box';
       case NodeType.Course:
         return 'pi pi-book';

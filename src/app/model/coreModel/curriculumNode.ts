@@ -7,7 +7,7 @@ import { Affiliation } from "./affiliation";
 
 export enum NodeType {
   StudyProgram = "Study Program",
-  Module = "Module",
+  Grouping = "Grouping",
   Course = "Course",
   Lecture = "Lecture"
 }

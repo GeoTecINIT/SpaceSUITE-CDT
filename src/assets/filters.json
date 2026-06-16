@@ -30,13 +30,13 @@
     "label": "filters.offerType.label",
     "tags": [
       "nodeTypes.studyProgram",
-      "nodeTypes.module",
+      "nodeTypes.grouping",
       "nodeTypes.course",
       "nodeTypes.lecture"
     ],
     "values": [
       "Study Program",
-      "Module",
+      "Grouping",
       "Course",
       "Lecture"
     ],

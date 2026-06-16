@@ -20,7 +20,6 @@ import { CurriculumNode, NodeType } from "../../model/coreModel/curriculumNode";
 import { SkeletonModule } from "primeng/skeleton";
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { OfferIndexComponent } from "../offerIndexComponent/offerIndexComponent.component";
-import { Module } from "../../model/coreModel/module";
 import { Course } from "../../model/coreModel/course";
 import { Lecture } from "../../model/coreModel/lecture";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -28,6 +27,7 @@ import { Duration } from "../../model/coreModel/duration";
 import { PdfService } from "../../services/exportServices/pdf.service";
 import { RdfService } from "../../services/exportServices/rdf.service";
 import { JsonService } from "../../services/exportServices/json.service";
+import { Grouping } from "../../model/coreModel/grouping";
 
 @Component({
   standalone: true,
@@ -202,10 +202,10 @@ export class OfferPageComponent {
     this.customTransversalSkills.set(selectedNode.customTransversalSkills.map(value => new Tag(value, 'primary')));
   }
 
-  getModuleType(): string {
+  getGroupingType(): string {
     const selectedNode = this.selectedNode();
-    if (selectedNode instanceof Module) {
-      return this.utilsService.getTranslatedModuleType(selectedNode.moduleType);
+    if (selectedNode instanceof Grouping) {
+      return this.utilsService.getTranslatedGroupingType(selectedNode.groupingType);
     }
     return "";
   }

@@ -8,7 +8,7 @@ import { DomainError } from "../domainError";
  * Represents an educational offer, which is a structured curriculum with associated metadata.
  * It contains a root curriculum node and supports operations to manage the curriculum structure.
  * The educational offer also includes affiliations, visibility settings, and organizational information.
- * The curriculum structure is managed through a tree of CurriculumNode objects, allowing for flexible representation of courses, modules, and other educational components.
+ * The curriculum structure is managed through a tree of CurriculumNode objects, allowing for flexible representation of courses, groupings, and other educational components.
  * The class provides methods to retrieve nodes by ID, add new nodes under a specified parent, and remove nodes while ensuring the integrity of the curriculum structure.
  * When a node is added, the system checks for the existence of the parent node to maintain a valid tree structure. 
  * When a node is removed, it ensures that the root node cannot be removed and that the specified node exists within the curriculum.

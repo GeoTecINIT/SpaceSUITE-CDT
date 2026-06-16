@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { EducationalOffer } from '../model/coreModel/educationalOffer';
 import { Lecture } from '../model/coreModel/lecture';
 import { Course } from '../model/coreModel/course';
-import { Module } from '../model/coreModel/module';
 import { CurriculumNode } from '../model/coreModel/curriculumNode';
+import { Grouping } from '../model/coreModel/grouping';
 
 @Injectable({
   providedIn: 'root',
@@ -105,8 +105,8 @@ export class OfferValidationService {
       this.validateCourse(node, errors, base);
     }
 
-    if (node instanceof Module) {
-      this.validateModule(node, errors, base);
+    if (node instanceof Grouping) {
+      this.validateGrouping(node, errors, base);
     }
   }
 
@@ -122,9 +122,9 @@ export class OfferValidationService {
     }
   }
 
-  private validateModule(node: Module, errors: Map<string, string>, base: string): void {
-    if (node.moduleType === undefined || node.moduleType === null) {
-      this.addError(errors, `${base}.moduleType`, 'Module type is required.');
+  private validateGrouping(node: Grouping, errors: Map<string, string>, base: string): void {
+    if (node.groupingType === undefined || node.groupingType === null) {
+      this.addError(errors, `${base}.groupingType`, 'Grouping type is required.');
     }
   }
 }

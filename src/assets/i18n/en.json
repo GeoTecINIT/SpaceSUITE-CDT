@@ -225,10 +225,10 @@
   "nodeTypes": {
     "studyProgram": "Study Program",
     "course": "Course",
-    "module": "Module",
+    "grouping": "Grouping",
     "lecture": "Lecture"
   },
-  "moduleTypes": {
+  "groupingTypes": {
     "studyProgram": "Study Program",
     "course": "Course",
     "lecture": "Lecture"
@@ -261,9 +261,9 @@
         "label": "Node Type",
         "tooltip":"The new node type."
       },
-      "newNodeModuleType": {
-        "label": "Module Type",
-        "tooltip":"The new module type."
+      "newNodeGroupingType": {
+        "label": "Grouping Type",
+        "tooltip":"The new grouping type."
       },
       "organization": {
         "label": "Organization *",
@@ -280,9 +280,9 @@
         "label": "Node Type",
         "tooltip": "The root node type"
       },
-      "rootNodeModuleType": {
-        "label": "Module Type",
-        "tooltip": "The root module type"
+      "rootNodeGroupingType": {
+        "label": "Grouping Type",
+        "tooltip": "The root grouping type"
       }
     },
     "buttons": {
@@ -387,7 +387,7 @@
     },
     "permalink": "Permalink",
     "type": "Type",
-    "moduleType": "Module Type",
+    "groupingType": "Grouping Type",
     "courseType": "Course Type",
     "isPractical": "Is Practical",
     "eqf":"EQF level",

@@ -1,11 +1,11 @@
 import { inject, Injectable } from "@angular/core";
-import { collection, collectionData, CollectionReference, deleteDoc, doc, docData, DocumentData, DocumentReference, Firestore, getDocs, setDoc, updateDoc, WriteBatch, writeBatch } from "@angular/fire/firestore";
-import { combineLatest, concatMap, defaultIfEmpty, filter, forkJoin, from, map, Observable, of, switchMap } from "rxjs";
+import { collection, collectionData, CollectionReference, doc, docData, DocumentData, DocumentReference, Firestore, getDocs, WriteBatch, writeBatch } from "@angular/fire/firestore";
+import { combineLatest, defaultIfEmpty, filter, from, map, Observable, of, switchMap } from "rxjs";
 import { CurriculumNodeDB } from "../../model/databaseModel/curriculumNodeDB";
 import { EducationalOfferDB } from "../../model/databaseModel/educationalOfferDB";
 import { LectureDB } from "../../model/databaseModel/lectureDB";
 import { CourseDB } from "../../model/databaseModel/courseDB";
-import { ModuleDB } from "../../model/databaseModel/moduleDB";
+import { GroupingDB } from "../../model/databaseModel/groupingDB";
 import { StudyProgramDB } from "../../model/databaseModel/studyProgramDB";
 import { DomainError } from "../../model/domainError";
 
@@ -88,7 +88,7 @@ export class EducationalOfferDBService {
 
   private async deleteEducationalOfferInternal(educationalOfferId: string): Promise<void> {
     const docRef = doc(this.educationalOfferCollection, educationalOfferId);
-    const subcollections = ['lectures', 'courses', 'modules', 'studyPrograms'];
+    const subcollections = ['lectures', 'courses', 'groupings', 'studyPrograms'];
 
     const batch = writeBatch(this.firestore);
 
@@ -188,16 +188,16 @@ export class EducationalOfferDBService {
   private getEducationalOfferNodes(educationalOfferDocRef: DocumentReference): Observable<CurriculumNodeDB[]> {
     const lectureCollection = collection(educationalOfferDocRef, 'lectures');
     const courseCollection = collection(educationalOfferDocRef, 'courses');
-    const moduleCollection = collection(educationalOfferDocRef, 'modules');
+    const groupingCollection = collection(educationalOfferDocRef, 'groupings');
     const studyProgramCollection = collection(educationalOfferDocRef, 'studyPrograms');
 
     const lectures$ = collectionData(lectureCollection).pipe(this.mapToClass(LectureDB));
     const courses$ = collectionData(courseCollection).pipe(this.mapToClass(CourseDB));
-    const modules$ = collectionData(moduleCollection).pipe(this.mapToClass(ModuleDB));
+    const groupings$ = collectionData(groupingCollection).pipe(this.mapToClass(GroupingDB));
     const studyPrograms$ = collectionData(studyProgramCollection).pipe(this.mapToClass(StudyProgramDB));
 
-    return combineLatest([lectures$, courses$, modules$, studyPrograms$]).pipe(defaultIfEmpty([]), map(([lectures, courses, modules, studyPrograms]) => {
-      return [...lectures, ...courses, ...modules, ...studyPrograms];
+    return combineLatest([lectures$, courses$, groupings$, studyPrograms$]).pipe(defaultIfEmpty([]), map(([lectures, courses, groupings, studyPrograms]) => {
+      return [...lectures, ...courses, ...groupings, ...studyPrograms];
     }));
   }
 
@@ -212,9 +212,9 @@ export class EducationalOfferDBService {
         const courseRef = collection(parentDocRef, 'courses');
         newDocRef = docId ? doc(courseRef, docId) : doc(courseRef);
         break;
-      case currentNode instanceof ModuleDB:
-        const moduleRef = collection(parentDocRef, 'modules');
-        newDocRef = docId ? doc(moduleRef, docId) : doc(moduleRef);
+      case currentNode instanceof GroupingDB:
+        const groupingRef = collection(parentDocRef, 'groupings');
+        newDocRef = docId ? doc(groupingRef, docId) : doc(groupingRef);
         break;
       case currentNode instanceof StudyProgramDB:
         const studyProgramRef = collection(parentDocRef, 'studyPrograms');
