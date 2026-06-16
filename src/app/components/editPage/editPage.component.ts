@@ -4,7 +4,7 @@ import { OfferFormComponent } from "../offerForm/offerForm.component";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Component, inject } from "@angular/core";
 import { AuthService, ExitWithoutSavingService } from "@eo4geo/ngx-bok-utils";
-import { EducationalOfferService } from "../../services/useCaseServices/educationalOffer.service";
+import { EducationalOfferService } from "../../services/educationalOffer.service";
 import { combineLatest, concatMap } from "rxjs";
 import { OrganizationDBService } from "../../services/databaseServices/organizationDB.service";
 import { TranslateModule } from "@ngx-translate/core";

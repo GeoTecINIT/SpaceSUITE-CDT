@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { EducationalOffer } from '../../model/coreModel/educationalOffer';
-import { Lecture } from '../../model/coreModel/lecture';
-import { Course } from '../../model/coreModel/course';
-import { Module } from '../../model/coreModel/module';
-import { CurriculumNode } from '../../model/coreModel/curriculumNode';
+import { EducationalOffer } from '../model/coreModel/educationalOffer';
+import { Lecture } from '../model/coreModel/lecture';
+import { Course } from '../model/coreModel/course';
+import { Module } from '../model/coreModel/module';
+import { CurriculumNode } from '../model/coreModel/curriculumNode';
 
 @Injectable({
   providedIn: 'root',

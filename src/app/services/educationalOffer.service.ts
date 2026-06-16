@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { EducationalOffer } from '../../model/coreModel/educationalOffer';
-import { EducationalOfferAdapterService } from '../databaseServices/educationalOfferAdapter.service';
+import { EducationalOffer } from '../model/coreModel/educationalOffer';
+import { EducationalOfferAdapterService } from './databaseServices/educationalOfferAdapter.service';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 
 @Injectable({

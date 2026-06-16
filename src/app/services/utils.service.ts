@@ -2,11 +2,11 @@ import { inject, Injectable } from "@angular/core";
 import { Tag } from "@eo4geo/ngx-bok-utils";
 import { BokInformationService } from "@eo4geo/ngx-bok-visualization";
 import { combineLatest, forkJoin, map, Observable, of, take } from "rxjs";
-import { CurriculumNode, NodeType } from "../../model/coreModel/curriculumNode";
+import { CurriculumNode, NodeType } from "../model/coreModel/curriculumNode";
 import { TranslateService } from "@ngx-translate/core";
-import { ModuleType } from "../../model/coreModel/module";
-import { CourseType } from "../../model/coreModel/course";
-import { DurationUnit } from "../../model/coreModel/duration";
+import { ModuleType } from "../model/coreModel/module";
+import { CourseType } from "../model/coreModel/course";
+import { DurationUnit } from "../model/coreModel/duration";
 
 @Injectable({
     providedIn: 'root',

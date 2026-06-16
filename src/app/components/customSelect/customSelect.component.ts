@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { CommonModule } from "@angular/common";
 import { Select, SelectModule } from "primeng/select";
-import { CardFilterService } from "../../services/useCaseServices/cardFilter.service";
+import { CardFilterService } from "../../services/cardFilter.service";
 import { TranslateModule } from "@ngx-translate/core";
 
 @Component({

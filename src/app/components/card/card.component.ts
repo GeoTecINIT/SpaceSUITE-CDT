@@ -19,13 +19,14 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { catchError, defaultIfEmpty, finalize, of, take } from 'rxjs';
-import { UtilsService } from '../../services/useCaseServices/utils.service';
+import { UtilsService } from '../../services/utils.service';
 import { OrganizationDBService } from '../../services/databaseServices/organizationDB.service';
-import { EducationalOfferService } from '../../services/useCaseServices/educationalOffer.service';
+import { EducationalOfferService } from '../../services/educationalOffer.service';
 import { EducationalOffer } from '../../model/coreModel/educationalOffer';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PdfService } from '../../services/exportServices/pdf.service';
 import { RdfService } from '../../services/exportServices/rdf.service';
+import { JsonService } from '../../services/exportServices/json.service';
 
 @Component({
   standalone: true,
@@ -78,6 +79,7 @@ export class CardComponent implements OnInit {
   private messageService = inject(MessageService);
   private pdfService = inject(PdfService);
   private rdfService = inject(RdfService);
+  private jsonService = inject(JsonService);
   private translate = inject(TranslateService);
 
   constructor() {
@@ -248,6 +250,12 @@ export class CardComponent implements OnInit {
     }
 
     document.body.style.cursor = '';
+  }
+
+  downloadJSON() {
+    const url = this.jsonService.getJSONUrl(this.educationalOffer);
+    this.downloadURI(url, this.educationalOffer.id + '_metadata.json');
+    this.op.hide();
   }
 
   private downloadURI(uri: string, name: string): void {

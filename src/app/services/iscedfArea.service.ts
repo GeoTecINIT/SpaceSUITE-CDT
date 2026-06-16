@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable, ReplaySubject, take } from 'rxjs';
-import { ISCEDFArea } from '../../model/coreModel/iscedfArea';
+import { ISCEDFArea } from '../model/coreModel/iscedfArea';
 
 @Injectable({
   providedIn: 'root',

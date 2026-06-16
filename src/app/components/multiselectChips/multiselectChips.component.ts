@@ -7,9 +7,9 @@ import { ChipModule } from 'primeng/chip';
 import { CommonModule } from "@angular/common";
 import { MultiSelect, MultiSelectModule } from "primeng/multiselect";
 import { BokInformationService } from "@eo4geo/ngx-bok-visualization";
-import { UtilsService } from "../../services/useCaseServices/utils.service";
-import { CardFilterService } from "../../services/useCaseServices/cardFilter.service";
-import { IscedfAreaService } from "../../services/useCaseServices/iscedfArea.service";
+import { UtilsService } from "../../services/utils.service";
+import { CardFilterService } from "../../services/cardFilter.service";
+import { IscedfAreaService } from "../../services/iscedfArea.service";
 import { TranslateModule } from "@ngx-translate/core";
 
 @Component({

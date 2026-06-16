@@ -12,9 +12,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { AuthService, Tag, SkillTagComponent } from "@eo4geo/ngx-bok-utils";
-import { UtilsService } from "../../services/useCaseServices/utils.service";
+import { UtilsService } from "../../services/utils.service";
 import { EducationalOffer } from "../../model/coreModel/educationalOffer";
-import { EducationalOfferService } from "../../services/useCaseServices/educationalOffer.service";
+import { EducationalOfferService } from "../../services/educationalOffer.service";
 import { OrganizationDBService } from "../../services/databaseServices/organizationDB.service";
 import { CurriculumNode, NodeType } from "../../model/coreModel/curriculumNode";
 import { SkeletonModule } from "primeng/skeleton";
@@ -27,6 +27,7 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { Duration } from "../../model/coreModel/duration";
 import { PdfService } from "../../services/exportServices/pdf.service";
 import { RdfService } from "../../services/exportServices/rdf.service";
+import { JsonService } from "../../services/exportServices/json.service";
 
 @Component({
   standalone: true,
@@ -71,6 +72,7 @@ export class OfferPageComponent {
   private translate = inject(TranslateService);
   private pdfService = inject(PdfService);
   private rdfService = inject(RdfService);
+  private jsonService = inject(JsonService);
 
   ngOnInit() {
     let nodeId: string = '';
@@ -108,12 +110,12 @@ export class OfferPageComponent {
     )
 
     forkJoin([routeData$, orgIds$, userState$]).subscribe(([newOffer, _, userData]) => {
-      const isMaterialMissing = !newOffer;
+      const isOfferMissing = !newOffer;
       const isNotPublic = newOffer && !newOffer.isPublic;
       const belongsToUserOrg = newOffer?.orgId && this.userOrgIds.includes(newOffer.orgId);
       const belongsToUser = newOffer && userData && newOffer.userId === userData.uid;
 
-      if (isMaterialMissing || (isNotPublic && !(belongsToUserOrg || belongsToUser))) {
+      if (isOfferMissing || (isNotPublic && !(belongsToUserOrg || belongsToUser))) {
           this.router.navigate(['not_found']);
       }
       else this.loadOffer(newOffer, nodeId);
@@ -281,7 +283,7 @@ export class OfferPageComponent {
     this.router.navigate(['']);
   }
 
-  editMaterial() {
+  editOffer() {
     this.router.navigate(['edit/' + this.offer()!.id]);
   }
 
@@ -301,14 +303,14 @@ export class OfferPageComponent {
         },
 
         accept: () => {
-          this.deleteMaterial();
+          this.deleteOffer();
         },
         reject: () => {
         },
     });
   }
 
-  deleteMaterial() {
+  deleteOffer() {
     let deleteError = false;
     this.educationalOfferService.deleteEducationalOffer(this.offer()!.id).pipe(
       take(1),
@@ -357,21 +359,27 @@ export class OfferPageComponent {
         document.body.style.cursor = '';
       });
   }
-  downloadMaterialXML() {
+  downloadOfferXML() {
     const url = this.rdfService.getRdfXmlUrl(this.offer()!);
     this.downloadURI(url, this.offer()!.id + '_metadata.xml');
     this.op.hide();
   }
 
-  downloadMaterialTTL() {
+  downloadOfferTTL() {
     const url = this.rdfService.getRdfTtlUrl(this.offer()!);
     this.downloadURI(url, this.offer()!.id + '_metadata.ttl');
     this.op.hide();
   }
 
-  downloadMaterialRDFa() {
+  downloadOfferRDFa() {
     const url = this.rdfService.getRdfaUrl(this.offer()!);
     this.downloadURI(url, this.offer()!.id + '_metadata.html');
+    this.op.hide();
+  }
+
+  downloadOfferJSON() {
+    const url = this.jsonService.getJSONUrl(this.offer()!);
+    this.downloadURI(url, this.offer()!.id + '_metadata.json');
     this.op.hide();
   }
 

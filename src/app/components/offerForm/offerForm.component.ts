@@ -20,12 +20,12 @@ import { Lecture } from "../../model/coreModel/lecture";
 import { DialogModule } from "primeng/dialog";
 import { PanelModule } from "primeng/panel";
 import { CurriculumNodeFormComponent } from "../curriculumNodeForm/curriculumNodeForm.component";
-import { EducationalOfferService } from "../../services/useCaseServices/educationalOffer.service";
-import { OfferValidationService } from "../../services/useCaseServices/offerValidation.service";
+import { EducationalOfferService } from "../../services/educationalOffer.service";
+import { OfferValidationService } from "../../services/offerValidation.service";
 import { OrganizationDBService } from "../../services/databaseServices/organizationDB.service";
 import { SelectButtonModule } from "primeng/selectbutton";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { UtilsService } from "../../services/useCaseServices/utils.service";
+import { UtilsService } from "../../services/utils.service";
 import { MessageModule } from 'primeng/message';
 
 @Component({

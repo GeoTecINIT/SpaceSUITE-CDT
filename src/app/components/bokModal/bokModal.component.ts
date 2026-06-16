@@ -8,7 +8,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ProgressSpinner } from "primeng/progressspinner";
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { UtilsService } from '../../services/useCaseServices/utils.service';
+import { UtilsService } from '../../services/utils.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({

@@ -11,7 +11,7 @@ import { SliderModule } from 'primeng/slider';
 import { FormsModule } from "@angular/forms";
 import { ButtonModule } from "primeng/button";
 import { DialogModule } from "primeng/dialog";
-import { UtilsService } from "../../services/useCaseServices/utils.service";
+import { UtilsService } from "../../services/utils.service";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { Tooltip } from "primeng/tooltip";
 import { MeterGroup, MeterItem } from 'primeng/metergroup';

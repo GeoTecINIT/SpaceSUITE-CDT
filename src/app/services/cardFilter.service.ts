@@ -1,9 +1,9 @@
 import { inject, Injectable } from "@angular/core";
-import { FilterOption } from "../../model/viewModel/filterOption";
+import { FilterOption } from "../model/viewModel/filterOption";
 import { PaginatorState } from "primeng/paginator";
 import { HttpClient } from "@angular/common/http";
 import {  combineLatest, concatMap, map, Observable, ReplaySubject, startWith, Subscription, switchMap, take, tap } from "rxjs";
-import { EducationalOffer } from "../../model/coreModel/educationalOffer";
+import { EducationalOffer } from "../model/coreModel/educationalOffer";
 import { EducationalOfferService } from "./educationalOffer.service";
 import { TranslateService } from "@ngx-translate/core";
 

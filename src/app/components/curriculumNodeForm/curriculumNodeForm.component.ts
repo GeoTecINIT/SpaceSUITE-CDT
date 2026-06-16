@@ -21,10 +21,10 @@ import { PanelModule } from "primeng/panel";
 import { TextChipsComponent } from "../textChips/textChips.component";
 import { CustomSelectComponent } from "../customSelect/customSelect.component";
 import { MultiselectChipsComponent } from "../multiselectChips/multiselectChips.component";
-import { IscedfAreaService } from "../../services/useCaseServices/iscedfArea.service";
+import { IscedfAreaService } from "../../services/iscedfArea.service";
 import { ISCEDFArea } from "../../model/coreModel/iscedfArea";
 import { TreeselectChipsComponent } from "../treeselectChips/treeselectChips.component";
-import { ESCOService } from "../../services/useCaseServices/esco.service";
+import { ESCOService } from "../../services/esco.service";
 import { DurationUnit } from "../../model/coreModel/duration";
 import { DividerModule } from "primeng/divider";
 import { TrainingMaterial } from "../../model/coreModel/trainingMaterial";
@@ -34,7 +34,7 @@ import { Lecture } from "../../model/coreModel/lecture";
 import { SelectButtonModule } from "primeng/selectbutton";
 import { ESCOSkill } from "../../model/coreModel/escoSkill";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { UtilsService } from "../../services/useCaseServices/utils.service";
+import { UtilsService } from "../../services/utils.service";
 
 @Component({
   standalone: true,
