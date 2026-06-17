@@ -10,13 +10,13 @@ export enum CourseType {
 }
 
 export class Course extends CurriculumNode {
-  public assesment: string;
+  public assessment: string;
   public courseType?: CourseType;
   public override nodeType: NodeType;
 
   constructor(currentNode?: Partial<Course>, id?: string) {
     super(currentNode, id);
-    this.assesment = currentNode?.assesment || "";
+    this.assessment = currentNode?.assessment || "";
     this.courseType = currentNode?.courseType;
     this.nodeType = NodeType.Course;
   }

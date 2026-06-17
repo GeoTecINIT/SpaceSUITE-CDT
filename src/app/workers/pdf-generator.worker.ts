@@ -259,8 +259,9 @@ function renderCurriculumNodes(doc: jsPDF, p: CurriculumNode, y: number, assets:
     [
       'Type: ' + p.nodeType, 
       p instanceof Grouping ? ('Grouping Type: ' + p.groupingType ) : undefined,
+      p instanceof Grouping ? ('Grouping Name: ' + p.groupingName ) : undefined,
       p instanceof Course && p.courseType ? ('Course Type: ' + p.courseType ) : undefined,
-      p instanceof Lecture ? (p.isPractical ? 'Practical' : 'Theorical') : undefined,
+      p instanceof Lecture ? (p.isPractical ? 'Practical' : 'Theoretical') : undefined,
       'EQF ' + p.eqf,
       p.ects + ' ECTS',
       p.timeRequired.value + ' ' + p.timeRequired.unit,
@@ -281,10 +282,10 @@ function renderCurriculumNodes(doc: jsPDF, p: CurriculumNode, y: number, assets:
     y += 4 * 1.35;
     y = checkEnd(doc, y, 0, assets);
     doc.setFont('Poppins', 'italic');
-    doc.text('Assesment:', 20, y);
+    doc.text('Assessment:', 20, y);
     doc.setFont('Poppins', 'normal')
     y += 4 * 1.35;
-    const lines = doc.splitTextToSize(p.assesment, 170);
+    const lines = doc.splitTextToSize(p.assessment, 170);
     const linesSize = lines.length * 4 * 1.35;
     y = checkEnd(doc, y, linesSize, assets);
     doc.text(lines, 20, y);

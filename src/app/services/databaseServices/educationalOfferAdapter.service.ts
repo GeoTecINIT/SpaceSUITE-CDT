@@ -132,7 +132,7 @@ export class EducationalOfferAdapterService {
               trainingMaterials: courseNode.trainingMaterials.map(material => material.toPlainObject()),
               timeRequired: courseNode.timeRequired.toPlainObject(),
               studyAreas: courseNode.studyAreas.map(area => area.toPlainObject()),
-              assesment: courseNode.assesment,
+              assessment: courseNode.assessment,
               courseType: courseNode.courseType
             }
           );
@@ -278,7 +278,7 @@ export class EducationalOfferAdapterService {
             trainingMaterials: courseDB.trainingMaterials.map(value => new TrainingMaterial(value)),
             timeRequired: new Duration(courseDB.timeRequired),
             studyAreas: courseDB.studyAreas.map(value => new ISCEDFArea(value)),
-            assesment: courseDB.assesment,
+            assessment: courseDB.assessment,
             courseType: courseDB.courseType
           }
         );

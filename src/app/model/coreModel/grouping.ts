@@ -12,11 +12,13 @@ export enum GroupingType {
 
 export class Grouping extends CurriculumNode {
   public groupingType: GroupingType;
+  public groupingName: string;
   public override nodeType: NodeType;
 
   constructor(currentNode?: Partial<Grouping>, id?: string) {
     super(currentNode, id);
     this.groupingType = currentNode?.groupingType || GroupingType.Course;
+    this.groupingName = currentNode?.groupingName || '';
     this.nodeType = NodeType.Grouping;
   }
 

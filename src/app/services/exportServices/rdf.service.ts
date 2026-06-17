@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { EducationalOffer } from '../../model/coreModel/educationalOffer';
 import { CurriculumNode, NodeType } from '../../model/coreModel/curriculumNode';
+import { Course } from '../../model/coreModel/course';
+import { Grouping } from '../../model/coreModel/grouping';
+import { Lecture } from '../../model/coreModel/lecture';
 
 @Injectable({
   providedIn: 'root'
@@ -142,7 +145,7 @@ export class RdfService {
       else {
         ttl += `  elm:hasPart _:${nodeRef}_MATERIAL${index} ;\n`;
         additionalObjects += `_:${nodeRef}_MATERIAL${index}\n`;
-        additionalObjects += `  dcterms:title "${mat.title}" .\n\n`;
+        additionalObjects += `  dcterms:title "${this.escape(mat.title)}" .\n\n`;
       }
     });
 
@@ -153,9 +156,29 @@ export class RdfService {
         ttl += `  elm:providedBy _:${nodeRef}_PROVIDER${index} ;\n`;
         additionalObjects += `_:${nodeRef}_PROVIDER${index}\n`;
         additionalObjects += `  rdf:type dcterms:Agent ;\n`;
-        additionalObjects += `  dcterms:title "${aff.name}" .\n\n`;
+        additionalObjects += `  dcterms:title "${this.escape(aff.name)}" .\n\n`;
       }
     });
+
+
+    if (node instanceof Course) {
+      ttl += `  elm:used _:${nodeRef}_ASSESSMENT ;\n`;
+      additionalObjects += `_:${nodeRef}_ASSESSMENT\n`;
+      additionalObjects += `  rdf:type elm:LearningAssessment ;\n`;
+      additionalObjects += `  dcterms:description "${this.escape(node.assessment)}" .\n\n`;
+      
+      if (node.courseType) {
+        ttl += `  dcterms:type "${node.courseType}" ;\n`;
+      }
+    }
+
+    if (node instanceof Grouping) {
+      ttl += `  dcterms:type "${node.groupingType}" ;\n`;
+    }
+
+    if (node instanceof Lecture) {
+      ttl += `elm:contentType "${node.isPractical ? 'Practical' : 'Theoretical'}"`
+    }
 
     const children = node.getChildren();
     let childBlocks = '';
@@ -345,6 +368,28 @@ export class RdfService {
       }
     });
 
+    if (node instanceof Course) {
+      xml += `${indent(indentLevel + 1)}<elm:used>\n`;
+      xml += `${indent(indentLevel + 2)}<rdf:Description>\n`;
+      xml += `${indent(indentLevel + 3)}<rdf:type rdf:resource="${elmNS}LearningAssessment"/>\n`;
+      xml += `${indent(indentLevel + 3)}<dcterms:description>${this.escapeXml(node.assessment)}</dcterms:description>\n`;
+      xml += `${indent(indentLevel + 2)}</rdf:Description>\n`;
+      xml += `${indent(indentLevel + 1)}</elm:used>\n`;
+      
+      if (node.courseType) {
+        xml += `${indent(indentLevel + 1)}<dcterms:type>${this.escapeXml(node.courseType)}</dcterms:type>\n`;
+      }
+    }
+
+    if (node instanceof Grouping) {
+      xml += `${indent(indentLevel + 1)}<dcterms:type>${this.escapeXml(node.groupingType)}</dcterms:type>\n`;
+    }
+
+    if (node instanceof Lecture) {
+      const contentType = node.isPractical ? 'Practical' : 'Theoretical';
+      xml += `${indent(indentLevel + 1)}<elm:contentType>${this.escapeXml(contentType)}</elm:contentType>\n`;
+    }
+
     const children = node.getChildren();
     children.forEach(child => {
       xml += `${indent(indentLevel + 1)}<elm:hasPart>\n`;
@@ -507,6 +552,29 @@ export class RdfService {
         html += `${indent}</div>\n`;
       }
     });
+
+    if (node instanceof Course) {
+      const assessmentId = `${nodeId}_ASSESSMENT`;
+
+      html += `${indent}<div rel="elm:used">\n`;
+      html += `${childIndent}<div about="#${assessmentId}" typeof="elm:LearningAssessment">\n`;
+      html += `${childIndent + '  '}<span property="dcterms:description">${this.escapeHtml(node.assessment)}</span><br/>\n`;
+      html += `${childIndent}</div>\n`;
+      html += `${indent}</div>\n`;
+
+      if (node.courseType) {
+        html += `${indent}<span property="dcterms:type">${this.escapeHtml(node.courseType)}</span><br/>\n`;
+      }
+    }
+
+    if (node instanceof Grouping) {
+      html += `${indent}<span property="dcterms:type">${this.escapeHtml(node.groupingType)}</span><br/>\n`;
+    }
+
+    if (node instanceof Lecture) {
+      const contentType = node.isPractical ? 'Practical' : 'Theoretical';
+      html += `${indent}<span property="elm:contentType">${this.escapeHtml(contentType)}</span><br/>\n`;
+    }
 
     const children = node.getChildren();
     children.forEach((child, i) => {

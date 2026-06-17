@@ -53,6 +53,8 @@ export class OfferFormComponent {
   newNodeType: NodeType | undefined;
   newNodeGroupingType: GroupingType | undefined;
 
+  public readonly groupingNodeType: NodeType = NodeType.Grouping;
+
   private CHILD_TYPES?: Record<string, Object[]>;
 
   private GROUPING_CHILD_TYPES?: Record<GroupingType, Object[]>;

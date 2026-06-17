@@ -1,6 +1,9 @@
 import { Injectable } from "@angular/core";
 import { EducationalOffer } from "../../model/coreModel/educationalOffer";
 import { CurriculumNode } from "../../model/coreModel/curriculumNode";
+import { Course } from "../../model/coreModel/course";
+import { Grouping } from "../../model/coreModel/grouping";
+import { Lecture } from "../../model/coreModel/lecture";
 
 @Injectable({ providedIn: 'root' })
 export class JsonService {
@@ -39,6 +42,17 @@ export class JsonService {
       bibliography: [...node.bibliography],
       affiliations: node.affiliations.map(value => value.toPlainObject()),
       nodeType: node.nodeType,
+      ...(node instanceof Course && {
+        assessment: node.assessment,
+        courseType: node.courseType
+      }),
+      ...(node instanceof Grouping && {
+        groupingType: node.groupingType,
+        groupingName: node.groupingName
+      }),
+      ...(node instanceof Lecture && {
+        isPractical: node.isPractical
+      }),
       children: node.getChildren().map(value => this.getCurriculumNodeJSON(value))
     }
   }

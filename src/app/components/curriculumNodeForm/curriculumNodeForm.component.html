@@ -130,19 +130,19 @@
                     @if(selectedCourse) {
                         <div>
                             <p-floatlabel variant="on" class="custom-floatlabel">
-                                <textarea id="assesment" pTextarea [(ngModel)]="selectedCourse.assesment"
-                                    [class.ng-invalid]="errorMap.get(curriculumNode.id + '.assesment') != undefined" [class.ng-dirty]="errorMap.get(curriculumNode.id + '.assesment') != undefined"
+                                <textarea id="assessment" pTextarea [(ngModel)]="selectedCourse.assessment"
+                                    [class.ng-invalid]="errorMap.get(curriculumNode.id + '.assessment') != undefined" [class.ng-dirty]="errorMap.get(curriculumNode.id + '.assessment') != undefined"
                                     rows="4" class="w-full custom-textarea m-0"
-                                    [pTooltip]="'curriculumNodeForm.fields.assesment.tooltip' | translate" 
+                                    [pTooltip]="'curriculumNodeForm.fields.assessment.tooltip' | translate" 
                                     tooltipPosition="right" showDelay="200" hideDelay="200" maxlength="1000"></textarea>
-                                <div class="textarea-length" [style]="errorMap.get(curriculumNode.id + '.assesment') != undefined ? 'color: var(--danger-color)' : ''">
-                                    <span>{{selectedCourse.assesment.length + ' '}}</span>
+                                <div class="textarea-length" [style]="errorMap.get(curriculumNode.id + '.assessment') != undefined ? 'color: var(--danger-color)' : ''">
+                                    <span>{{selectedCourse.assessment.length + ' '}}</span>
                                     <span>/ 1000</span>
                                 </div>
-                                <label for="assesment">{{'curriculumNodeForm.fields.assesment.label' | translate}} *</label>
+                                <label for="assessment">{{'curriculumNodeForm.fields.assessment.label' | translate}} *</label>
                             </p-floatlabel>
-                            @if(errorMap.get(curriculumNode.id + '.assesment')) {
-                                <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.assesment')}}</p>
+                            @if(errorMap.get(curriculumNode.id + '.assessment')) {
+                                <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.assessment')}}</p>
                             }
                         </div>
                     }

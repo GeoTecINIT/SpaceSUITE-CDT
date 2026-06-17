@@ -52,6 +52,8 @@ export class OfferPageComponent {
 
   expandPanel: boolean = false;
 
+  public readonly groupingNodeType: NodeType = NodeType.Grouping;
+
   private userOrgIdsSubscription!: Subscription;
   private userOrgIds: string[] = [];
 
@@ -210,10 +212,10 @@ export class OfferPageComponent {
     return "";
   }
 
-  getAssesment(): string {
+  getAssessment(): string {
     const selectedNode = this.selectedNode();
     if (selectedNode instanceof Course) {
-      return selectedNode.assesment;
+      return selectedNode.assessment;
     }
     return "";
   }

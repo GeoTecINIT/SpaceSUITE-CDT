@@ -152,7 +152,7 @@ export class CurriculumNodeFormComponent {
 
     this.LECTURE_ISPRACTICAL = [
       { label: this.translate.instant('curriculumNodeForm.lecturePractical.practical'), value: true },
-      { label: this.translate.instant('curriculumNodeForm.lecturePractical.theorical'), value: false }
+      { label: this.translate.instant('curriculumNodeForm.lecturePractical.theoretical'), value: false }
     ];
   }
 

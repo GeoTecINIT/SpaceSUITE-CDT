@@ -117,8 +117,8 @@ export class OfferValidationService {
   }
 
   private validateCourse(node: Course, errors: Map<string, string>, base: string): void {
-    if (this.isBlank(node.assesment)) {
-      this.addError(errors, `${base}.assesment`, 'Assessment is required.');
+    if (this.isBlank(node.assessment)) {
+      this.addError(errors, `${base}.assessment`, 'Assessment is required.');
     }
   }
 

@@ -65,7 +65,7 @@
   "curriculumNodeForm": {
     "lecturePractical": {
       "practical": "Practical",
-      "theorical": "Theorical"
+      "theoretical": "Theoretical"
     },
     "stepList": {
       "step1": "General Information",
@@ -106,9 +106,9 @@
         "tooltip": "Select the type of course. This classification determines how the course fits within the curriculum structure.",
         "label": "Course Type"
       },
-      "assesment": {
+      "assessment": {
         "tooltip": "Describe how students will be evaluated in this course. Include assessment methods (exams, projects, participation), grading criteria, and any relevant deadlines or requirements.",
-        "label": "Assesment"
+        "label": "Assessment"
       },
       "lecturePractical": {
         "tooltip": "Specifies whether this lecture is theoretical or practical. Practical lectures involve hands-on activities, labs, or exercises."
@@ -398,7 +398,7 @@
     "visibility": "Visibility",
     "downloadMetadata": "Download Metadata",
     "metadataFormat": "Metadata Format",
-    "assesment": "Assesment",
+    "assessment": "Assessment",
     "prerequisites": "Prerequisites",
     "trainingMaterials": "Training Materials",
     "learningOutcomes": "Learning Outcomes",
