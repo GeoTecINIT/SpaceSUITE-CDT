@@ -212,6 +212,14 @@ export class OfferPageComponent {
     return "";
   }
 
+  getGroupingName(): string {
+    const selectedNode = this.selectedNode();
+    if (selectedNode instanceof Grouping) {
+      return selectedNode.groupingName;
+    }
+    return "";
+  }
+
   getAssessment(): string {
     const selectedNode = this.selectedNode();
     if (selectedNode instanceof Course) {

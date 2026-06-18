@@ -1,7 +1,14 @@
 <p-panel class="my-2 custom-panel">
     <ng-template #header>
         <div class="flex flex-column">
-            <div class="font-italic">{{getNodeType(offer.root.nodeType)}}</div>
+            <div class="font-italic">
+                @if(isGroupingWithName(offer.root.id)) {
+                    {{getGroupingName(offer.root.id)}}
+                }
+                @else {
+                    {{getNodeType(offer.root.nodeType)}}
+                }
+            </div>
             <div class="font-bold text-xl">
                 {{offer.root.name == '' ? ('offerIndex.newNodeName' | translate: {nodeType: getNodeType(offer.root.nodeType)}) : offer.root.name}}
             </div>
@@ -22,7 +29,14 @@
                         <ng-template let-node pTemplate="default">
                             <div class="flex column-gap-2 justify-content-start flex-wrap align-items-baseline">
                                 {{node.label == '' ? ('offerIndex.newNodeName' | translate: {nodeType: getNodeType(node.data.type)}) : node.label}}
-                                <div class="type-text text-xs font-italic">{{getNodeType(node.data.type)}}</div>
+                                <div class="type-text text-xs font-italic">
+                                    @if(isGroupingWithName(node.key)) {
+                                        {{getGroupingName(node.key)}}
+                                    }
+                                    @else {
+                                        {{getNodeType(node.data.type)}}
+                                    }
+                                </div>
                             </div>
                         </ng-template>
                     </p-tree>
@@ -45,7 +59,14 @@
                                 [selection]="selectedTreeNode()" (selectionChange)="onTreeNodeSelection($event)" (onNodeUnselect)="preventTreeNodeUnselect($event)">
                                 <ng-template let-node pTemplate="default">
                                     <div>{{node.label == '' ? ('offerIndex.newNodeName' | translate: {nodeType: getNodeType(node.data.type)}) : node.label}}</div>
-                                    <div class="text-xs font-italic">{{getNodeType(node.data.type)}}</div>
+                                    <div class="text-xs font-italic">
+                                        @if(isGroupingWithName(node.key)) {
+                                            {{getGroupingName(node.key)}}
+                                        }
+                                        @else {
+                                            {{getNodeType(node.data.type)}}
+                                        }
+                                    </div>
                                     @if(knowledgeDistributions().get(node.key)) {
                                         <p-divider></p-divider>
                                         <p-metergroup [value]="knowledgeDistributions().get(node.key) ?? []" class="text-xs">

@@ -156,7 +156,8 @@ export class EducationalOfferAdapterService {
               trainingMaterials: groupingNode.trainingMaterials.map(material => material.toPlainObject()),
               timeRequired: groupingNode.timeRequired.toPlainObject(),
               studyAreas: groupingNode.studyAreas.map(area => area.toPlainObject()),
-              groupingType: groupingNode.groupingType
+              groupingType: groupingNode.groupingType,
+              groupingName: groupingNode.groupingName
             }
           );
         case node instanceof StudyProgram:
@@ -301,7 +302,8 @@ export class EducationalOfferAdapterService {
             trainingMaterials: groupingDB.trainingMaterials.map(value => new TrainingMaterial(value)),
             timeRequired: new Duration(groupingDB.timeRequired),
             studyAreas: groupingDB.studyAreas.map(value => new ISCEDFArea(value)),
-            groupingType: groupingDB.groupingType
+            groupingType: groupingDB.groupingType,
+            groupingName: groupingDB.groupingName
           }
         );
       case nodeDB instanceof StudyProgramDB:

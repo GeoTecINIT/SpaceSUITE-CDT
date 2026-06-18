@@ -72,9 +72,13 @@
       "step2": "Skills & Resources"
     },
     "fields": {
-      "title": {
+      "name": {
         "tooltip": "A name given to the {{nodeType}}.",
-        "label": "Title"
+        "label": "Name"
+      },
+      "groupingName": {
+        "tooltip": "A name that describes the purpose of this grouping.",
+        "label": "Grouping Name"
       },
       "description": {
         "tooltip": "Provide a concise summary or overview of the {{nodeType}} content. Include key topics, purpose, scope, and any important features.",
@@ -388,6 +392,7 @@
     "permalink": "Permalink",
     "type": "Type",
     "groupingType": "Grouping Type",
+    "groupingName": "Grouping Name",
     "courseType": "Course Type",
     "isPractical": "Is Practical",
     "eqf":"EQF level",

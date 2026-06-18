@@ -19,6 +19,7 @@ import { Divider } from "primeng/divider";
 import { BokInformationService } from "@eo4geo/ngx-bok-visualization";
 import { forkJoin, map, Observable, of, take } from "rxjs";
 import { BadgeModule } from 'primeng/badge';
+import { Grouping } from "../../model/coreModel/grouping";
 
 @Component({
   standalone: true,
@@ -195,5 +196,18 @@ export class OfferIndexComponent {
       return this.translate.instant('offerIndex.collapseTooltip', {selectedTab: selectedTabText});
     }
     else return this.translate.instant('offerIndex.expandTooltip', {selectedTab: selectedTabText});
+  }
+
+  isGroupingWithName(nodeId: string): boolean {
+    const selectedNode = this.offer.getNodeById(nodeId);
+    const isSelectedNodeTypeGrouping = selectedNode instanceof Grouping;
+    return selectedNode != undefined && isSelectedNodeTypeGrouping && selectedNode.groupingName != '';
+  }
+
+  getGroupingName(nodeId: string): string {
+    const selectedNode = this.offer.getNodeById(nodeId);
+    const isSelectedNodeTypeGrouping = selectedNode instanceof Grouping;
+    if (selectedNode != undefined && isSelectedNodeTypeGrouping) return selectedNode.groupingName;
+    return '';
   }
 }

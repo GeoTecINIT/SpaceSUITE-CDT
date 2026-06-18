@@ -13,15 +13,29 @@
                                 <input pInputText id="name" autocomplete="off" class="w-full custom-input" 
                                     [class.ng-invalid]="errorMap.get(curriculumNode.id + '.name') != undefined" [class.ng-dirty]="errorMap.get(curriculumNode.id + '.name') != undefined" 
                                     [ngModel]="curriculumNode.name" (ngModelChange)="onNameChange($event)" tooltipPosition="right" showDelay="200" hideDelay="200" maxlength="200"
-                                    [pTooltip]="'curriculumNodeForm.fields.title.tooltip' | translate: {nodeType: getNodeType()}"/>
+                                    [pTooltip]="'curriculumNodeForm.fields.name.tooltip' | translate: {nodeType: getNodeType()}"/>
                                 <p-inputicon class="pi pi-pencil" [style]="errorMap.get(curriculumNode.id + '.name') != undefined ? 'color: var(--danger-color)' : ''" />
                             </p-iconfield>
-                            <label for="title">{{ 'curriculumNodeForm.fields.title.label' | translate }} *</label>
+                            <label for="name">{{ 'curriculumNodeForm.fields.name.label' | translate }} *</label>
                         </p-floatlabel>
                         @if(errorMap.get(curriculumNode.id + '.name')) {
                             <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.name')}}</p>
                         }
                     </div>
+                    @if(selectedGrouping) {
+                        <div>
+                            <p-floatlabel variant="on" class="custom-floatlabel">
+                                <p-iconfield>
+                                    <input pInputText id="groupingName" autocomplete="off" class="w-full custom-input" 
+                                        [ngModel]="selectedGrouping.groupingName" (ngModelChange)="onGroupingNameChange($event)" 
+                                        tooltipPosition="right" showDelay="200" hideDelay="200" maxlength="200"
+                                        [pTooltip]="'curriculumNodeForm.fields.groupingName.tooltip' | translate"/>
+                                    <p-inputicon class="pi pi-box"/>
+                                </p-iconfield>
+                                <label for="groupingName">{{ 'curriculumNodeForm.fields.groupingName.label' | translate }}</label>
+                            </p-floatlabel>
+                        </div>
+                    }
                     <div>
                         <p-floatlabel variant="on" class="custom-floatlabel">
                             <textarea id="description" pTextarea [(ngModel)]="curriculumNode.description"

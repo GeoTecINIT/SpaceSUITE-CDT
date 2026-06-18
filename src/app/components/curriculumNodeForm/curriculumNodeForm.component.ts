@@ -35,6 +35,7 @@ import { SelectButtonModule } from "primeng/selectbutton";
 import { ESCOSkill } from "../../model/coreModel/escoSkill";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { UtilsService } from "../../services/utils.service";
+import { Grouping } from "../../model/coreModel/grouping";
 
 @Component({
   standalone: true,
@@ -171,6 +172,11 @@ export class CurriculumNodeFormComponent {
     this.curriculumNodeChanged.emit();
   }
 
+  onGroupingNameChange(newName: string) {
+    (this.curriculumNode as Grouping).groupingName = newName;
+    this.curriculumNodeChanged.emit();
+  }
+
   selectedNodeEqf(): string | undefined {
     if (this.curriculumNode.eqf < 1 || this.curriculumNode.eqf > 8) return undefined;
     return 'EQF ' + this.curriculumNode.eqf;
@@ -229,6 +235,12 @@ export class CurriculumNodeFormComponent {
   get selectedLecture(): Lecture | null {
     return this.curriculumNode instanceof Lecture 
       ? this.curriculumNode as Lecture 
+      : null;
+  }
+
+  get selectedGrouping(): Grouping | null {
+    return this.curriculumNode instanceof Grouping 
+      ? this.curriculumNode as Grouping 
       : null;
   }
 
