@@ -152,7 +152,7 @@
         [pTooltip]="duplicateTooltip"
         tooltipPosition="top"
         [disabled]="!logged"
-        (onClick)="duplicateJob()"
+        (onClick)="duplicateOffer()"
       />
 
       <p-button
@@ -163,7 +163,7 @@
         [pTooltip]="editTooltip"
         tooltipPosition="top"
         [disabled]="!logged || !checkUser()"
-        (onClick)="editJob()"
+        (onClick)="editOffer()"
       />
 
       <p-button

@@ -132,11 +132,11 @@ export class CardComponent implements OnInit {
     return this.organizations.includes(this.educationalOffer.orgId);
   }
 
-  editJob() {
+  editOffer() {
     this.router.navigate([`edit/${this.educationalOffer.id}`]);
   }
 
-  duplicateJob() {
+  duplicateOffer() {
     this.router.navigate([`new/${this.educationalOffer.id}`]);
   }
 
