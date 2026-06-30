@@ -297,6 +297,10 @@ export class OfferPageComponent {
     this.router.navigate(['edit/' + this.offer()!.id]);
   }
 
+  duplicateOffer() {
+    this.router.navigate([`new/${this.offer()!.id}`]);
+  }
+
   deleteModal(event: Event) {
     this.confirmationService.confirm({
         target: event.target as EventTarget,
@@ -343,6 +347,10 @@ export class OfferPageComponent {
 
   checkUser() {
     return (this.loggedUserId == this.offer()?.userId);
+  }
+
+  checkLoggin() {
+    return (this.loggedUserId != undefined);
   }
 
   checkOrganizations() {

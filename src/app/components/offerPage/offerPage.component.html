@@ -124,9 +124,10 @@
             </ul>
         </div>
 
-        <div class="hidden lg:flex justify-content-between mb-2 mt-auto">
-            <p-button label="Return to Homepage" severity="secondary" icon="pi pi-arrow-left" class="custom-secondary-button" (onClick)="goToMainPage()"></p-button>
-            <div class="flex flex-wrap gap-2">
+        <div class="hidden lg:flex justify-content-between mb-2 mt-auto gap-2">
+            <p-button label="{{'offerPage.buttons.return' | translate}}" severity="secondary" icon="pi pi-arrow-left" class="custom-secondary-button" (onClick)="goToMainPage()"></p-button>
+            <div class="flex gap-2">
+                <p-button label="{{'offerPage.buttons.duplicate' | translate}}" icon="pi pi-clone" class="custom-button" (onClick)="duplicateOffer()" *ngIf="checkLoggin()"></p-button>
                 <p-button label="{{'offerPage.buttons.edit' | translate}}" icon="pi pi-pencil" class="custom-button" (onClick)="editOffer()" *ngIf="checkUser() || checkOrganizations()"></p-button>
                 <p-button label="{{'offerPage.buttons.delete' | translate}}" icon="pi pi-trash" class="delete-button" (onClick)="deleteModal($event)" *ngIf="checkUser() || checkOrganizations()"></p-button>
             </div>
@@ -166,6 +167,7 @@
             </p-panel>
         </div>
 
+        <p-button label="{{'offerPage.buttons.duplicate' | translate}}" icon="pi pi-clone" class="lg:hidden flex justify-content-center custom-button my-2" (onClick)="duplicateOffer()" *ngIf="checkLoggin()"></p-button>
         <p-button label="{{'offerPage.buttons.edit' | translate}}" icon="pi pi-pencil" class="lg:hidden flex justify-content-center custom-button my-2" (onClick)="editOffer()" *ngIf="checkUser() || checkOrganizations()"></p-button>
         <p-button label="{{'offerPage.buttons.delete' | translate}}" icon="pi pi-trash" class="flex lg:hidden justify-content-center delete-button my-2" (onClick)="deleteModal($event)" *ngIf="checkUser() || checkOrganizations()"></p-button>
         <p-button label="{{'offerPage.buttons.return' | translate}}" severity="secondary" icon="pi pi-arrow-left" class="flex lg:hidden justify-content-center custom-secondary-button my-2" (onClick)="goToMainPage()"></p-button>
