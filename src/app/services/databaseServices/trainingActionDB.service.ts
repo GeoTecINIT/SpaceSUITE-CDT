@@ -5,12 +5,14 @@ import { TrainingAction } from "../../model/trainingActionModel/trainingAction";
 import { EducationalOffer } from "../../model/coreModel/educationalOffer";
 import { WorkloadUnit } from "../../model/trainingActionModel/trainingItem";
 import { BokInformationService } from "@eo4geo/ngx-bok-visualization";
+import { AuthService } from "@eo4geo/ngx-bok-utils";
 
 @Injectable({
     providedIn: 'root',
 })
 export class TrainingActionDBService {
   private bokInformationService: BokInformationService = inject(BokInformationService);
+  private authService: AuthService = inject(AuthService);
   private db: Firestore = inject(Firestore);
   private actionCollection: CollectionReference;
 
@@ -18,8 +20,8 @@ export class TrainingActionDBService {
     this.actionCollection = collection(this.db, 'TrainingActions');
   }
 
-  public createActionFromOffer(offer: EducationalOffer): Observable<string> {
-    return this.OfferToActionAdapter(offer).pipe(
+  public createActionFromOffer(offer: EducationalOffer, orgId: string, orgName: string, division?: string): Observable<string> {
+    return this.OfferToActionAdapter(offer, orgId, orgName, division).pipe(
       switchMap(newAction => this.setTrainingAction(newAction))
     );  
   }
@@ -33,12 +35,12 @@ export class TrainingActionDBService {
     return of(setDoc(newDocRef, newAction.toPlain())).pipe(map(() => newAction._id));
   }
 
-  private OfferToActionAdapter(offer: EducationalOffer): Observable<TrainingAction> {
+  private OfferToActionAdapter(offer: EducationalOffer, orgId: string, orgName: string, division?: string): Observable<TrainingAction> {
     const subjects: string[] = [];
     const concepts: string[] = [];
 
     offer.root.bokConcepts.forEach(value => {
-      if (value.length == 2 || value == 'GIST') subjects.push(value);
+      if (value.length == 2) subjects.push(value);
       else concepts.push(value);
     });
 
@@ -53,19 +55,17 @@ export class TrainingActionDBService {
         workloadUnit: WorkloadUnit.ECTS,
         prerequisites: [...offer.root.prerequisites],
         concepts: concepts,
-        orgId: offer.orgId,
-        orgName: offer.orgName,
-        division: offer.division,
-        userId: offer.userId,
-        isPublic: false,
-        //isPublic: offer.isPublic,
+        orgId: orgId,
+        orgName: orgName,
+        division: division,
+        isPublic: false
       }
     );
 
     return this.formatConceptsToFirestore(newTrainingAction.concepts).pipe(
-      tap(formattedConcepts => {
-        newTrainingAction.concepts = formattedConcepts;
-      }),
+      tap(formattedConcepts => newTrainingAction.concepts = formattedConcepts),
+      switchMap(() => this.authService.getUserState()),
+      tap(authState => newTrainingAction.userId = authState?.uid!),
       map(() => newTrainingAction)
     );
   }

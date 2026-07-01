@@ -29,6 +29,11 @@ import { RdfService } from "../../services/exportServices/rdf.service";
 import { JsonService } from "../../services/exportServices/json.service";
 import { Grouping } from "../../model/coreModel/grouping";
 import { TrainingActionDBService } from "../../services/databaseServices/trainingActionDB.service";
+import { DialogModule } from "primeng/dialog";
+import { FloatLabelModule } from "primeng/floatlabel";
+import { SelectModule } from "primeng/select";
+import { TooltipModule } from "primeng/tooltip";
+import { FormsModule } from "@angular/forms";
 
 @Component({
   standalone: true,
@@ -36,7 +41,8 @@ import { TrainingActionDBService } from "../../services/databaseServices/trainin
   templateUrl: './offerPage.component.html',
   styleUrls: ['./offerPage.component.css'],
   imports: [CommonModule, ProgressSpinnerModule, ButtonModule, PanelModule, TabsModule, DividerModule, BreadcrumbModule, TranslateModule,
-            ConfirmDialogModule, ToastModule, PopoverModule, SkillTagComponent, SkeletonModule, DividerModule, OfferIndexComponent],
+    ConfirmDialogModule, ToastModule, PopoverModule, SkillTagComponent, SkeletonModule, DividerModule, OfferIndexComponent, DialogModule, 
+    FloatLabelModule, SelectModule, TooltipModule, FormsModule],
 })
 export class OfferPageComponent {
   offer: WritableSignal<EducationalOffer | undefined> = signal<EducationalOffer | undefined>(undefined);
@@ -52,6 +58,14 @@ export class OfferPageComponent {
   breadcrumbItems: WritableSignal<MenuItem[]> = signal([]);
 
   expandPanel: boolean = false;
+  exportActionModalVisible: boolean = false;
+
+  actionOrgId: string = '';
+  actionOrgName: string = '';
+  actionDivision?: string = undefined;
+
+  organizations: object[] = [];
+  divisions: string[] = [];
 
   public readonly groupingNodeType: NodeType = NodeType.Grouping;
 
@@ -126,6 +140,12 @@ export class OfferPageComponent {
     });
 
     this.userOrgIdsSubscription = this.organizationService.getUserOrganizations().pipe(
+      tap(value => {
+        this.organizations = [];
+        value.forEach(organization =>
+        this.organizations.push({label: organization.name, value: organization._id})
+      )
+      }),
       skip(1),
       map(orgs => orgs.map(o => o._id))
     ).subscribe(ids => {
@@ -295,6 +315,13 @@ export class OfferPageComponent {
     this.router.navigate(['']);
   }
 
+  loadDivisions(newValue: {label: string, value: string}) {
+    this.actionOrgId = newValue.value;
+    this.actionOrgName = newValue.label;
+    this.actionDivision = undefined;
+    this.organizationService.getOrganizationDivisions(this.actionOrgId).subscribe(divisions => this.divisions = divisions);
+  }
+
   editOffer() {
     this.router.navigate(['edit/' + this.offer()!.id]);
   }
@@ -304,7 +331,7 @@ export class OfferPageComponent {
   }
 
   exportToAction() {
-    this.actionService.createActionFromOffer(this.offer()!).pipe(
+    this.actionService.createActionFromOffer(this.offer()!, this.actionOrgId, this.actionOrgName, this.actionDivision).pipe(
       catchError((error) => {
         this.messageService.add({ 
           severity: 'error', 
@@ -316,7 +343,8 @@ export class OfferPageComponent {
         return EMPTY;
       })
     ).subscribe( actionId => {
-      window.open('https://spacesuite-project-tct.web.app/action/' + actionId, '_blank');
+      this.exportActionModalVisible = false;
+      window.open('https://spacesuite-project-tct.web.app/action/edit/' + actionId, '_blank');
     });
   }
 

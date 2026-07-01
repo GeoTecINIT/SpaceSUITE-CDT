@@ -382,6 +382,19 @@
         "header": "Delete Offer",
         "reject": "Cancel",
         "accept": "Delete"
+      },
+      "createAction": {
+        "header": "Create Training Action",
+        "organization": {
+          "label": "Organization*",
+          "tooltip": "The organization under which the action is to be registered."
+        },
+        "division": {
+          "label": "Division",
+          "tooltip": "The division under which the action is to be registered."
+        },
+        "createButton": "Create Action",
+        "warningMessage": "Please make sure you are logged in to the Training Catalogue before creating the training action. Otherwise,the target form may not open correctly."
       }
     },
     "buttons": {

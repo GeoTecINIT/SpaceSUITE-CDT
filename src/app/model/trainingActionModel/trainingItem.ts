@@ -101,7 +101,7 @@ export class TrainingItem {
       image: this.image,
       orgId: this.orgId,
       orgName: this.orgName,
-      division: this.division,
+      division: this.division || null,
       userId: this.userId,
       isPublic: this.isPublic,
       updatedAt: this.updatedAt,
