@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { TabsModule } from 'primeng/tabs';
 import { DividerModule } from 'primeng/divider';
-import { catchError, combineLatest, concatMap, finalize, forkJoin, map, of, retry, skip, Subscription, take, tap } from "rxjs";
+import { catchError, combineLatest, concatMap, EMPTY, finalize, forkJoin, map, of, retry, skip, Subscription, take, tap } from "rxjs";
 import { ConfirmationService, MenuItem, MessageService } from "primeng/api";
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
@@ -28,6 +28,7 @@ import { PdfService } from "../../services/exportServices/pdf.service";
 import { RdfService } from "../../services/exportServices/rdf.service";
 import { JsonService } from "../../services/exportServices/json.service";
 import { Grouping } from "../../model/coreModel/grouping";
+import { TrainingActionDBService } from "../../services/databaseServices/trainingActionDB.service";
 
 @Component({
   standalone: true,
@@ -75,6 +76,7 @@ export class OfferPageComponent {
   private pdfService = inject(PdfService);
   private rdfService = inject(RdfService);
   private jsonService = inject(JsonService);
+  private actionService = inject(TrainingActionDBService);
 
   ngOnInit() {
     let nodeId: string = '';
@@ -301,6 +303,23 @@ export class OfferPageComponent {
     this.router.navigate([`new/${this.offer()!.id}`]);
   }
 
+  exportToAction() {
+    this.actionService.createActionFromOffer(this.offer()!).pipe(
+      catchError((error) => {
+        this.messageService.add({ 
+          severity: 'error', 
+          summary: this.translate.instant('offerPage.toast.error.summary'),
+          detail: error.message ?? this.translate.instant('offerPage.toast.error.detail'),
+          life: 3000, 
+          closable: true 
+        });
+        return EMPTY;
+      })
+    ).subscribe( actionId => {
+      window.open('https://spacesuite-project-tct.web.app/action/' + actionId, '_blank');
+    });
+  }
+
   deleteModal(event: Event) {
     this.confirmationService.confirm({
         target: event.target as EventTarget,
@@ -337,12 +356,9 @@ export class OfferPageComponent {
           closable: true 
         });
         deleteError = true;
-        return of(null)
-      }),
-      finalize(() => {
-        if (!deleteError) this.router.navigate([''], {queryParams: { submited: true, mode: 'delete' }});
+        return EMPTY
       })
-    ).subscribe();
+    ).subscribe(() => this.router.navigate([''], {queryParams: { submited: true, mode: 'delete' }}));
   }
 
   checkUser() {

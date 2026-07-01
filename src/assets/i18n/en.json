@@ -385,6 +385,7 @@
       }
     },
     "buttons": {
+      "action": "Create Training Action",
       "duplicate": "Duplicate Offer",
       "edit": "Edit Offer",
       "delete": "Delete Offer",
