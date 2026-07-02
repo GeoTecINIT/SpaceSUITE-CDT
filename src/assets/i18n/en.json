@@ -384,7 +384,7 @@
         "accept": "Delete"
       },
       "createAction": {
-        "header": "Create Training Action",
+        "header": "Export as Training Action",
         "organization": {
           "label": "Organization*",
           "tooltip": "The organization under which the action is to be registered."
@@ -393,12 +393,12 @@
           "label": "Division",
           "tooltip": "The division under which the action is to be registered."
         },
-        "createButton": "Create Action",
-        "warningMessage": "Please make sure you are logged in to the Training Catalogue before creating the training action. Otherwise,the target form may not open correctly."
+        "createButton": "Export as Action",
+        "warningMessage": "Please make sure you are logged in to the Training Catalogue. Otherwise, the target form may not open correctly."
       }
     },
     "buttons": {
-      "action": "Create Training Action",
+      "action": "Export as Training Action",
       "duplicate": "Duplicate Offer",
       "edit": "Edit Offer",
       "delete": "Delete Offer",
