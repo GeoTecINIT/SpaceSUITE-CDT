@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { TabsModule } from 'primeng/tabs';
 import { DividerModule } from 'primeng/divider';
-import { catchError, combineLatest, concatMap, EMPTY, finalize, forkJoin, map, of, retry, skip, Subscription, take, tap } from "rxjs";
+import { catchError, combineLatest, concatMap, EMPTY, forkJoin, map, of, retry, skip, Subscription, take, tap } from "rxjs";
 import { ConfirmationService, MenuItem, MessageService } from "primeng/api";
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
@@ -34,6 +34,7 @@ import { FloatLabelModule } from "primeng/floatlabel";
 import { SelectModule } from "primeng/select";
 import { TooltipModule } from "primeng/tooltip";
 import { FormsModule } from "@angular/forms";
+import { SplitterModule } from 'primeng/splitter';
 
 @Component({
   standalone: true,
@@ -42,7 +43,7 @@ import { FormsModule } from "@angular/forms";
   styleUrls: ['./offerPage.component.css'],
   imports: [CommonModule, ProgressSpinnerModule, ButtonModule, PanelModule, TabsModule, DividerModule, BreadcrumbModule, TranslateModule,
     ConfirmDialogModule, ToastModule, PopoverModule, SkillTagComponent, SkeletonModule, DividerModule, OfferIndexComponent, DialogModule, 
-    FloatLabelModule, SelectModule, TooltipModule, FormsModule],
+    FloatLabelModule, SelectModule, TooltipModule, FormsModule, SplitterModule],
 })
 export class OfferPageComponent {
   offer: WritableSignal<EducationalOffer | undefined> = signal<EducationalOffer | undefined>(undefined);
@@ -57,7 +58,6 @@ export class OfferPageComponent {
 
   breadcrumbItems: WritableSignal<MenuItem[]> = signal([]);
 
-  expandPanel: boolean = false;
   exportActionModalVisible: boolean = false;
 
   actionOrgId: string = '';
@@ -66,6 +66,13 @@ export class OfferPageComponent {
 
   organizations: object[] = [];
   divisions: string[] = [];
+
+  isBelowLg = false;
+
+  private mediaQuery!: MediaQueryList;
+  private onMediaChange = (event: MediaQueryListEvent) => {
+    this.isBelowLg = event.matches;
+  };
 
   public readonly groupingNodeType: NodeType = NodeType.Grouping;
 
@@ -153,6 +160,10 @@ export class OfferPageComponent {
     });
 
     this.authStateSubscription = this.authService.getUserState().pipe(skip(1)).subscribe(authState => this.loggedUserId = authState?.uid);
+
+    this.mediaQuery = window.matchMedia('(max-width: 991.98px)');
+    this.isBelowLg = this.mediaQuery.matches;
+    this.mediaQuery.addEventListener('change', this.onMediaChange);
   }
 
   ngAfterViewInit() {
@@ -187,6 +198,7 @@ export class OfferPageComponent {
   ngOnDestroy() {
     this.authStateSubscription.unsubscribe();
     this.userOrgIdsSubscription.unsubscribe();
+    this.mediaQuery.removeEventListener('change', this.onMediaChange);
   }
 
   private loadOffer(newOffer: EducationalOffer, nodeId: string) {

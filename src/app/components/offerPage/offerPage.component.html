@@ -1,7 +1,64 @@
 <p-toast class="custom-toast" position="bottom-right"/>
 <p-confirmdialog />
-<div *ngIf="offer(); else spinner" class="flex flex-column lg:flex-row justify-content-between lg:gap-4">
-    <div class="flex flex-column overflow-auto left-panel" [class.expanded]="expandPanel">
+<div *ngIf="offer(); else spinner">
+    @if(!isBelowLg) {
+        <p-splitter [panelSizes]="[60, 40]" [minSizes]="[30, 30]" gutterSize="2" styleClass="m-0 p-0 h-full border-none" [panelStyle]="{'color': 'var(--primary-color)'}">
+            <ng-template #panel>
+                <ng-container *ngTemplateOutlet="leftPanel"></ng-container>
+            </ng-template>
+            <ng-template #panel>
+                <ng-container *ngTemplateOutlet="rightPanel"></ng-container>
+            </ng-template>
+        </p-splitter>
+    }
+    @else {
+        <div class="flex flex-column justify-content-between gap-4">
+            <ng-container *ngTemplateOutlet="leftPanel"></ng-container>
+            <ng-container *ngTemplateOutlet="rightPanel"></ng-container>
+        </div>
+    }
+</div>
+<div *ngIf="offer()" class="flex justify-content-center lg:justify-content-start gap-2 flex-wrap mt-4 mb-2">
+    <p-button label="{{'offerPage.buttons.return' | translate}}" severity="secondary" icon="pi pi-arrow-left" class="custom-secondary-button lg:mr-auto mr-0" (onClick)="goToMainPage()"></p-button>
+    <p-button label="{{'offerPage.buttons.action' | translate}}" icon="pi pi-upload" class="custom-button" (onClick)="exportActionModalVisible = !exportActionModalVisible" *ngIf="checkLoggin()"></p-button>
+    <p-button label="{{'offerPage.buttons.duplicate' | translate}}" icon="pi pi-clone" class="custom-button" (onClick)="duplicateOffer()" *ngIf="checkLoggin()"></p-button>
+    <p-button label="{{'offerPage.buttons.edit' | translate}}" icon="pi pi-pencil" class="custom-button" (onClick)="editOffer()" *ngIf="checkUser() || checkOrganizations()"></p-button>
+    <p-button label="{{'offerPage.buttons.delete' | translate}}" icon="pi pi-trash" class="delete-button" (onClick)="deleteModal($event)" *ngIf="checkUser() || checkOrganizations()"></p-button>
+</div>
+
+<ng-template #spinner>
+    <div class="flex justify-content-center align-content-center" style="height: 65vh;">
+        <p-progress-spinner strokeWidth="2" ariaLabel="loading" class="flex align-items-center justify-content-center" />
+    </div>
+</ng-template>
+
+<p-dialog [header]="'offerPage.modal.createAction.header' | translate" [modal]="true" [(visible)]="exportActionModalVisible" 
+            [style]="{ width: '40rem', color: 'var(--primary-color)' }" [draggable]="false" [closable]="true">
+    <div class="flex flex-column sm:flex-row gap-3 mb-4 mt-2">
+        <p-floatlabel variant="on" class="custom-floatlabel w-full">
+            <p-select inputId="orgId" [options]="organizations" (ngModelChange)="loadDivisions($event)"
+                [ngModel]="this.actionOrgId == '' ? undefined : {value: this.actionOrgId, label: this.actionOrgName}"
+                class="w-full custom-select" optionLabel="label" [checkmark]="true" appendTo="body"
+                [pTooltip]="'offerPage.modal.createAction.organization.tooltip' | translate" 
+                tooltipPosition="top" showDelay="200" hideDelay="200"/>
+            <label for="orgId">{{'offerPage.modal.createAction.organization.label' | translate}}</label>
+        </p-floatlabel>
+        <p-floatlabel variant="on" class="custom-floatlabel w-full">
+            <p-select [options]="divisions" [(ngModel)]="this.actionDivision" class="w-full custom-select" 
+                [disabled]="divisions.length == 0" [checkmark]="true" inputId="division"
+                [pTooltip]="'offerPage.modal.createAction.division.tooltip' | translate" appendTo="body"
+                tooltipPosition="top" showDelay="200" hideDelay="200"/>
+            <label for="division">{{'offerPage.modal.createAction.division.label' | translate}}</label>
+        </p-floatlabel>
+    </div>
+    <span class="text-sm" [style]="{'color': 'var(--danger-color)'}">{{'offerPage.modal.createAction.warningMessage' | translate}}</span>
+    <div class="flex justify-content-end mt-4">
+        <p-button icon="pi pi-upload" [label]="'offerPage.modal.createAction.createButton' | translate" class="custom-button" [disabled]="this.actionOrgId == ''" (onClick)="exportToAction()"></p-button>
+    </div>
+</p-dialog>
+
+<ng-template #leftPanel>
+    <div class="flex flex-column overflow-auto lg:mr-4">
         <p-breadcrumb [model]="breadcrumbItems()" class="custom-breadcrumb mt-3"></p-breadcrumb>
         <h1 class="mb-2 mt-1">
             {{selectedNode()?.name}}
@@ -124,9 +181,12 @@
             </ul>
         </div>
     </div>
-    <div class="flex flex-column right-panel" [class.expanded]="expandPanel">
+</ng-template>
+
+<ng-template #rightPanel>
+    <div class="flex flex-column w-full min-w-0 lg:ml-4">
         <div class="flex flex-column gap-1">
-            <offer-index-component class="mt-3 mb-2" [offer]="offer()!" [selectedNode]="selectedNode()?.id!" (selectedNodeChanged)="changeSelectedNode($event)" (expandedChanged)="expandPanel = $event"></offer-index-component>
+            <offer-index-component class="mt-3 mb-2" [offer]="offer()!" [selectedNode]="selectedNode()?.id!" (selectedNodeChanged)="changeSelectedNode($event)"></offer-index-component>
             <p-panel #affiliationsPanel [header]="('offerPage.affiliations' | translate) + ' (' + affiliations().length + ')'" toggleable="true" collapsed="false" class="my-2 custom-panel">
                 <ng-template #headericons>
                     <p-button *ngIf="!conceptsPanel.collapsed" icon="pi pi-chevron-up" severity="secondary" rounded text/>
@@ -158,42 +218,4 @@
             </p-panel>
         </div>
     </div>
-</div>
-<div *ngIf="offer()" class="flex justify-content-center lg:justify-content-start gap-2 flex-wrap my-2">
-    <p-button label="{{'offerPage.buttons.return' | translate}}" severity="secondary" icon="pi pi-arrow-left" class="custom-secondary-button lg:mr-auto mr-0" (onClick)="goToMainPage()"></p-button>
-    <p-button label="{{'offerPage.buttons.action' | translate}}" icon="pi pi-upload" class="custom-button" (onClick)="exportActionModalVisible = !exportActionModalVisible" *ngIf="checkLoggin()"></p-button>
-    <p-button label="{{'offerPage.buttons.duplicate' | translate}}" icon="pi pi-clone" class="custom-button" (onClick)="duplicateOffer()" *ngIf="checkLoggin()"></p-button>
-    <p-button label="{{'offerPage.buttons.edit' | translate}}" icon="pi pi-pencil" class="custom-button" (onClick)="editOffer()" *ngIf="checkUser() || checkOrganizations()"></p-button>
-    <p-button label="{{'offerPage.buttons.delete' | translate}}" icon="pi pi-trash" class="delete-button" (onClick)="deleteModal($event)" *ngIf="checkUser() || checkOrganizations()"></p-button>
-</div>
-
-<ng-template #spinner>
-    <div class="flex justify-content-center align-content-center" style="height: 65vh;">
-        <p-progress-spinner strokeWidth="2" ariaLabel="loading" class="flex align-items-center justify-content-center" />
-    </div>
 </ng-template>
-
-<p-dialog [header]="'offerPage.modal.createAction.header' | translate" [modal]="true" [(visible)]="exportActionModalVisible" 
-            [style]="{ width: '40rem', color: 'var(--primary-color)' }" [draggable]="false" [closable]="true">
-    <div class="flex flex-column sm:flex-row gap-3 mb-4 mt-2">
-        <p-floatlabel variant="on" class="custom-floatlabel w-full">
-            <p-select inputId="orgId" [options]="organizations" (ngModelChange)="loadDivisions($event)"
-                [ngModel]="this.actionOrgId == '' ? undefined : {value: this.actionOrgId, label: this.actionOrgName}"
-                class="w-full custom-select" optionLabel="label" [checkmark]="true" appendTo="body"
-                [pTooltip]="'offerPage.modal.createAction.organization.tooltip' | translate" 
-                tooltipPosition="top" showDelay="200" hideDelay="200"/>
-            <label for="orgId">{{'offerPage.modal.createAction.organization.label' | translate}}</label>
-        </p-floatlabel>
-        <p-floatlabel variant="on" class="custom-floatlabel w-full">
-            <p-select [options]="divisions" [(ngModel)]="this.actionDivision" class="w-full custom-select" 
-                [disabled]="divisions.length == 0" [checkmark]="true" inputId="division"
-                [pTooltip]="'offerPage.modal.createAction.division.tooltip' | translate" appendTo="body"
-                tooltipPosition="top" showDelay="200" hideDelay="200"/>
-            <label for="division">{{'offerPage.modal.createAction.division.label' | translate}}</label>
-        </p-floatlabel>
-    </div>
-    <span class="text-sm" [style]="{'color': 'var(--danger-color)'}">{{'offerPage.modal.createAction.warningMessage' | translate}}</span>
-    <div class="flex justify-content-end mt-4">
-        <p-button icon="pi pi-upload" [label]="'offerPage.modal.createAction.createButton' | translate" class="custom-button" [disabled]="this.actionOrgId == ''" (onClick)="exportToAction()"></p-button>
-    </div>
-</p-dialog>

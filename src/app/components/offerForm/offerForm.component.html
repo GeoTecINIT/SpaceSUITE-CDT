@@ -1,7 +1,47 @@
 <p-toast class="custom-toast" position="bottom-right"/>
 <p-confirmdialog />
-<div class="flex flex-column lg:flex-row justify-content-between mt-3 gap-4">
-    <div class="left-panel" [class.expanded]="expandPanel">
+<div class="mt-3">
+    @if(!isBelowLg) {
+        <p-splitter [panelSizes]="[60, 40]" [minSizes]="[30, 30]" gutterSize="2" styleClass="m-0 p-0 h-full border-none" [panelStyle]="{'color': 'var(--primary-color)'}">
+            <ng-template #panel>
+                <ng-container *ngTemplateOutlet="leftPanel"></ng-container>
+            </ng-template>
+            <ng-template #panel>
+                <ng-container *ngTemplateOutlet="rightPanel"></ng-container>
+            </ng-template>
+        </p-splitter>
+    }
+    @else {
+        <div class="flex flex-column justify-content-between gap-4">
+            <ng-container *ngTemplateOutlet="leftPanel"></ng-container>
+            <ng-container *ngTemplateOutlet="rightPanel"></ng-container>
+        </div>
+    }
+</div>
+
+<p-dialog [header]="'offerForm.headers.rootNodeModal' | translate" [modal]="true" [(visible)]="rootNodeModalVisible" 
+            [style]="{ width: '30rem', color: 'var(--primary-color)' }" [draggable]="false" [closable]="rootNodeModalClosable">
+    <div class="flex flex-column sm:flex-row gap-3 p-3">
+        <p-floatlabel variant="on" class="custom-floatlabel w-full">
+            <p-select [inputId]="'newNodeType'" [options]="getRootNodeTypes()" [(ngModel)]="rootNodeType" class="w-full custom-select" [checkmark]="true"
+                [pTooltip]="'offerForm.fields.rootNodeType.tooltip' | translate" tooltipPosition="bottom" showDelay="200" hideDelay="200" appendTo="body"/>
+            <label [for]="'newNodeType'">{{'offerForm.fields.rootNodeType.label' | translate}}</label>
+        </p-floatlabel>
+        @if(rootNodeType == groupingNodeType) {
+            <p-floatlabel variant="on" class="custom-floatlabel w-full">
+                <p-select [inputId]="'newNodeGroupingType'" [options]="getRootGroupingTypes()" [(ngModel)]="rootNodeGroupingType"  class="w-full custom-select" 
+                    [checkmark]="true" [pTooltip]="'offerForm.fields.rootNodeGroupingType.tooltip' | translate" tooltipPosition="bottom" 
+                    showDelay="200" hideDelay="200" optionLabel="label" optionValue="value" appendTo="body"/>
+                <label [for]="'newNodeGroupingType'">{{'offerForm.fields.rootNodeGroupingType.label' | translate}}</label>
+            </p-floatlabel>
+        }
+        <p-button icon="pi pi-plus" rounded [disabled]="rootNodeType == undefined || (rootNodeType == groupingNodeType && rootNodeGroupingType == undefined)" 
+            class="custom-button" (onClick)="addRootNode()"></p-button>
+    </div>
+</p-dialog>
+
+<ng-template #leftPanel>
+    <div class="w-full min-w-0 lg:mr-4">
         <h2 class="flex justify-content-center m-0">{{pageName}}</h2>
         <h3 class="flex font-italic font-light justify-content-center m-0">
             {{selectedNode().name == '' ? ('offerForm.headers.newNodeName' | translate: {nodeType: getSelectedNodeType()}) : selectedNode().name}}
@@ -9,8 +49,11 @@
         <curriuclum-node-form class="flex mt-3 w-full" [curriculumNode]="this.selectedNode()" (curriculumNodeChanged)="updateSelectedNode()" 
             [errorMap]="this.errorMap"></curriuclum-node-form>
     </div>
-    <div class="flex flex-column gap-3 right-panel" [class.expanded]="expandPanel">
-        <offer-index-component [offer]="offer()" [selectedNode]="selectedNode().id" (selectedNodeChanged)="changeSelectedNode($event)" (expandedChanged)="expandPanel = $event"></offer-index-component>
+</ng-template>
+
+<ng-template #rightPanel>
+    <div class="flex flex-column w-full min-w-0 gap-3 lg:ml-4">
+        <offer-index-component [offer]="offer()" [selectedNode]="selectedNode().id" (selectedNodeChanged)="changeSelectedNode($event)"></offer-index-component>
         <p-panel class="custom-panel">
             <div class="font-bold mb-3">{{'offerForm.headers.addNode' | translate}}</div>
             <div class="flex flex-column sm:flex-row gap-3 mb-4">
@@ -83,25 +126,4 @@
             <p-button class="custom-button" [label]="'offerForm.buttons.save' | translate" (onClick)="submitEducationalOffer()"></p-button>
         </div>
     </div>
-</div>
-
-<p-dialog [header]="'offerForm.headers.rootNodeModal' | translate" [modal]="true" [(visible)]="rootNodeModalVisible" 
-            [style]="{ width: '30rem', color: 'var(--primary-color)' }" [draggable]="false" [closable]="rootNodeModalClosable">
-    <div class="flex flex-column sm:flex-row gap-3 p-3">
-        <p-floatlabel variant="on" class="custom-floatlabel w-full">
-            <p-select [inputId]="'newNodeType'" [options]="getRootNodeTypes()" [(ngModel)]="rootNodeType" class="w-full custom-select" [checkmark]="true"
-                [pTooltip]="'offerForm.fields.rootNodeType.tooltip' | translate" tooltipPosition="bottom" showDelay="200" hideDelay="200" appendTo="body"/>
-            <label [for]="'newNodeType'">{{'offerForm.fields.rootNodeType.label' | translate}}</label>
-        </p-floatlabel>
-        @if(rootNodeType == groupingNodeType) {
-            <p-floatlabel variant="on" class="custom-floatlabel w-full">
-                <p-select [inputId]="'newNodeGroupingType'" [options]="getRootGroupingTypes()" [(ngModel)]="rootNodeGroupingType"  class="w-full custom-select" 
-                    [checkmark]="true" [pTooltip]="'offerForm.fields.rootNodeGroupingType.tooltip' | translate" tooltipPosition="bottom" 
-                    showDelay="200" hideDelay="200" optionLabel="label" optionValue="value" appendTo="body"/>
-                <label [for]="'newNodeGroupingType'">{{'offerForm.fields.rootNodeGroupingType.label' | translate}}</label>
-            </p-floatlabel>
-        }
-        <p-button icon="pi pi-plus" rounded [disabled]="rootNodeType == undefined || (rootNodeType == groupingNodeType && rootNodeGroupingType == undefined)" 
-            class="custom-button" (onClick)="addRootNode()"></p-button>
-    </div>
-</p-dialog>
+</ng-template>

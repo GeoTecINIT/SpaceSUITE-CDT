@@ -33,9 +33,6 @@ export class OfferIndexComponent {
   @Input() offer!: EducationalOffer;
   @Input() selectedNode: string = "";
   @Output() selectedNodeChanged: EventEmitter<string> = new EventEmitter();
-  @Output() expandedChanged: EventEmitter<boolean> = new EventEmitter();
-
-  expanded: boolean = false;
 
   treeNodeRoot: WritableSignal<TreeNode[]> = signal<TreeNode[]>([]);
   selectedTreeNode: WritableSignal<TreeNode | undefined> = signal<TreeNode | undefined>(undefined);
@@ -175,27 +172,6 @@ export class OfferIndexComponent {
 
   getNodeType(type: NodeType): string {
     return this.utilsService.getTranslatedNodeType(type);
-  }
-
-  updateExpanded() {
-    this.expanded = !this.expanded;
-    this.expandedChanged.emit(this.expanded);
-  }
-
-  getExpandedIcon() {
-    if (this.expanded) return 'pi pi-angle-double-right'
-    return 'pi pi-angle-double-left'
-  }
-
-  getExpandedTooltip(selectedTabIndex: number) {
-    const selectedTabText: string = 
-      selectedTabIndex == 0 ? 
-      this.translate.instant('offerIndex.tablist.index') : 
-      this.translate.instant('offerIndex.tablist.tree'); 
-    if (this.expanded) {
-      return this.translate.instant('offerIndex.collapseTooltip', {selectedTab: selectedTabText});
-    }
-    else return this.translate.instant('offerIndex.expandTooltip', {selectedTab: selectedTabText});
   }
 
   isGroupingWithName(nodeId: string): boolean {

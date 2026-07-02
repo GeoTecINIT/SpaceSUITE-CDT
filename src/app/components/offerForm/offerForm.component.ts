@@ -27,6 +27,8 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { UtilsService } from "../../services/utils.service";
 import { MessageModule } from 'primeng/message';
 import { Grouping, GroupingType } from "../../model/coreModel/grouping";
+import { SplitterModule } from 'primeng/splitter';
+import { CommonModule } from "@angular/common";
 
 @Component({
   standalone: true,
@@ -34,7 +36,7 @@ import { Grouping, GroupingType } from "../../model/coreModel/grouping";
   templateUrl: './offerForm.component.html',
   styleUrls: ['./offerForm.component.css'],
   imports: [ToastModule, ConfirmDialogModule, FloatLabelModule, FormsModule, PanelModule, OfferIndexComponent, SelectModule, TooltipModule, 
-            ButtonModule, DialogModule, CurriculumNodeFormComponent, SelectButtonModule, TranslateModule, MessageModule],
+            ButtonModule, DialogModule, CurriculumNodeFormComponent, SelectButtonModule, TranslateModule, MessageModule, SplitterModule, CommonModule],
 })
 export class OfferFormComponent {
   @Input() inputPageName?: string;
@@ -68,9 +70,14 @@ export class OfferFormComponent {
 
   loggedUserId!: string;
 
-  expandPanel: boolean = false;
-
   promotedNode?: string;
+
+  isBelowLg = false;
+
+  private mediaQuery!: MediaQueryList;
+  private onMediaChange = (event: MediaQueryListEvent) => {
+    this.isBelowLg = event.matches;
+  };
 
   private previousNavigationUrl?: UrlTree;
 
@@ -135,6 +142,10 @@ export class OfferFormComponent {
 
     const initial = this.router.lastSuccessfulNavigation?.previousNavigation?.initialUrl?.toString();
     this.previousNavigationUrl = initial ? this.router.parseUrl(initial.split('?')[0]) : undefined;
+
+    this.mediaQuery = window.matchMedia('(max-width: 991.98px)');
+    this.isBelowLg = this.mediaQuery.matches;
+    this.mediaQuery.addEventListener('change', this.onMediaChange);
   }
 
   ngOnDestroy() {
