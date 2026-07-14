@@ -71,7 +71,7 @@
 }
 
 ::ng-deep .p-splitter-gutter {
-    background: color-mix(in srgb, var(--secondary-color) 20%, rgb(243, 243, 243) 80%);
+    background: color-mix(in srgb, var(--secondary-color) 22%, rgb(243, 243, 243) 78%);
 }
 
 ::ng-deep .p-splitter-gutter:hover {

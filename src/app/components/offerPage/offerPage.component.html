@@ -2,7 +2,7 @@
 <p-confirmdialog />
 <div *ngIf="offer(); else spinner">
     @if(!isBelowLg) {
-        <p-splitter [panelSizes]="[60, 40]" [minSizes]="[30, 30]" gutterSize="2" styleClass="m-0 p-0 h-full border-none" [panelStyle]="{'color': 'var(--primary-color)'}">
+        <p-splitter [panelSizes]="[60, 40]" [minSizes]="[30, 30]" gutterSize="3" styleClass="m-0 p-0 h-full border-none" [panelStyle]="{'color': 'var(--primary-color)'}">
             <ng-template #panel>
                 <ng-container *ngTemplateOutlet="leftPanel"></ng-container>
             </ng-template>
