@@ -2,7 +2,7 @@
 <p-confirmdialog />
 <div class="mt-3">
     @if(!isBelowLg) {
-        <p-splitter [panelSizes]="[60, 40]" [minSizes]="[30, 30]" gutterSize="3" styleClass="m-0 p-0 h-full border-none" [panelStyle]="{'color': 'var(--primary-color)'}">
+        <p-splitter [panelSizes]="[60, 40]" [minSizes]="[30, 30]" gutterSize="2" styleClass="m-0 p-0 h-full border-none" [panelStyle]="{'color': 'var(--primary-color)'}">
             <ng-template #panel>
                 <ng-container *ngTemplateOutlet="leftPanel"></ng-container>
             </ng-template>
@@ -20,7 +20,13 @@
 </div>
 
 <p-dialog [header]="'offerForm.headers.rootNodeModal' | translate" [modal]="true" [(visible)]="rootNodeModalVisible" 
-            [style]="{ width: '30rem', color: 'var(--primary-color)' }" [draggable]="false" [closable]="rootNodeModalClosable">
+            [style]="{ width: '30rem', color: 'var(--primary-color)' }" [draggable]="false" [closable]="rootNodeModalResetMode">
+    @if(rootNodeModalResetMode) {
+        <div class="px-3">
+            <span [style.color]="'var(--danger-color)'">{{'offerForm.modal.offerType.warning' | translate}}</span>
+            <p [style.color]="'var(--danger-color)'" class="mt-0">{{'offerForm.modal.offerType.message' | translate}}</p>
+        </div>
+    }
     <div class="flex flex-column sm:flex-row gap-3 p-3">
         <p-floatlabel variant="on" class="custom-floatlabel w-full">
             <p-select [inputId]="'newNodeType'" [options]="getRootNodeTypes()" [(ngModel)]="rootNodeType" class="w-full custom-select" [checkmark]="true"
@@ -35,7 +41,7 @@
                 <label [for]="'newNodeGroupingType'">{{'offerForm.fields.rootNodeGroupingType.label' | translate}}</label>
             </p-floatlabel>
         }
-        <p-button icon="pi pi-plus" rounded [disabled]="rootNodeType == undefined || (rootNodeType == groupingNodeType && rootNodeGroupingType == undefined)" 
+        <p-button [icon]="rootNodeModalResetMode ? 'pi pi-refresh' : 'pi pi-plus'" rounded [disabled]="rootNodeType == undefined || (rootNodeType == groupingNodeType && rootNodeGroupingType == undefined)" 
             class="custom-button" (onClick)="addRootNode()"></p-button>
     </div>
 </p-dialog>
@@ -117,8 +123,9 @@
         </p-panel>
         <div class="flex w-full">
             <p-selectbutton [options]="IS_PUBLIC" [(ngModel)]="offer().isPublic" optionLabel="label" optionValue="value"
-                [pTooltip]="'offerForm.fields.isPublic.tooltip' | translate" allowEmpty="false"
-                tooltipPosition="bottom" showDelay="200" hideDelay="200"/>
+                [pTooltip]="selectedOrgCanPublish() ? ('offerForm.fields.isPublic.tooltip' | translate) : ('offerForm.fields.isPublic.disabledTooltip' | translate)" 
+                allowEmpty="false" [disabled]="!selectedOrgCanPublish()" tooltipPosition="bottom" showDelay="200" hideDelay="200" 
+                [tooltipStyleClass]="selectedOrgCanPublish() ? '' : 'danger-tooltip'"/>
         </div>
         <div class="flex justify-content-between gap-3">
             <p-button icon="pi pi-arrow-left" severity="secondary" class="custom-secondary-button" (onClick)="returnToHomepage()"

@@ -278,7 +278,8 @@
         "tooltip":"The organization division under which the offer is to be registered."
       },
       "isPublic": {
-        "tooltip": "Specifies whether this offer is public or restricted to your account."
+        "tooltip": "Specifies whether this offer is public or restricted to your account.",
+        "disabledTooltip": "The selected organization do not have permission to save public curriuclums"
       },
       "rootNodeType": {
         "label": "Node Type",
@@ -308,8 +309,12 @@
         "reject": "Cancel",
         "accept": "Exit"
       },
+      "offerType": {
+        "warning": "Warning!",
+        "message": "You are going to reset the whole educational offer. This action will delete all the filled content."
+      },
       "deleteNode": {
-        "message": "Do you want to delete the selected curriculum node?",
+        "message": "Do you want to delete the selected curriculum node and all its children?",
         "header": "Delete Node",
         "reject": "Cancel",
         "accept": "Delete"

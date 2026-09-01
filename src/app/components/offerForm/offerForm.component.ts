@@ -3,7 +3,7 @@ import { EducationalOffer } from "../../model/coreModel/educationalOffer";
 import { StudyProgram } from "../../model/coreModel/studyProgram";
 import { ToastModule } from "primeng/toast";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { AuthService, ExitWithoutSavingService } from "@eo4geo/ngx-bok-utils";
+import { AuthService, ExitWithoutSavingService, PermissionService } from "@eo4geo/ngx-bok-utils";
 import { ActivatedRoute, Router, UrlTree } from "@angular/router";
 import { catchError, EMPTY, of, Subscription, switchMap, take } from "rxjs";
 import { ConfirmationService, MessageService } from "primeng/api";
@@ -47,7 +47,7 @@ export class OfferFormComponent {
   errorMap: Map<string, string> = new Map();
 
   rootNodeModalVisible: boolean = false;
-  rootNodeModalClosable: boolean = false;
+  rootNodeModalResetMode: boolean = false;
 
   rootNodeType: NodeType | undefined;
   rootNodeGroupingType: GroupingType | undefined;
@@ -74,6 +74,8 @@ export class OfferFormComponent {
 
   isBelowLg = false;
 
+  selectedOrgCanPublish: WritableSignal<boolean> = signal(false);
+
   private mediaQuery!: MediaQueryList;
   private onMediaChange = (event: MediaQueryListEvent) => {
     this.isBelowLg = event.matches;
@@ -96,6 +98,7 @@ export class OfferFormComponent {
   private organizationDBService: OrganizationDBService = inject(OrganizationDBService);
   private translate: TranslateService = inject(TranslateService);
   private utilsService: UtilsService = inject(UtilsService);
+  private permissionService: PermissionService = inject(PermissionService);
 
   constructor() {
     this.langChangeSub = this.translate.onLangChange.subscribe(() => this.buildSelectOptions());
@@ -110,7 +113,8 @@ export class OfferFormComponent {
     })).subscribe((duplicatedOffer: EducationalOffer | undefined) => {
       if (this.inputOffer) {
         this.offer.set(new EducationalOffer(this.inputOffer.root, this.inputOffer));
-        this.organizationDBService.getOrganizationDivisions(this.offer().orgId).subscribe(divisions => this.divisions = divisions);
+        this.organizationDBService.getOrganizationDivisions(this.offer().orgId).pipe(take(1)).subscribe(divisions => this.divisions = divisions);
+        this.permissionService.organizationHasPermission(this.offer().orgId, 'cdt').pipe(take(1)).subscribe(hasPermission => this.selectedOrgCanPublish.set(hasPermission));
       } else if (duplicatedOffer) {
         this.offer.set(new EducationalOffer(duplicatedOffer.root));
       }
@@ -290,12 +294,12 @@ export class OfferFormComponent {
     this.rootNodeGroupingType = undefined;
     this.selectedNode.set(this.offer().root);
     this.rootNodeModalVisible = false;
-    this.rootNodeModalClosable = false;
+    this.rootNodeModalResetMode = false;
   }
 
   replaceRootNode() {
     this.rootNodeModalVisible = true;
-    this.rootNodeModalClosable = true;
+    this.rootNodeModalResetMode = true;
   }
 
   deleteModal(event: Event) {
@@ -378,11 +382,25 @@ export class OfferFormComponent {
     }
   }
 
-  loadDivisions(newValue: {label: string, value: string}) {
-    this.offer().orgId = newValue.value;
-    this.offer().orgName = newValue.label;
-    this.offer().division = undefined;
-    this.organizationDBService.getOrganizationDivisions(this.offer().orgId).subscribe(divisions => this.divisions = divisions);
+  loadDivisions(newOrganization: {label: string, value: string}) {
+    this.offer.update(oldValue => {
+      const newValue = oldValue;
+      newValue.orgId = newOrganization.value;
+      newValue.orgName = newOrganization.label;
+      newValue.division = undefined;
+      return newValue;
+    })
+    this.organizationDBService.getOrganizationDivisions(this.offer().orgId).pipe(take(1)).subscribe(divisions => this.divisions = divisions);
+    this.permissionService.organizationHasPermission(this.offer().orgId, 'cdt').pipe(take(1)).subscribe(hasPermission => {
+      this.selectedOrgCanPublish.set(hasPermission);
+      if (!hasPermission) {
+        this.offer.update(oldOffer => {
+          const newOffer = oldOffer;
+          newOffer.isPublic = false;
+          return newOffer;
+        });
+      }
+    });
   }
 
   private deleteSelectedNode() {

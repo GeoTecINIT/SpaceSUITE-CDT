@@ -48,12 +48,6 @@
    --p-button-text-secondary-color: var(--p-multiselect-dropdown-color);
 }
 
-.disabled-addon {
-    opacity: 1;
-    background: var(--p-inputtext-disabled-background);
-    color: var(--p-inputtext-disabled-color);
-}
-
 ::ng-deep .p-selectbutton {
     flex: auto;
 }
