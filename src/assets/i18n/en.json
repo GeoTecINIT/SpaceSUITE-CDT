@@ -389,7 +389,7 @@
         "accept": "Delete"
       },
       "createAction": {
-        "header": "Export as Training Action",
+        "header": "Export offer as Training Action",
         "organization": {
           "label": "Organization*",
           "tooltip": "The organization under which the action is to be registered."
@@ -403,7 +403,7 @@
       }
     },
     "buttons": {
-      "action": "Export as Training Action",
+      "action": "Export offer as Training Action",
       "duplicate": "Duplicate Offer",
       "edit": "Edit Offer",
       "delete": "Delete Offer",
