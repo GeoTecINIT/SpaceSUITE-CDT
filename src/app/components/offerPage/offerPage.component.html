@@ -10,10 +10,10 @@
                 </div>
             </ng-template>
             <ng-template #panel>
-                <div class="mb-2 lg:ml-4 flex flex-column flex-grow-1 justify-content-center">
+                <div class="flex flex-column w-full min-w-0 gap-2 mb-2 lg:ml-4">
                     <ng-container *ngTemplateOutlet="rightPanel"></ng-container>
                     <p-button label="{{'offerPage.buttons.action' | translate}}" icon="pi pi-upload" class="custom-button flex justify-content-end mt-auto" (onClick)="exportActionModalVisible = !exportActionModalVisible" *ngIf="checkLoggin()"></p-button>
-                    <div class="flex justify-content-end gap-2 flex-wrap mt-2">
+                    <div class="flex justify-content-end gap-2 flex-wrap">
                         <p-button label="{{'offerPage.buttons.duplicate' | translate}}" icon="pi pi-clone" class="custom-button" (onClick)="duplicateOffer()" *ngIf="checkLoggin()"></p-button>
                         <p-button label="{{'offerPage.buttons.edit' | translate}}" icon="pi pi-pencil" class="custom-button" (onClick)="editOffer()" *ngIf="checkUser() || checkOrganizations()"></p-button>
                         <p-button label="{{'offerPage.buttons.delete' | translate}}" icon="pi pi-trash" class="delete-button" (onClick)="deleteModal($event)" *ngIf="checkUser() || checkOrganizations()"></p-button>
@@ -70,7 +70,7 @@
 
 <ng-template #leftPanel>
     <div class="flex flex-column overflow-auto">
-        <p-breadcrumb [model]="breadcrumbItems()" class="custom-breadcrumb mt-3"></p-breadcrumb>
+        <p-breadcrumb [model]="breadcrumbItems()" class="custom-breadcrumb mt-3 text-sm"></p-breadcrumb>
         <h1 class="mb-2 mt-1">
             {{selectedNode()?.name}}
             <a class="icon-link text-sm align-items-center mx-1 cursor-pointer font-normal" (click)="copyURIToClipboard()">
@@ -184,6 +184,22 @@
             </ul>
         </div>
         <div class="mb-2">
+            <strong>{{'offerPage.affiliations' | translate}}:</strong>
+            <ul *ngIf="(selectedNode()?.affiliations?.length || 0) || 0 > 0">
+                <li *ngFor="let affiliation of selectedNode()?.affiliations">
+                    @if (affiliation.url) {
+                        <a href="{{affiliation.url}}" target="_blank" class="icon-link">
+                            {{affiliation.name}}
+                            <i class="pi pi-external-link text-sm mx-1"></i>
+                        </a>
+                    }
+                    @else {
+                        {{affiliation.name}}
+                    }
+                </li>
+            </ul>
+        </div>
+        <div class="mb-2">
             <strong>{{'offerPage.bibliography' | translate}}:</strong>
             <ul *ngIf="(selectedNode()?.bibliography?.length || 0) || 0 > 0">
                 <li *ngFor="let outcome of selectedNode()?.bibliography">
@@ -198,13 +214,6 @@
     <div class="flex flex-column w-full min-w-0">
         <div class="flex flex-column gap-1">
             <offer-index-component class="mt-3 mb-2" [offer]="offer()!" [selectedNode]="selectedNode()?.id!" (selectedNodeChanged)="changeSelectedNode($event)"></offer-index-component>
-            <p-panel #affiliationsPanel [header]="('offerPage.affiliations' | translate) + ' (' + affiliations().length + ')'" toggleable="true" collapsed="false" class="my-2 custom-panel">
-                <ng-template #headericons>
-                    <p-button *ngIf="!conceptsPanel.collapsed" icon="pi pi-chevron-up" severity="secondary" rounded text/>
-                    <p-button *ngIf="conceptsPanel.collapsed" icon="pi pi-chevron-down" severity="secondary" rounded text/>
-                </ng-template>  
-                <skill-tags [tags]="affiliations()" [compactBoKTags]="false"></skill-tags>
-            </p-panel>
             <p-panel #studyAreasPanel [header]="('offerPage.studyAreas' | translate) + ' (' + studyAreas().length + ')'" toggleable="true" collapsed="false" class="my-2 custom-panel">
                 <ng-template #headericons>
                     <p-button *ngIf="!conceptsPanel.collapsed" icon="pi pi-chevron-up" severity="secondary" rounded text/>

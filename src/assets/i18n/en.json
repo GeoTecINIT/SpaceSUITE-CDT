@@ -153,7 +153,7 @@
     },
     "buttons": {
       "next": "Next",
-      "back": "Back"
+      "previous": "Previous"
     }
   },
   "customSelect": {
@@ -172,7 +172,7 @@
       "loginRequired": "You must be logged in to use this field"
     },
     "hidePrivateItems": {
-      "label": "Hide private profiles?"
+      "label": "Hide private offers?"
     },
     "searchByField": {
       "label": "Search by",
@@ -282,8 +282,8 @@
         "disabledTooltip": "The selected organization do not have permission to save public curriuclums"
       },
       "rootNodeType": {
-        "label": "Node Type",
-        "tooltip": "The root node type"
+        "label": "Offer Type",
+        "tooltip": "The offer type, defined by the root node type"
       },
       "rootNodeGroupingType": {
         "label": "Grouping Type",
@@ -293,7 +293,7 @@
     "buttons": {
       "resetOffer": "Reset Offer",
       "deleteNode": "Delete {{nodeType}}",
-      "return": "Return",
+      "cancel": "Cancel",
       "save": "Save",
       "addNode": "Add {{nodeType}}",
       "promoteNode": "Promote {{nodeType}}"

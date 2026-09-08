@@ -54,7 +54,6 @@ export class OfferPageComponent {
   studyAreas: WritableSignal<Tag[]> = signal<Tag[]>([]);
   transversalSkills: WritableSignal<Tag[]> = signal<Tag[]>([]);
   customTransversalSkills: WritableSignal<Tag[]> = signal<Tag[]>([]);
-  affiliations: WritableSignal<Tag[]> = signal<Tag[]>([]);
 
   breadcrumbItems: WritableSignal<MenuItem[]> = signal([]);
 
@@ -229,11 +228,6 @@ export class OfferPageComponent {
     this.studyAreas.set(selectedNode.studyAreas.map(value => new Tag(value.getCompleteName(), 'primary')));
     
     this.transversalSkills.set(selectedNode.transversalSkills.map(value => new Tag(value.preferredLabel, 'url', undefined, undefined, value.uri)));
-
-    this.affiliations.set(selectedNode.affiliations.map(value => {
-      if (value.url) return new Tag(value.name, 'url', undefined, undefined, value.url);
-      return new Tag(value.name, 'primary');
-    }));
 
     this.customTransversalSkills.set(selectedNode.customTransversalSkills.map(value => new Tag(value, 'primary')));
   }

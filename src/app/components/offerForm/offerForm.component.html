@@ -44,6 +44,10 @@
         <p-button [icon]="rootNodeModalResetMode ? 'pi pi-refresh' : 'pi pi-plus'" rounded [disabled]="rootNodeType == undefined || (rootNodeType == groupingNodeType && rootNodeGroupingType == undefined)" 
             class="custom-button" (onClick)="addRootNode()"></p-button>
     </div>
+    @if (!rootNodeModalResetMode) {
+        <p-button icon="pi pi-times" severity="secondary" class="custom-secondary-button p-3" (onClick)="returnToHomepage()"
+                [label]="'offerForm.buttons.cancel' | translate"></p-button>
+    }
 </p-dialog>
 
 <ng-template #leftPanel>
@@ -128,8 +132,8 @@
                 [tooltipStyleClass]="selectedOrgCanPublish() ? '' : 'danger-tooltip'"/>
         </div>
         <div class="flex justify-content-between gap-3">
-            <p-button icon="pi pi-arrow-left" severity="secondary" class="custom-secondary-button" (onClick)="returnToHomepage()"
-                [label]="'offerForm.buttons.return' | translate"></p-button>
+            <p-button icon="pi pi-times" severity="secondary" class="custom-secondary-button" (onClick)="returnToHomepage()"
+                [label]="'offerForm.buttons.cancel' | translate"></p-button>
             <p-button class="custom-button" [label]="'offerForm.buttons.save' | translate" (onClick)="submitEducationalOffer()"></p-button>
         </div>
     </div>

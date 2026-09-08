@@ -14,7 +14,7 @@
             </div>
         </div>
     </ng-template> 
-    <p-tabs class="w-full custom-tabs" value="0">
+    <p-tabs class="w-full custom-tabs" value="1">
         <p-tablist>
             <p-tab value="0">{{'offerIndex.tablist.index' | translate}}</p-tab>
             <p-tab value="1">{{'offerIndex.tablist.tree' | translate}}</p-tab>
@@ -25,17 +25,15 @@
                     <p-tree [value]="treeNodeRoot()" [selection]="selectedTreeNode()" selectionMode="single" class="w-full custom-tree ml-0" 
                         (selectionChange)="onTreeNodeSelection($event)" (onNodeUnselect)="preventTreeNodeUnselect($event)">
                         <ng-template let-node pTemplate="default">
-                            <div class="flex column-gap-2 justify-content-start flex-wrap align-items-baseline">
                                 {{node.label == '' ? ('offerIndex.newNodeName' | translate: {nodeType: getNodeType(node.data.type)}) : node.label}}
-                                <div class="type-text text-xs font-italic">
+                                <span class="inline-flex gap-column-2 type-text type-text-background text-xs font-italic">
                                     @if(isGroupingWithName(node.key)) {
                                         {{getGroupingName(node.key)}}
                                     }
                                     @else {
                                         {{getNodeType(node.data.type)}}
                                     }
-                                </div>
-                            </div>
+                                </span>
                         </ng-template>
                     </p-tree>
                 </div>
