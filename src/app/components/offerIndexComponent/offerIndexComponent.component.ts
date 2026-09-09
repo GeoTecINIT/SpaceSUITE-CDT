@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output, signal, SimpleChanges, WritableSignal} from "@angular/core";
+import { Component, ElementRef, EventEmitter, inject, Input, Output, signal, SimpleChanges, ViewChild, WritableSignal} from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { TreeNode } from "primeng/api";
 import { EducationalOffer } from "../../model/coreModel/educationalOffer";
@@ -33,6 +33,7 @@ export class OfferIndexComponent {
   @Input() offer!: EducationalOffer;
   @Input() selectedNode: string = "";
   @Output() selectedNodeChanged: EventEmitter<string> = new EventEmitter();
+  @ViewChild('tree') treeElement: ElementRef | undefined;
 
   treeNodeRoot: WritableSignal<TreeNode[]> = signal<TreeNode[]>([]);
   selectedTreeNode: WritableSignal<TreeNode | undefined> = signal<TreeNode | undefined>(undefined);
@@ -43,8 +44,12 @@ export class OfferIndexComponent {
   knowledgeDistributions: WritableSignal<Map<string, MeterItem[]>> = signal(new Map());
   knowledgeNames: WritableSignal<Map<string, string>> = signal(new Map())
 
+  // Auto adjust tree zoom variables
+  initialTreeClientWidth: number = 0;
+  previousTreeClientWidth: number = 0;
+  treeZoomAdjusted: boolean = false;
+
   private utilsService: UtilsService = inject(UtilsService);
-  private translate: TranslateService = inject(TranslateService);
   private bokInfo: BokInformationService = inject(BokInformationService);
 
   onMenuItemSelection(nodeId: string) {
@@ -85,6 +90,28 @@ export class OfferIndexComponent {
 
     if (changes['selectedNode'] && changes['selectedNode'].currentValue !== changes['selectedNode'].previousValue) {
       this.selectedTreeNode.set(this.getTreeNodeById(changes['selectedNode'].currentValue));
+    }
+  }
+
+  ngAfterViewInit() {
+    const element = this.treeElement?.nativeElement;
+    if(element) {
+      this.initialTreeClientWidth = element.clientWidth;
+    }
+  }
+
+  ngAfterViewChecked() {
+    if (!this.treeZoomAdjusted) {
+      const element = this.treeElement?.nativeElement;
+      if (element) {
+        if (element.clientWidth != this.initialTreeClientWidth && element.clientWidth == this.previousTreeClientWidth) {
+          if (element.scrollWidth != element.clientWidth && this.scale() > 0.25) {
+            this.scale.update(value => Math.max((value / 2), 0.25))
+          }
+          else this.treeZoomAdjusted = true;
+        }
+        this.previousTreeClientWidth = element.clientWidth;
+      }
     }
   }
 

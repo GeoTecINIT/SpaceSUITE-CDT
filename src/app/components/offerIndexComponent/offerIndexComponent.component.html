@@ -47,7 +47,7 @@
                         <i class="pi pi-search-minus" style="font-size: 1rem"></i>
                     </div>
                     <div class="zoom-wrapper">
-                        <div class="zoom-content" [style.zoom]="scale()">
+                        <div class="zoom-content" [style.zoom]="scale()" #tree>
                             <p-organization-chart 
                                 class="custom-org-chart" [value]="treeNodeRoot()" [collapsible]="true" selectionMode="single" 
                                 [selection]="selectedTreeNode()" (selectionChange)="onTreeNodeSelection($event)" (onNodeUnselect)="preventTreeNodeUnselect($event)">
