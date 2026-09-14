@@ -58,7 +58,7 @@ export class OfferValidationService {
     if (this.isBlank(node.name)) {
       this.addError(errors, `${base}.name`, 'Name is required.');
     }
-
+    /*
     if (this.isBlank(node.description)) {
       this.addError(errors, `${base}.description`, 'Description is required.');
     }
@@ -96,15 +96,15 @@ export class OfferValidationService {
         this.addError(errors, `${base}.affiliations`, 'Affiliation name is required.');
       }
     });
-
+    */
     if (node instanceof Lecture) {
       this.validateLecture(node, errors, base);
     }
-
+    /*
     if (node instanceof Course) {
       this.validateCourse(node, errors, base);
     }
-
+    */
     if (node instanceof Grouping) {
       this.validateGrouping(node, errors, base);
     }
