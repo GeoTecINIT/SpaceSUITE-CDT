@@ -330,9 +330,8 @@ export class OfferFormComponent {
         offer
       );
     });
-    this.rootNodeType = undefined;
-    this.rootNodeGroupingType = undefined;
     this.selectedNode.set(this.offer().root);
+    this.autoSelectNewNodeType(this.selectedNode());
     this.rootNodeModalVisible = false;
     this.rootNodeModalResetMode = false;
   }
