@@ -68,7 +68,7 @@
             <div class="font-bold mb-3">{{'offerForm.headers.addNode' | translate}}</div>
             <div class="flex flex-column sm:flex-row gap-3 mb-4">
                 <p-floatlabel variant="on" class="custom-floatlabel w-full">
-                    <p-select [inputId]="'newNodeType'" [options]="getValidChildTypes()" [(ngModel)]="newNodeType" class="w-full custom-select" [checkmark]="true"
+                    <p-select [inputId]="'newNodeType'" [options]="getValidChildTypes()" [ngModel]="newNodeType" (ngModelChange)="loadGroupingNodeType($event)" class="w-full custom-select" [checkmark]="true"
                         [pTooltip]="'offerForm.fields.newNodeType.tooltip' | translate" tooltipPosition="bottom" showDelay="200" hideDelay="200" [disabled]="getValidChildTypes().length <= 0"/>
                     <label [for]="'newNodeType'">{{'offerForm.fields.newNodeType.label' | translate}}</label>
                 </p-floatlabel>

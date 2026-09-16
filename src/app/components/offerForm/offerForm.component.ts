@@ -129,6 +129,7 @@ export class OfferFormComponent {
         this.selectedNode.set(selectedNode || this.offer().root);
       }
       else this.selectedNode.set(this.offer().root);
+      this.autoSelectNewNodeType(this.selectedNode());
     });
 
     this.sessionSubscription = this.authService.getUserState().subscribe ( state => {
@@ -215,12 +216,44 @@ export class OfferFormComponent {
 
   changeSelectedNode(nodeId: string) {
     this.inputSelectedNodeIdChange.emit(nodeId);
-    this.newNodeType = undefined;
-    this.newNodeGroupingType = undefined;
     this.promotedNode = undefined;
     const newNode = this.offer().getNodeById(nodeId);
     if (newNode == undefined) return;
+    if (nodeId != this.selectedNode().id) this.autoSelectNewNodeType(newNode);
     this.selectedNode.set(newNode);
+  }
+
+  private autoSelectNewNodeType(newNode: CurriculumNode) {
+    switch(newNode.nodeType) {
+      case (NodeType.StudyProgram):
+        this.newNodeType = NodeType.Course;
+        break;
+      case (NodeType.Course):
+        this.newNodeType = NodeType.Lecture;
+        break;
+      case (NodeType.Grouping):
+        this.newNodeType = this.GROUPING_CHILD_TYPES![(newNode as Grouping).groupingType][0]["value" as keyof Object] as unknown as NodeType;
+        break;
+      default:
+        this.newNodeType = undefined;
+    }
+    this.newNodeGroupingType = undefined;
+  }
+
+  loadGroupingNodeType(nodeType: NodeType) {
+    this.newNodeType = nodeType;
+    if (nodeType == NodeType.Grouping) {
+      switch(this.selectedNode().nodeType) {
+        case (NodeType.StudyProgram):
+          this.newNodeGroupingType = GroupingType.Course;
+          break;
+        case (NodeType.Course):
+          this.newNodeGroupingType = GroupingType.Lecture;
+          break;
+        default:
+          this.newNodeGroupingType = undefined;
+      }
+    }
   }
 
   addNewChild() {
