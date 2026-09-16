@@ -1,4 +1,4 @@
-import { Component, inject, Input, signal, WritableSignal } from "@angular/core";
+import { Component, EventEmitter, inject, Input, Output, signal, WritableSignal } from "@angular/core";
 import { EducationalOffer } from "../../model/coreModel/educationalOffer";
 import { StudyProgram } from "../../model/coreModel/studyProgram";
 import { ToastModule } from "primeng/toast";
@@ -41,6 +41,8 @@ import { CommonModule } from "@angular/common";
 export class OfferFormComponent {
   @Input() inputPageName?: string;
   @Input() inputOffer?: EducationalOffer;
+  @Input() inputSelectedNodeId?: string;
+  @Output() inputSelectedNodeIdChange: EventEmitter<string> = new EventEmitter();
   pageName: string = 'Create New Educational Offer'
   offer: WritableSignal<EducationalOffer> = signal(new EducationalOffer(new StudyProgram(undefined, this.generateTimeBasedID())));
   selectedNode: WritableSignal<CurriculumNode> = signal<CurriculumNode>(this.offer().root);
@@ -122,7 +124,11 @@ export class OfferFormComponent {
         this.rootNodeModalVisible = true;
       }
 
-      this.selectedNode.set(this.offer().root);
+      if (this.inputSelectedNodeId) {
+        const selectedNode = this.offer().getNodeById(this.inputSelectedNodeId);
+        this.selectedNode.set(selectedNode || this.offer().root);
+      }
+      else this.selectedNode.set(this.offer().root);
     });
 
     this.sessionSubscription = this.authService.getUserState().subscribe ( state => {
@@ -208,6 +214,7 @@ export class OfferFormComponent {
   }
 
   changeSelectedNode(nodeId: string) {
+    this.inputSelectedNodeIdChange.emit(nodeId);
     this.newNodeType = undefined;
     this.newNodeGroupingType = undefined;
     this.promotedNode = undefined;
@@ -336,7 +343,12 @@ export class OfferFormComponent {
   }
 
   returnToHomepage() {
-    if (this.previousNavigationUrl) this.router.navigateByUrl(this.previousNavigationUrl);
+    if (this.previousNavigationUrl) {
+      if (this.previousNavigationUrl.toString().includes('/offer/' + this.offer().id)) {
+        this.router.navigate(['offer/' + this.offer().id + '/' + this.selectedNode().id]);
+      }
+      else this.router.navigateByUrl(this.previousNavigationUrl);
+    }
     else this.router.navigate(['']);
   }
 

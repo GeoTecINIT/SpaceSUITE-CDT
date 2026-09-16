@@ -329,7 +329,10 @@ export class OfferPageComponent {
   }
 
   editOffer() {
-    this.router.navigate(['edit/' + this.offer()!.id]);
+    if (this.selectedNode() != undefined) {
+      this.router.navigate(['edit/' + this.offer()!.id + '/' + this.selectedNode()!.id]);
+    }
+    else this.router.navigate(['edit/' + this.offer()!.id ]);
   }
 
   duplicateOffer() {

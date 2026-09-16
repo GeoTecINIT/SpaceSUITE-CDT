@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, Location } from "@angular/common";
 import { EducationalOffer } from "../../model/coreModel/educationalOffer";
 import { OfferFormComponent } from "../offerForm/offerForm.component";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -12,11 +12,12 @@ import { TranslateModule } from "@ngx-translate/core";
 @Component({
   standalone: true,
   selector: 'edit-page',
-  template: '<offer-form *ngIf="educationalOffer" [inputOffer]="educationalOffer" [inputPageName]="`editPage.pageName` | translate">',
+  template: '<offer-form *ngIf="educationalOffer" [inputOffer]="educationalOffer" [inputSelectedNodeId]="selectedNodeId" (inputSelectedNodeIdChange)="updateUri($event)" [inputPageName]="`editPage.pageName` | translate">',
   imports: [OfferFormComponent, CommonModule, TranslateModule],
 })
 export class EditPageComponent {
   educationalOffer?: EducationalOffer;
+  selectedNodeId?: string;
 
   private route: ActivatedRoute = inject(ActivatedRoute);
   private router: Router = inject(Router);
@@ -24,11 +25,13 @@ export class EditPageComponent {
   private eduOfferService: EducationalOfferService = inject(EducationalOfferService);
   private organizationService: OrganizationDBService = inject(OrganizationDBService);
   private authService: AuthService = inject(AuthService);
+  private location: Location = inject(Location);
 
   ngOnInit() {
     this.route.paramMap.pipe(
       concatMap(params => {
-        const offerId = params.get('dynamicValue') || '';
+        const offerId = params.get('offerId') || '';
+        this.selectedNodeId = params.get('nodeId') || undefined;
         return this.eduOfferService.getEducationalOffer(offerId);
       }),
       concatMap( (offer: EducationalOffer | undefined) => {
@@ -46,5 +49,9 @@ export class EditPageComponent {
         }
       }
     );
+  }
+
+  updateUri(newSelectedNodeId: string) {
+    this.location.replaceState('edit/' + this.educationalOffer!.id + "/" + newSelectedNodeId);
   }
 }

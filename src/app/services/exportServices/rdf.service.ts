@@ -21,7 +21,6 @@ export class RdfService {
 
   getRdfXmlUrl(model: EducationalOffer): string {
     const blob = new Blob([this.convertEducationalOfferToRdfXml(model)], { type: 'text/xml' });
-    console.log('hola')
     return window.URL.createObjectURL(blob);
   }
 
@@ -609,7 +608,6 @@ export class RdfService {
      ============================ */
 
   private escape(str: string): string {
-    console.log('Escaping string:', str);
     const inlineString: string = str
       .split("\n")
       .map(line => line.trim())

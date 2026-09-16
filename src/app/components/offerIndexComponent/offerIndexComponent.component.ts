@@ -86,6 +86,7 @@ export class OfferIndexComponent {
         // Get knowledge areas distribution
         this.getKnowledgeAreaDistribution(node).subscribe(newDistribution => this.knowledgeDistributions.update(map => map.set(node.id, newDistribution)));
       })
+      this.selectedTreeNode.set(this.getTreeNodeById(this.selectedNode));
     }
 
     if (changes['selectedNode'] && changes['selectedNode'].currentValue !== changes['selectedNode'].previousValue) {

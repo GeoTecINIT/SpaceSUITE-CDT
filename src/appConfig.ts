@@ -27,7 +27,10 @@ const routes: Routes = [
         {path: '', component: OfferFormComponent},
         {path: ':offerId', component: OfferFormComponent}
     ]},
-    { path: 'edit/:dynamicValue', component: EditPageComponent, canMatch: [AuthGuard], canDeactivate: [exitWithoutSavingGuard]},
+    { path: 'edit/:offerId', canMatch: [AuthGuard], canDeactivate: [exitWithoutSavingGuard], children: [
+        { path: '', component: EditPageComponent},
+        { path: ':nodeId', component: EditPageComponent}
+    ]},
     { path: 'not_found', component: NotFoundPageComponent},
     { path: 'offer/:offerId', children: [
         { path: '', component: OfferPageComponent},
