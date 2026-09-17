@@ -20,6 +20,7 @@ import { BokInformationService } from "@eo4geo/ngx-bok-visualization";
 import { forkJoin, map, Observable, of, take } from "rxjs";
 import { BadgeModule } from 'primeng/badge';
 import { Grouping } from "../../model/coreModel/grouping";
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
 
 @Component({
   standalone: true,
@@ -27,11 +28,12 @@ import { Grouping } from "../../model/coreModel/grouping";
   templateUrl: './offerIndexComponent.component.html',
   styleUrls: ['./offerIndexComponent.component.css'],
   imports: [CommonModule, PanelModule, TabsModule, OrganizationChartModule, SliderModule, FormsModule, TreeModule, ButtonModule, DialogModule,
-    TranslateModule, Tooltip, MeterGroup, Divider, BadgeModule],
+    TranslateModule, Tooltip, MeterGroup, Divider, BadgeModule, OverlayBadgeModule],
 })
 export class OfferIndexComponent {
   @Input() offer!: EducationalOffer;
   @Input() selectedNode: string = "";
+  @Input() errorMap: Map<string, string> = new Map();
   @Output() selectedNodeChanged: EventEmitter<string> = new EventEmitter();
   @ViewChild('tree') treeElement: ElementRef | undefined;
 
@@ -89,6 +91,11 @@ export class OfferIndexComponent {
       this.selectedTreeNode.set(this.getTreeNodeById(this.selectedNode));
     }
 
+    if (changes['errorMap']) {
+      this.treeNodeRoot.set(this.buildTreeNode(this.offer.root));
+      this.selectedTreeNode.set(this.getTreeNodeById(this.selectedNode));
+    }
+
     if (changes['selectedNode'] && changes['selectedNode'].currentValue !== changes['selectedNode'].previousValue) {
       this.selectedTreeNode.set(this.getTreeNodeById(changes['selectedNode'].currentValue));
     }
@@ -119,6 +126,13 @@ export class OfferIndexComponent {
   private buildTreeNode(node: CurriculumNode): TreeNode[] {
     const children = node.getChildren().map(child => this.buildTreeNode(child)).flat();
     const leaf: boolean = children.length === 0;
+    let badge = false;
+    for (const key of this.errorMap.keys()) {
+      if (key.includes(node.id)) { 
+        badge = true;
+        break;
+      }
+    }
     return ([{
       key: node.id,
       label: node.name,
@@ -126,7 +140,8 @@ export class OfferIndexComponent {
       leaf: leaf,
       expanded: !leaf,
       data: {
-        type: node.nodeType
+        type: node.nodeType,
+        badage: badge
       },
       icon: this.getTreeNodeIcon(node.nodeType)
     }]);

@@ -57,13 +57,14 @@
             {{selectedNode().name == '' ? ('offerForm.headers.newNodeName' | translate: {nodeType: getSelectedNodeType()}) : selectedNode().name}}
         </h3>
         <curriuclum-node-form class="flex mt-3 w-full" [curriculumNode]="this.selectedNode()" (curriculumNodeChanged)="updateSelectedNode()" 
-            [errorMap]="this.errorMap"></curriuclum-node-form>
+            [errorMap]="this.errorMap()"></curriuclum-node-form>
     </div>
 </ng-template>
 
 <ng-template #rightPanel>
     <div class="flex flex-column w-full min-w-0 gap-3 lg:ml-4">
-        <offer-index-component [offer]="offer()" [selectedNode]="selectedNode().id" (selectedNodeChanged)="changeSelectedNode($event)"></offer-index-component>
+        <offer-index-component [offer]="offer()" [selectedNode]="selectedNode().id" (selectedNodeChanged)="changeSelectedNode($event)" 
+            [errorMap]="this.errorMap()"></offer-index-component>
         <p-panel class="custom-panel">
             <div class="font-bold mb-3">{{'offerForm.headers.addNode' | translate}}</div>
             <div class="flex flex-column sm:flex-row gap-3 mb-4">
@@ -107,11 +108,11 @@
         <p-panel class="custom-panel">
             <div class="font-bold mb-3">{{'offerForm.headers.organization' | translate}}</div>
             <div class="flex flex-column sm:flex-row gap-3 mb-4">
-                <p-floatlabel variant="on" class="custom-floatlabel w-full" [class.invalid-floatlabel]="errorMap.get('orgId') != undefined">
+                <p-floatlabel variant="on" class="custom-floatlabel w-full" [class.invalid-floatlabel]="errorMap().get('orgId') != undefined">
                     <p-select inputId="orgId" [options]="organizations" (ngModelChange)="loadDivisions($event)"
                         [ngModel]="this.offer().orgId == '' ? undefined : {value: this.offer().orgId, label: this.offer().orgName}"
                         class="w-full custom-select" optionLabel="label" [checkmark]="true"
-                        [class.invalid-select]="errorMap.get('orgId') != undefined"
+                        [class.invalid-select]="errorMap().get('orgId') != undefined"
                         [pTooltip]="'offerForm.fields.organization.tooltip' | translate" 
                         tooltipPosition="bottom" showDelay="200" hideDelay="200"/>
                     <label for="orgId">{{'offerForm.fields.organization.label' | translate}}</label>

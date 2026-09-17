@@ -25,6 +25,7 @@
                     <p-tree [value]="treeNodeRoot()" [selection]="selectedTreeNode()" selectionMode="single" class="w-full custom-tree ml-0" 
                         (selectionChange)="onTreeNodeSelection($event)" (onNodeUnselect)="preventTreeNodeUnselect($event)">
                         <ng-template let-node pTemplate="default">
+                            <p-overlaybadge severity="danger" [style]="{ 'background-color': 'var(--danger-color)', 'outline-style': 'none'}" [badgeDisabled]="!node.data.badage">
                                 {{node.label == '' ? ('offerIndex.newNodeName' | translate: {nodeType: getNodeType(node.data.type)}) : node.label}}
                                 <span class="inline-flex gap-column-2 type-text type-text-background text-xs font-italic">
                                     @if(isGroupingWithName(node.key)) {
@@ -34,6 +35,7 @@
                                         {{getNodeType(node.data.type)}}
                                     }
                                 </span>
+                            </p-overlaybadge>
                         </ng-template>
                     </p-tree>
                 </div>
@@ -52,7 +54,9 @@
                                 class="custom-org-chart" [value]="treeNodeRoot()" [collapsible]="true" selectionMode="single" 
                                 [selection]="selectedTreeNode()" (selectionChange)="onTreeNodeSelection($event)" (onNodeUnselect)="preventTreeNodeUnselect($event)">
                                 <ng-template let-node pTemplate="default">
-                                    <div>{{node.label == '' ? ('offerIndex.newNodeName' | translate: {nodeType: getNodeType(node.data.type)}) : node.label}}</div>
+                                    <p-overlaybadge severity="danger" [style]="{ 'background-color': 'var(--danger-color)', 'outline-style': 'none'}" [badgeDisabled]="!node.data.badage">
+                                        <div>{{node.label == '' ? ('offerIndex.newNodeName' | translate: {nodeType: getNodeType(node.data.type)}) : node.label}}</div>
+                                    </p-overlaybadge>
                                     <div class="text-xs font-italic">
                                         @if(isGroupingWithName(node.key)) {
                                             {{getGroupingName(node.key)}}

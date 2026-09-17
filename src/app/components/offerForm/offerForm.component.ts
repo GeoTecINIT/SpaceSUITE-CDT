@@ -46,7 +46,7 @@ export class OfferFormComponent {
   pageName: string = 'Create New Educational Offer'
   offer: WritableSignal<EducationalOffer> = signal(new EducationalOffer(new StudyProgram(undefined, this.generateTimeBasedID())));
   selectedNode: WritableSignal<CurriculumNode> = signal<CurriculumNode>(this.offer().root);
-  errorMap: Map<string, string> = new Map();
+  errorMap: WritableSignal<Map<string, string>> = signal(new Map());
 
   rootNodeModalVisible: boolean = false;
   rootNodeModalResetMode: boolean = false;
@@ -388,8 +388,8 @@ export class OfferFormComponent {
     this.exitWithoutSavingService.bypassGuard.next(true);
     if (!this.inputOffer) this.offer().userId = this.loggedUserId;
     else this.offer().updatedAt = new Date();
-    this.errorMap = this.offerValidationService.validateEducationalOffer(this.offer());
-    if (this.errorMap.size == 0) {
+    this.errorMap.set(this.offerValidationService.validateEducationalOffer(this.offer()));
+    if (this.errorMap().size == 0) {
       this.educationalOfferService.submitEducationalOffer(this.offer(), this.inputOffer).pipe(
         take(1),
         catchError( error => {
@@ -416,6 +416,7 @@ export class OfferFormComponent {
       });
     }
     else {
+      this.exitWithoutSavingService.bypassGuard.next(false);
       this.messageService.add({ 
         severity: 'error', 
         summary: this.translate.instant('offerForm.toast.mandatoryFieldsError.summary'), 
@@ -601,8 +602,8 @@ export class OfferFormComponent {
     newOffer.orgName = this.offer().orgName;
     newOffer.division = this.offer().division;
 
-    this.errorMap = this.offerValidationService.validateEducationalOffer(newOffer);
-    if (this.errorMap.size == 0) {
+    this.errorMap.set(this.offerValidationService.validateEducationalOffer(newOffer));
+    if (this.errorMap().size == 0) {
       this.educationalOfferService.submitEducationalOffer(newOffer).pipe(
         take(1),
         catchError( error => {
