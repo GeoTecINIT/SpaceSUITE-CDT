@@ -10,14 +10,8 @@
                 </div>
             </ng-template>
             <ng-template #panel>
-                <div class="flex flex-column w-full min-w-0 gap-2 mb-2 lg:ml-4">
+                <div class="w-full min-w-0 mb-2 lg:ml-4">
                     <ng-container *ngTemplateOutlet="rightPanel"></ng-container>
-                    <p-button label="{{'offerPage.buttons.action' | translate}}" icon="pi pi-upload" class="custom-button flex justify-content-end mt-auto" (onClick)="exportActionModalVisible = !exportActionModalVisible" *ngIf="checkLoggin()"></p-button>
-                    <div class="flex justify-content-end gap-2 flex-wrap">
-                        <p-button label="{{'offerPage.buttons.duplicate' | translate}}" icon="pi pi-clone" class="custom-button" (onClick)="duplicateOffer()" *ngIf="checkLoggin()"></p-button>
-                        <p-button label="{{'offerPage.buttons.edit' | translate}}" icon="pi pi-pencil" class="custom-button" (onClick)="editOffer()" *ngIf="checkUser() || checkOrganizations()"></p-button>
-                        <p-button label="{{'offerPage.buttons.delete' | translate}}" icon="pi pi-trash" class="delete-button" (onClick)="deleteModal($event)" *ngIf="checkUser() || checkOrganizations()"></p-button>
-                    </div>
                 </div>
             </ng-template>
         </p-splitter>
@@ -27,12 +21,8 @@
             <ng-container *ngTemplateOutlet="leftPanel"></ng-container>
             <ng-container *ngTemplateOutlet="rightPanel"></ng-container>
         </div>
-        <div class="flex justify-content-center gap-2 flex-wrap mt-4 mb-2">
+        <div class="flex justify-content-center mt-4 mb-2">
             <p-button label="{{'offerPage.buttons.return' | translate}}" severity="secondary" icon="pi pi-arrow-left" class="custom-secondary-button lg:mr-auto mr-0" (onClick)="goToMainPage()"></p-button>
-            <p-button label="{{'offerPage.buttons.action' | translate}}" icon="pi pi-upload" class="custom-button" (onClick)="exportActionModalVisible = !exportActionModalVisible" *ngIf="checkLoggin()"></p-button>
-            <p-button label="{{'offerPage.buttons.duplicate' | translate}}" icon="pi pi-clone" class="custom-button" (onClick)="duplicateOffer()" *ngIf="checkLoggin()"></p-button>
-            <p-button label="{{'offerPage.buttons.edit' | translate}}" icon="pi pi-pencil" class="custom-button" (onClick)="editOffer()" *ngIf="checkUser() || checkOrganizations()"></p-button>
-            <p-button label="{{'offerPage.buttons.delete' | translate}}" icon="pi pi-trash" class="delete-button" (onClick)="deleteModal($event)" *ngIf="checkUser() || checkOrganizations()"></p-button>
         </div>
     }
 </div>
@@ -212,6 +202,24 @@
 
 <ng-template #rightPanel>
     <div class="flex flex-column w-full min-w-0">
+        <div class="absolute right-0 xl:mr-7" style="margin-right: 2.5rem; margin-top: 1.75rem;">
+            <p-splitbutton
+                class="custom-text-splitbutton"
+                [label]="'offerPage.buttons.edit' | translate"
+                menuStyleClass="custom-p-tieredmenu"
+                icon="pi pi-pencil"
+                dropdownIcon="pi pi-cog"
+                [model]="cogItems()"
+                [rounded]="true"
+                [tooltip]="editButtonTooltip()"
+                [tooltipOptions]="{'tooltipPosition': 'bottom'}" 
+                text
+                [buttonDisabled]="!(checkUser() || checkOrganizations())"
+                [menuButtonDisabled]="!checkLoggin()"
+                (onDropdownClick)="this.cogItems.set(this.buildCogMenu())"
+                (onClick)="editOffer()"
+            />
+        </div>
         <div class="flex flex-column gap-1">
             <offer-index-component class="mt-3 mb-2" [offer]="offer()!" [selectedNode]="selectedNode()?.id!" (selectedNodeChanged)="changeSelectedNode($event)"></offer-index-component>
             <p-panel #studyAreasPanel [header]="('offerPage.studyAreas' | translate) + ' (' + studyAreas().length + ')'" toggleable="true" collapsed="false" class="my-2 custom-panel">

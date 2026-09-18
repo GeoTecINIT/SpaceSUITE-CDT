@@ -405,9 +405,13 @@
     "buttons": {
       "action": "Export offer as Training Action",
       "duplicate": "Duplicate Offer",
-      "edit": "Edit Offer",
+      "edit": "Edit",
       "delete": "Delete Offer",
       "return": "Return to Homepage"
+    },
+    "tooltips": {
+      "loginRequired": "Login to be able to {{action}}.",
+      "accessRequired": "You can only {{action}} offers from your organization."
     },
     "permalink": "Permalink",
     "type": "Type",

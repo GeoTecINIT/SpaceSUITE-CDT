@@ -35,6 +35,7 @@ import { SelectModule } from "primeng/select";
 import { TooltipModule } from "primeng/tooltip";
 import { FormsModule } from "@angular/forms";
 import { SplitterModule } from 'primeng/splitter';
+import { SplitButton } from 'primeng/splitbutton';
 
 @Component({
   standalone: true,
@@ -43,7 +44,7 @@ import { SplitterModule } from 'primeng/splitter';
   styleUrls: ['./offerPage.component.css'],
   imports: [CommonModule, ProgressSpinnerModule, ButtonModule, PanelModule, TabsModule, DividerModule, BreadcrumbModule, TranslateModule,
     ConfirmDialogModule, ToastModule, PopoverModule, SkillTagComponent, SkeletonModule, DividerModule, OfferIndexComponent, DialogModule, 
-    FloatLabelModule, SelectModule, TooltipModule, FormsModule, SplitterModule],
+    FloatLabelModule, SelectModule, TooltipModule, FormsModule, SplitterModule, SplitButton],
 })
 export class OfferPageComponent {
   offer: WritableSignal<EducationalOffer | undefined> = signal<EducationalOffer | undefined>(undefined);
@@ -56,6 +57,7 @@ export class OfferPageComponent {
   customTransversalSkills: WritableSignal<Tag[]> = signal<Tag[]>([]);
 
   breadcrumbItems: WritableSignal<MenuItem[]> = signal([]);
+  cogItems: WritableSignal<MenuItem[]> = signal([]);
 
   exportActionModalVisible: boolean = false;
 
@@ -163,6 +165,45 @@ export class OfferPageComponent {
     this.mediaQuery = window.matchMedia('(max-width: 991.98px)');
     this.isBelowLg = this.mediaQuery.matches;
     this.mediaQuery.addEventListener('change', this.onMediaChange);
+  }
+
+  editButtonTooltip(): string {
+    if (!this.checkLoggin()) {
+      return this.translate.instant('offerPage.tooltips.loginRequired', {action: 'edit'});
+    }
+    else if (!(this.checkUser() || this.checkOrganizations())) {
+      return this.translate.instant('offerPage.tooltips.accessRequired', {action: 'edit'});
+    } 
+    return ''
+  }
+
+  buildCogMenu(): MenuItem[] {
+    return [
+      {
+        label: this.translate.instant('offerPage.buttons.duplicate'),
+        icon: 'pi pi-clone',
+        command: () => {
+          this.duplicateOffer()
+        },
+      },
+      {
+        label: this.translate.instant('offerPage.buttons.action'),
+        icon: 'pi pi-upload',
+        command: () => { this.exportActionModalVisible = !this.exportActionModalVisible }
+      },
+      {
+        separator: true,
+      },
+      {
+        label: this.translate.instant('offerPage.buttons.delete'),
+        icon: 'pi pi-trash',
+        disabled: !(this.checkUser() || this.checkOrganizations()),
+        command: (event) => {
+          this.deleteModal(event as Event)
+        },
+        styleClass: 'custom-danger-item'
+      },
+    ];
   }
 
   ngAfterViewInit() {
@@ -403,12 +444,12 @@ export class OfferPageComponent {
   }
 
   checkLoggin() {
-    return (this.loggedUserId != undefined);
+    return (this.loggedUserId != undefined && this.loggedUserId.trim() != '');
   }
 
-  checkOrganizations() {
+  checkOrganizations(): boolean {
     const currentOffer = this.offer();
-    return (currentOffer != undefined &&  currentOffer.orgId && this.userOrgIds.includes(currentOffer.orgId));
+    return (currentOffer != undefined && currentOffer.orgId != undefined && this.userOrgIds.includes(currentOffer.orgId));
   }
 
   onClickConcept(code: string) {

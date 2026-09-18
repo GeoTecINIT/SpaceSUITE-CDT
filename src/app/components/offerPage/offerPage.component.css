@@ -78,3 +78,31 @@
     width: 3px !important;
     background: color-mix(in srgb, var(--hover-color) 20%, rgb(243, 243, 243) 80%) !important;
 }
+
+.custom-text-splitbutton {
+  --p-button-text-primary-color: var(--secondary-color);
+  --p-button-text-primary-hover-background: color-mix(
+    in srgb,
+    var(--secondary-color) 10%,
+    rgba(255, 255, 255, 0) 90%
+  );
+  --p-button-text-primary-active-background: color-mix(
+    in srgb,
+    var(--secondary-color) 20%,
+    rgba(255, 255, 255, 0) 80%
+  );
+}
+
+::ng-deep .p-tieredmenu {
+    --p-tieredmenu-item-icon-color: var(--primary-color);
+    --p-tieredmenu-item-icon-active-color: var(--hover-color);
+    --p-tieredmenu-item-icon-focus-color: var(--hover-color);
+    --p-tieredmenu-item-color: var(--primary-color);
+    --p-tieredmenu-item-active-color: var(--hover-color);
+    --p-tieredmenu-item-focus-color: var(--hover-color);
+}
+
+::ng-deep .p-tieredmenu .custom-danger-item {
+    --p-tieredmenu-item-icon-color: var(--danger-color) !important;
+    --p-tieredmenu-item-color: var(--danger-color) !important;
+}
