@@ -35,21 +35,15 @@ export class OfferIndexComponent {
   @Input() selectedNode: string = "";
   @Input() errorMap: Map<string, string> = new Map();
   @Output() selectedNodeChanged: EventEmitter<string> = new EventEmitter();
-  @ViewChild('tree') treeElement: ElementRef | undefined;
 
   treeNodeRoot: WritableSignal<TreeNode[]> = signal<TreeNode[]>([]);
   selectedTreeNode: WritableSignal<TreeNode | undefined> = signal<TreeNode | undefined>(undefined);
 
-  scale: WritableSignal<number> = signal(1);
+  scale: WritableSignal<number> = signal(0.5);
   updateScale = (newValue: number) => this.scale.set(newValue);
 
   knowledgeDistributions: WritableSignal<Map<string, MeterItem[]>> = signal(new Map());
   knowledgeNames: WritableSignal<Map<string, string>> = signal(new Map())
-
-  // Auto adjust tree zoom variables
-  initialTreeClientWidth: number = 0;
-  previousTreeClientWidth: number = 0;
-  treeZoomAdjusted: boolean = false;
 
   private utilsService: UtilsService = inject(UtilsService);
   private bokInfo: BokInformationService = inject(BokInformationService);
@@ -98,28 +92,6 @@ export class OfferIndexComponent {
 
     if (changes['selectedNode'] && changes['selectedNode'].currentValue !== changes['selectedNode'].previousValue) {
       this.selectedTreeNode.set(this.getTreeNodeById(changes['selectedNode'].currentValue));
-    }
-  }
-
-  ngAfterViewInit() {
-    const element = this.treeElement?.nativeElement;
-    if(element) {
-      this.initialTreeClientWidth = element.clientWidth;
-    }
-  }
-
-  ngAfterViewChecked() {
-    if (!this.treeZoomAdjusted) {
-      const element = this.treeElement?.nativeElement;
-      if (element) {
-        if (element.clientWidth != this.initialTreeClientWidth && element.clientWidth == this.previousTreeClientWidth) {
-          if (element.scrollWidth != element.clientWidth && this.scale() > 0.25) {
-            this.scale.update(value => Math.max((value / 2), 0.25))
-          }
-          else this.treeZoomAdjusted = true;
-        }
-        this.previousTreeClientWidth = element.clientWidth;
-      }
     }
   }
 
