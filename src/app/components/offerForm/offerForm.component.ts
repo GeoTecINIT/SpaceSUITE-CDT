@@ -376,7 +376,7 @@ export class OfferFormComponent {
 
   returnToHomepage() {
     if (this.previousNavigationUrl) {
-      if (this.previousNavigationUrl.toString().includes('/offer/' + this.offer().id)) {
+      if (this.inputOffer && this.previousNavigationUrl.toString().includes('/offer/' + this.offer().id)) {
         this.router.navigate(['offer/' + this.offer().id + '/' + this.selectedNode().id]);
       }
       else this.router.navigateByUrl(this.previousNavigationUrl);

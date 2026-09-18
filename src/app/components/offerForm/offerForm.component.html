@@ -51,7 +51,7 @@
 </p-dialog>
 
 <ng-template #leftPanel>
-    <div class="w-full min-w-0 lg:mr-4">
+    <div class="w-full min-w-0 lg:mr-4 mt-3">
         <h2 class="flex justify-content-center m-0">{{pageName}}</h2>
         <h3 class="flex font-italic font-light justify-content-center m-0">
             {{selectedNode().name == '' ? ('offerForm.headers.newNodeName' | translate: {nodeType: getSelectedNodeType()}) : selectedNode().name}}
@@ -62,7 +62,7 @@
 </ng-template>
 
 <ng-template #rightPanel>
-    <div class="flex flex-column w-full min-w-0 gap-3 lg:ml-4">
+    <div class="flex flex-column w-full min-w-0 gap-3 mt-3 lg:ml-4">
         <offer-index-component [offer]="offer()" [selectedNode]="selectedNode().id" (selectedNodeChanged)="changeSelectedNode($event)" 
             [errorMap]="this.errorMap()"></offer-index-component>
         <p-panel class="custom-panel">
