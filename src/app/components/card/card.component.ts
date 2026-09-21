@@ -27,6 +27,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PdfService } from '../../services/exportServices/pdf.service';
 import { RdfService } from '../../services/exportServices/rdf.service';
 import { JsonService } from '../../services/exportServices/json.service';
+import { NodeType } from '../../model/coreModel/curriculumNode';
+import { Grouping } from '../../model/coreModel/grouping';
 
 @Component({
   standalone: true,
@@ -130,6 +132,15 @@ export class CardComponent implements OnInit {
 
   checkUser() {
     return this.organizations.includes(this.educationalOffer.orgId);
+  }
+
+  isANamedGrouping(): boolean {
+    return this.educationalOffer.root.nodeType == NodeType.Grouping && 
+      (this.educationalOffer.root as Grouping).groupingName != '';
+  }
+
+  getGroupingName(): string {
+    return (this.educationalOffer.root as Grouping).groupingName;
   }
 
   editOffer() {

@@ -25,7 +25,12 @@
           <span class="white-space-nowrap">
             <strong>{{ 'card.attributes.type' | translate }}:</strong>
 
-            {{ educationalOffer.root.nodeType }}
+            @if(isANamedGrouping()) {
+              {{getGroupingName()}}
+            }
+            @else {
+              {{ educationalOffer.root.nodeType }}
+            }
           </span>
           |
           <span class="white-space-nowrap">
