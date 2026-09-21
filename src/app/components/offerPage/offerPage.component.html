@@ -248,8 +248,8 @@
             <offer-index-component class="mt-3 mb-2" [offer]="offer()!" [selectedNode]="selectedNode()?.id!" (selectedNodeChanged)="changeSelectedNode($event)"></offer-index-component>
             <p-panel #studyAreasPanel [header]="('offerPage.studyAreas' | translate) + ' (' + studyAreas().length + ')'" toggleable="true" collapsed="false" class="my-2 custom-panel">
                 <ng-template #headericons>
-                    <p-button *ngIf="!conceptsPanel.collapsed" icon="pi pi-chevron-up" severity="secondary" rounded text/>
-                    <p-button *ngIf="conceptsPanel.collapsed" icon="pi pi-chevron-down" severity="secondary" rounded text/>
+                    <p-button *ngIf="!studyAreasPanel.collapsed" icon="pi pi-chevron-up" severity="secondary" rounded text/>
+                    <p-button *ngIf="studyAreasPanel.collapsed" icon="pi pi-chevron-down" severity="secondary" rounded text/>
                 </ng-template>  
                 <skill-tags [tags]="studyAreas()" [compactBoKTags]="false"></skill-tags>
             </p-panel>
@@ -263,8 +263,8 @@
             <p-panel #transversalSkillsPanel toggleable="true" collapsed="false" class="my-2 custom-panel"
                 [header]="('offerPage.transversalSkills' | translate) + ' (' + transversalSkills().concat(customTransversalSkills()).length + ')'">
                 <ng-template #headericons>
-                    <p-button *ngIf="!conceptsPanel.collapsed" icon="pi pi-chevron-up" severity="secondary" rounded text/>
-                    <p-button *ngIf="conceptsPanel.collapsed" icon="pi pi-chevron-down" severity="secondary" rounded text/>
+                    <p-button *ngIf="!transversalSkillsPanel.collapsed" icon="pi pi-chevron-up" severity="secondary" rounded text/>
+                    <p-button *ngIf="transversalSkillsPanel.collapsed" icon="pi pi-chevron-down" severity="secondary" rounded text/>
                 </ng-template>      
                 <skill-tags [tags]="transversalSkills().concat(customTransversalSkills())" [compactBoKTags]="false"></skill-tags>
             </p-panel>
