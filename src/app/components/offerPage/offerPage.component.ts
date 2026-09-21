@@ -462,7 +462,6 @@ export class OfferPageComponent {
 
   downloadPDF(): void {
     document.body.style.cursor = 'wait';
-    this.op.hide();
 
     this.pdfService
       .generateOfferPdf(new EducationalOffer(this.offer()!.root, this.offer()))

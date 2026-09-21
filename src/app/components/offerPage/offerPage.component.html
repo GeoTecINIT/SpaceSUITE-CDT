@@ -4,7 +4,7 @@
     @if(!isBelowLg) {
         <p-splitter [panelSizes]="[60, 40]" [minSizes]="[20, 20]" gutterSize="2" styleClass="m-0 p-0 h-full border-none" [panelStyle]="{'color': 'var(--primary-color)'}">
             <ng-template #panel>
-                <div class="mb-2 lg:mr-4 flex flex-column gap-2">
+                <div class="mb-2 w-full min-w-0 lg:mr-4 flex flex-column gap-2">
                     <ng-container *ngTemplateOutlet="leftPanel"></ng-container>
                     <p-button label="{{'offerPage.buttons.return' | translate}}" severity="secondary" icon="pi pi-arrow-left" class="custom-secondary-button flex mt-auto" (onClick)="goToMainPage()"></p-button>
                 </div>
@@ -59,7 +59,7 @@
 </p-dialog>
 
 <ng-template #leftPanel>
-    <div class="flex flex-column overflow-auto">
+    <div class="flex flex-column overflow-auto flex-auto">
         <p-breadcrumb [model]="breadcrumbItems()" class="custom-breadcrumb mt-3 text-sm"></p-breadcrumb>
         <h1 class="mb-2 mt-1">
             {{selectedNode()?.name}}
@@ -69,16 +69,16 @@
             </a>
         </h1>
         <div class="flex align-items-center gap-2 flex-wrap white-space-nowrap mb-2">
-            <div class="text-sm"><strong>{{'offerPage.type' | translate}}:</strong> {{selectedNodeType()}}</div>
+            <div class="text-sm">
+                @if (selectedNodeType() === groupingNodeType && getGroupingName() != '') {
+                    <strong>{{'offerPage.type' | translate}}:</strong> {{getGroupingName()}}
+                }
+                @else {
+                    <strong>{{'offerPage.type' | translate}}:</strong> {{selectedNodeType()}}
+                }
+                
+            </div>
             |
-            <div *ngIf="selectedNodeType() === groupingNodeType" class="flex align-items-center flex-wrap gap-2 white-space-nowrap">
-                <div class="text-sm"><strong>{{'offerPage.groupingType' | translate}}:</strong> {{getGroupingType()}}</div>
-                |
-            </div>
-            <div *ngIf="selectedNodeType() === groupingNodeType && getGroupingName() != ''" class="flex align-items-center flex-wrap gap-2 white-space-nowrap">
-                <div class="text-sm"><strong>{{'offerPage.groupingName' | translate}}:</strong> {{getGroupingName()}}</div>
-                |
-            </div>
             <div *ngIf="selectedNodeType() === 'Course' && getCourseType() != undefined" class="flex align-items-center flex-wrap gap-2 white-space-nowrap">
                 <div class="text-sm"><strong>{{'offerPage.courseType' | translate}}:</strong> {{getCourseType()}}</div>
                 |
@@ -101,6 +101,11 @@
             </div>
             <div class="text-sm"><strong>{{'offerPage.visibility' | translate}}:</strong> {{offer()?.isPublic ? 'Public' : 'Private'}}</div>
             |
+            <a class="icon-link text-sm align-items-center mx-1 cursor-pointer" (click)="downloadPDF()">
+                {{'offerPage.downloadPdf' | translate}}
+                <i class="pi pi-file-pdf text-sm mx-1"></i>
+            </a>
+            |
             <a class="icon-link text-sm align-items-center mx-1 cursor-pointer" (click)="toggle($event)">
                 {{'offerPage.downloadMetadata' | translate}}
                 <i class="pi pi-download text-sm mx-1"></i>
@@ -109,9 +114,6 @@
                 <div style="color: var(--primary-color)">
                     <span class="font-medium block mb-2"><strong>{{'offerPage.metadataFormat' | translate}}</strong></span>
                     <ul class="p-0 m-0 flex flex-column">
-                        <li class="flex items-center gap-2 px-2 py-2 cursor-pointer popover-element" (click)="downloadPDF()">
-                            <span class="font-medium">PDF</span>
-                        </li>
                         <li class="flex items-center gap-2 px-2 py-2 cursor-pointer popover-element" (click)="downloadOfferJSON()">
                             <span class="font-medium">JSON</span>
                         </li>
@@ -130,73 +132,95 @@
         </div>
         <div style="color: var(--primary-color);" class="mb-2 font-italic">{{offer()?.orgName + (offer()?.division != "" ? (' - ' + offer()?.division) : "")}}</div>
 
-        <p-divider></p-divider>
+        <p-tabs value="0" scrollable class="custom-tabs mb-2">
+            <p-tablist>
+                <p-tab value="0">{{'offerPage.tabs.generalInfo' | translate}}</p-tab>
+                <p-tab value="1">{{'offerPage.tabs.prerequisites' | translate}}</p-tab>
+                <p-tab value="2">{{'offerPage.tabs.resources' | translate}}</p-tab>
+            </p-tablist>
+            <p-tabpanels>
+                <p-tabpanel value="0">
+                    <div class="mb-2 text-justify">
+                        <div class="mb-4">
+                            <strong>{{'offerPage.description' | translate}}:</strong>
+                            <div class="text-justify mt-2">{{selectedNode()?.description}}</div>
+                        </div>
 
-        <div class="mb-4 text-justify">
-            {{selectedNode()?.description}}
-        </div>
+                        <div *ngIf="selectedNodeType() === 'Course'" class="mb-4">
+                            <strong>{{'offerPage.assessment' | translate}}:</strong>
+                            <div class="text-justify mt-2">{{getAssessment()}}</div>
+                        </div>
 
-        <div *ngIf="selectedNodeType() === 'Course'" class="mb-4">
-            <strong>{{'offerPage.assessment' | translate}}:</strong>
-            <div class="text-justify mt-2">{{getAssessment()}}</div>
-        </div>
-        
-        <div class="mb-2">
-            <strong>{{'offerPage.prerequisites' | translate}}:</strong>
-            <ul *ngIf="(selectedNode()?.prerequisites?.length || 0) || 0 > 0">
-                <li *ngFor="let requisite of selectedNode()?.prerequisites">
-                    {{requisite}}
-                </li>
-            </ul>
-        </div>
-        <div class="mb-2">
-            <strong>{{'offerPage.trainingMaterials' | translate}}:</strong>
-            <ul *ngIf="(selectedNode()?.trainingMaterials?.length || 0) || 0 > 0">
-                <li *ngFor="let material of selectedNode()?.trainingMaterials">
-                    @if (material.url) {
-                        <a href="{{material.url}}" target="_blank" class="icon-link">
-                            {{material.title}}
-                            <i class="pi pi-external-link text-sm mx-1"></i>
-                        </a>
-                    }
-                    @else {
-                        {{material.title}}
-                    }
-                </li>
-            </ul>
-        </div>
-        <div class="mb-2">
-            <strong>{{'offerPage.learningOutcomes' | translate}}:</strong>
-            <ul *ngIf="(selectedNode()?.learningObjectives?.length || 0) || 0 > 0">
-                <li *ngFor="let outcome of selectedNode()?.learningObjectives">
-                    {{outcome}}
-                </li>
-            </ul>
-        </div>
-        <div class="mb-2">
-            <strong>{{'offerPage.affiliations' | translate}}:</strong>
-            <ul *ngIf="(selectedNode()?.affiliations?.length || 0) || 0 > 0">
-                <li *ngFor="let affiliation of selectedNode()?.affiliations">
-                    @if (affiliation.url) {
-                        <a href="{{affiliation.url}}" target="_blank" class="icon-link">
-                            {{affiliation.name}}
-                            <i class="pi pi-external-link text-sm mx-1"></i>
-                        </a>
-                    }
-                    @else {
-                        {{affiliation.name}}
-                    }
-                </li>
-            </ul>
-        </div>
-        <div class="mb-2">
-            <strong>{{'offerPage.bibliography' | translate}}:</strong>
-            <ul *ngIf="(selectedNode()?.bibliography?.length || 0) || 0 > 0">
-                <li *ngFor="let outcome of selectedNode()?.bibliography">
-                    {{outcome}}
-                </li>
-            </ul>
-        </div>
+                        <div class="mb-2">
+                            <strong>{{'offerPage.affiliations' | translate}}:</strong>
+                            <ul *ngIf="(selectedNode()?.affiliations?.length || 0) || 0 > 0">
+                                <li *ngFor="let affiliation of selectedNode()?.affiliations">
+                                    @if (affiliation.url) {
+                                        <a href="{{affiliation.url}}" target="_blank" class="icon-link">
+                                            {{affiliation.name}}
+                                            <i class="pi pi-external-link text-sm mx-1"></i>
+                                        </a>
+                                    }
+                                    @else {
+                                        {{affiliation.name}}
+                                    }
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </p-tabpanel>
+                <p-tabpanel value="1">
+                    <div class="mb-2 text-justify">
+                        <div class="mb-4">
+                            <strong>{{'offerPage.prerequisites' | translate}}:</strong>
+                            <ul *ngIf="(selectedNode()?.prerequisites?.length || 0) || 0 > 0">
+                                <li *ngFor="let requisite of selectedNode()?.prerequisites">
+                                    {{requisite}}
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="mb-4">
+                            <strong>{{'offerPage.learningOutcomes' | translate}}:</strong>
+                            <ul *ngIf="(selectedNode()?.learningObjectives?.length || 0) || 0 > 0">
+                                <li *ngFor="let outcome of selectedNode()?.learningObjectives">
+                                    {{outcome}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </p-tabpanel>
+                <p-tabpanel value="2">
+                    <div class="mb-2 text-justify">
+                        <div class="mb-4">
+                            <strong>{{'offerPage.trainingMaterials' | translate}}:</strong>
+                            <ul *ngIf="(selectedNode()?.trainingMaterials?.length || 0) || 0 > 0">
+                                <li *ngFor="let material of selectedNode()?.trainingMaterials">
+                                    @if (material.url) {
+                                        <a href="{{material.url}}" target="_blank" class="icon-link">
+                                            {{material.title}}
+                                            <i class="pi pi-external-link text-sm mx-1"></i>
+                                        </a>
+                                    }
+                                    @else {
+                                        {{material.title}}
+                                    }
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <strong>{{'offerPage.bibliography' | translate}}:</strong>
+                            <ul *ngIf="(selectedNode()?.bibliography?.length || 0) || 0 > 0">
+                                <li *ngFor="let outcome of selectedNode()?.bibliography">
+                                    {{outcome}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </p-tabpanel>
+            </p-tabpanels>
+        </p-tabs>
     </div>
 </ng-template>
 

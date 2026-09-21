@@ -106,3 +106,11 @@
     --p-tieredmenu-item-icon-color: var(--danger-color) !important;
     --p-tieredmenu-item-color: var(--danger-color) !important;
 }
+
+.custom-tabs {
+    --p-tabs-tab-active-color: var(--hover-color);
+    --p-tabs-active-bar-background: var(--hover-color);
+    --p-tabs-tab-hover-color: var(--primary-color);
+    --p-tabs-tab-color: color-mix(in srgb, var(--primary-color) 60%, rgba(255, 255, 255, 0) 40%);
+    --p-tabs-tabpanel-color: var(--primary-color);
+}

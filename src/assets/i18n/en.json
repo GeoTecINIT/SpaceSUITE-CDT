@@ -413,6 +413,11 @@
       "loginRequired": "Login to be able to {{action}}.",
       "accessRequired": "You can only {{action}} offers from your organization."
     },
+    "tabs": {
+      "generalInfo": "General Information",
+      "prerequisites": "Prerequisites & Learning Outcomes",
+      "resources": "Related Resources"
+    },
     "permalink": "Permalink",
     "type": "Type",
     "groupingType": "Grouping Type",
@@ -427,6 +432,8 @@
     "visibility": "Visibility",
     "downloadMetadata": "Download Metadata",
     "metadataFormat": "Metadata Format",
+    "downloadPdf": "Download PDF",
+    "description": "Description",
     "assessment": "Assessment",
     "prerequisites": "Prerequisites",
     "trainingMaterials": "Training Materials",
