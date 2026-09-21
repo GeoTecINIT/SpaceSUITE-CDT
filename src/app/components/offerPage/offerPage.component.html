@@ -101,7 +101,7 @@
             </div>
             <div class="text-sm"><strong>{{'offerPage.visibility' | translate}}:</strong> {{offer()?.isPublic ? 'Public' : 'Private'}}</div>
             |
-            <a class="icon-link text-sm align-items-center mx-1 cursor-pointer" (click)="downloadPDF()">
+            <a [class]="'icon-link text-sm align-items-center mx-1 ' + (disablePdfLink() ? '' : 'cursor-pointer')" (click)="downloadPDF()">
                 {{'offerPage.downloadPdf' | translate}}
                 <i class="pi pi-file-pdf text-sm mx-1"></i>
             </a>

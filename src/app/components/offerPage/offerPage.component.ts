@@ -59,6 +59,8 @@ export class OfferPageComponent {
   breadcrumbItems: WritableSignal<MenuItem[]> = signal([]);
   cogItems: WritableSignal<MenuItem[]> = signal([]);
 
+  disablePdfLink: WritableSignal<boolean> = signal(false);
+
   exportActionModalVisible: boolean = false;
 
   actionOrgId: string = '';
@@ -461,13 +463,17 @@ export class OfferPageComponent {
   }
 
   downloadPDF(): void {
+    if (this.disablePdfLink()) return;
+
     document.body.style.cursor = 'wait';
+    this.disablePdfLink.set(true);
 
     this.pdfService
       .generateOfferPdf(new EducationalOffer(this.offer()!.root, this.offer()))
       .subscribe((pdf) => {
         this.downloadURI(pdf.url, pdf.filename);
         document.body.style.cursor = '';
+        this.disablePdfLink.set(false);
       });
   }
   downloadOfferXML() {
