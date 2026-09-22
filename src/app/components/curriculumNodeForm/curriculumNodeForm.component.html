@@ -71,20 +71,37 @@
                             <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.eqf')}}</p>
                         }
                     </div>
-                    <div>
-                        <p-floatlabel variant="on" class="w-full custom-floatlabel">
-                            <p-iconfield>
-                                <p-inputnumber id="workload" [min]="0" [useGrouping]="false" suffix=" ECTS" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="1"
+                    <div tooltipPosition="right" showDelay="200" hideDelay="200" 
+                        [pTooltip]="(curriculumNode.workloadUnit == 'ECTS' ? 'curriculumNodeForm.fields.workload.tooltips.ects' : 'curriculumNodeForm.fields.workload.tooltips.hours') | translate">
+                        <p-inputgroup>
+                            <p-floatlabel variant="on" class="w-full custom-floatlabel">
+                                <p-inputnumber id="workload" [min]="0" [useGrouping]="false" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="1"
                                     [class.ng-invalid]="errorMap.get(curriculumNode.id + '.ects') != undefined" [class.ng-dirty]="errorMap.get(curriculumNode.id + '.ects') != undefined" 
-                                    class="custom-input" [(ngModel)]="curriculumNode.ects" fluid tooltipPosition="right" showDelay="200" hideDelay="200"
-                                    [pTooltip]="'curriculumNodeForm.fields.workload.tooltip' | translate" allowEmpty="false"/>
-                                <p-inputicon class="pi pi-clock" [style]="errorMap.get(curriculumNode.id + '.ects') != undefined ? 'color: var(--danger-color)' : ''"/>
-                            </p-iconfield>
-                            <label for="workload">{{ 'curriculumNodeForm.fields.workload.label' | translate }}</label>
-                        </p-floatlabel>
+                                    class="custom-input" [(ngModel)]="curriculumNode.ects" fluid allowEmpty="false"/>
+                                <label for="workload">{{ 'curriculumNodeForm.fields.workload.label' | translate }}</label>
+                            </p-floatlabel>
+                            <p-inputgroup-addon>
+                                <p-button
+                                    class="input-button"
+                                    [label]="curriculumNode.workloadUnit"
+                                    icon="pi pi-chevron-down"
+                                    severity="secondary"
+                                    variant="text"
+                                    (click)="menu.toggle($event)"
+                                />
+                            </p-inputgroup-addon>
+                        </p-inputgroup>
                         @if(errorMap.get(curriculumNode.id + '.ects')) {
                             <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.ects')}}</p>
                         }
+                        <p-menu #menu [model]="WORKLOAD_UNIT" popup styleClass="!min-w-fit" class="custom-menu">
+                            <ng-template #item let-item>
+                                <a pRipple class="flex items-center p-menu-item-link" (click)="setWorkloadUnit(item.label)">
+                                    <i class="w-1rem" [ngClass]="item.label == curriculumNode.workloadUnit ? 'pi pi-check' : ''"></i>
+                                    <span class="ml-2">{{ item.label }}</span>
+                                </a>
+                            </ng-template>
+                        </p-menu>
                     </div>
                     <div>
                         <div class="custom-border p-2" style="color: #64748b;" tooltipPosition="right" showDelay="200" hideDelay="200"

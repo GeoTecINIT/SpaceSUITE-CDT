@@ -89,7 +89,7 @@
             </div>
             <div class="text-sm"><strong>{{'offerPage.eqf' | translate}}:</strong> {{selectedNode()?.eqf}}</div>
             |
-            <div class="text-sm"><strong>{{'offerPage.workload' | translate}}:</strong> {{selectedNode()?.ects}} ECTS</div>
+            <div class="text-sm"><strong>{{'offerPage.workload' | translate}}:</strong> {{selectedNode()?.ects}} {{selectedNode()?.workloadUnit}}</div>
             |
             <div class="text-sm"><strong>{{'offerPage.duration' | translate}}:</strong> {{selectedNode()?.timeRequired?.value + " " + getTimeRequiredUnit(selectedNode()?.timeRequired)}}</div>
             |

@@ -115,7 +115,7 @@ function renderHeader(doc: jsPDF, p: EducationalOffer, y: number,  assets: {
     [
       'Type: ' + p.root.nodeType, 
       'EQF ' + p.root.eqf,
-      p.root.ects + ' ECTS',
+      p.root.ects + ' ' + p.root.workloadUnit,
       p.root.timeRequired.value + ' ' + p.root.timeRequired.unit,
     ].filter(Boolean).join(' | '),
     20,
@@ -263,7 +263,7 @@ function renderCurriculumNodes(doc: jsPDF, p: CurriculumNode, y: number, assets:
       p instanceof Course && p.courseType ? ('Course Type: ' + p.courseType ) : undefined,
       p instanceof Lecture ? (p.isPractical ? 'Practical' : 'Theoretical') : undefined,
       'EQF ' + p.eqf,
-      p.ects + ' ECTS',
+      p.ects + ' ' + p.workloadUnit,
       p.timeRequired.value + ' ' + p.timeRequired.unit,
     ].filter(Boolean).join(' | '),
     20,

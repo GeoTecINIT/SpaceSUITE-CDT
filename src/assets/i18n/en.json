@@ -93,7 +93,10 @@
         "label": "EQF Level"
       },
       "workload": {
-        "tooltip": "Amount of time expected to invest in order to meet the defined learning outcomes, quantified using ECTS.",
+        "tooltips": {
+          "ects": "Amount of time expected to invest in order to meet the defined learning outcomes, quantified using ECTS.",
+          "hours": "Amount of time expected to invest in order to meet the defined learning outcomes, quantified using hours."
+        },
         "label": "Workload"
       },
       "duration": {
@@ -251,6 +254,10 @@
     "days": "Days",
     "hours": "Hours",
     "minutes": "Minutes"
+  },
+  "workloadUnit": {
+    "ects": "ECTS",
+    "hours": "Hours"
   },
   "offerForm": {
     "headers": {

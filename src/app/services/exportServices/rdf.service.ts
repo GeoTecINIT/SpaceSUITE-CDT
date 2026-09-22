@@ -72,6 +72,9 @@ export class RdfService {
     additionalObjects += `_:ECTS\n`;
     additionalObjects += `  rdf:type elm:CreditPoint ;\n`;
     additionalObjects += `  dcterms:title "ECTS" .\n\n`;
+    additionalObjects += `_:Hours\n`;
+    additionalObjects += `  rdf:type elm:CreditPoint ;\n`;
+    additionalObjects += `  dcterms:title "Hours" .\n\n`;
 
     ttl += additionalObjects;
     return ttl;
@@ -109,7 +112,7 @@ export class RdfService {
       ttl += `  elm:EQFLevel "${node.eqf}" ;\n`;
 
     if (node.ects) {
-      ttl += `  elm:creditPoint _:ECTS ;\n`;
+      ttl += node.workloadUnit == 'ECTS' ? `  elm:creditPoint _:ECTS ;\n` : `  elm:creditPoint _:Hours ;\n`;
       ttl += `  elm:creditReceived "${node.ects}" ;\n`;
     }
 
@@ -237,6 +240,11 @@ export class RdfService {
     xml += `    <dcterms:title>ECTS</dcterms:title>\n`;
     xml += `  </rdf:Description>\n\n`;
 
+    xml += `  <rdf:Description rdf:about="${uriBase}/credit-point/Hours">\n`;
+    xml += `    <rdf:type rdf:resource="${elmNS}CreditPoint"/>\n`;
+    xml += `    <dcterms:title>Hours</dcterms:title>\n`;
+    xml += `  </rdf:Description>\n\n`;
+
     const offerUri = `${uriBase}/educational-offer/${this.escapeXml(String(model.id))}`;
 
     xml += `  <rdf:Description rdf:about="${offerUri}">\n`;
@@ -310,7 +318,12 @@ export class RdfService {
     }
 
     if (node.ects) {
-      xml += `${indent(indentLevel + 1)}<elm:creditPoint rdf:resource="${uriBase}/credit-point/ECTS"/>\n`;
+      if (node.workloadUnit == 'ECTS') {
+        xml += `${indent(indentLevel + 1)}<elm:creditPoint rdf:resource="${uriBase}/credit-point/ECTS"/>\n`;
+      }
+      else {
+        xml += `${indent(indentLevel + 1)}<elm:creditPoint rdf:resource="${uriBase}/credit-point/Hours"/>\n`;
+      }
       xml += `${indent(indentLevel + 1)}<elm:creditReceived>${this.escapeXml(String(node.ects))}</elm:creditReceived>\n`;
     }
 
@@ -495,7 +508,12 @@ export class RdfService {
     }
 
     if (node.ects !== undefined && node.ects !== null) {
-      html += `${indent}<a rel="elm:creditPoint" href="${uriBase}/credit-point/ECTS">ECTS</a><br/>\n`;
+      if (node.workloadUnit == 'ECTS') {
+        html += `${indent}<a rel="elm:creditPoint" href="${uriBase}/credit-point/ECTS">ECTS</a><br/>\n`;
+      }
+      else {
+        html += `${indent}<a rel="elm:creditPoint" href="${uriBase}/credit-point/Hours">Hours</a><br/>\n`;
+      }
       html += `${indent}<span property="elm:creditReceived">${this.escapeHtml(String(node.ects))}</span><br/>\n`;
     }
 

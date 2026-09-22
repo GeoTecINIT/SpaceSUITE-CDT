@@ -4,6 +4,7 @@ import { Duration } from "./duration";
 import { ISCEDFArea } from "./iscedfArea";
 import { TrainingMaterial } from "./trainingMaterial";
 import { Affiliation } from "./affiliation";
+import { WorkloadUnit } from "../workloadUnit";
 
 export enum NodeType {
   StudyProgram = "Study Program",
@@ -21,6 +22,7 @@ export abstract class CurriculumNode {
   public prerequisites: string[];
   public eqf: number;
   public ects: number;
+  public workloadUnit: WorkloadUnit;
   public timeRequired: Duration;
   public studyAreas: ISCEDFArea[];
   public transversalSkills: ESCOSkill[];
@@ -40,6 +42,7 @@ export abstract class CurriculumNode {
     this.prerequisites = [...currentNode?.prerequisites || []];
     this.eqf = currentNode?.eqf || 0;
     this.ects = currentNode?.ects || 0;
+    this.workloadUnit = currentNode?.workloadUnit || WorkloadUnit.ECTS;
     this.timeRequired = new Duration(currentNode?.timeRequired);
     this.studyAreas = currentNode?.studyAreas?.map(area => new ISCEDFArea(area)) || [];
     this.transversalSkills = currentNode?.transversalSkills?.map(skill => new ESCOSkill(skill)) || [];

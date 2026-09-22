@@ -36,6 +36,11 @@ import { ESCOSkill } from "../../model/coreModel/escoSkill";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { UtilsService } from "../../services/utils.service";
 import { Grouping } from "../../model/coreModel/grouping";
+import { InputGroupModule } from "primeng/inputgroup";
+import { InputGroupAddonModule } from "primeng/inputgroupaddon";
+import { MenuModule } from "primeng/menu";
+import { WorkloadUnit } from "../../model/workloadUnit";
+import { CommonModule } from "@angular/common";
 
 @Component({
   standalone: true,
@@ -44,7 +49,8 @@ import { Grouping } from "../../model/coreModel/grouping";
   styleUrls: ['./curriculumNodeForm.component.css'],
   imports: [ToastModule, ConfirmDialogModule, InputTextModule, FloatLabelModule, FormsModule, InputIconModule, IconFieldModule, PanelModule, InputNumberModule,
             StepperModule, SelectModule, TooltipModule, ButtonModule, DialogModule, TextareaModule, BokModalComponent, TextChipsComponent, TranslateModule,
-            CustomSelectComponent, MultiselectChipsComponent, TreeselectChipsComponent, DividerModule, SelectButtonModule],
+            CustomSelectComponent, MultiselectChipsComponent, TreeselectChipsComponent, DividerModule, SelectButtonModule, InputGroupModule, InputGroupAddonModule,
+            MenuModule, CommonModule],
 })
 export class CurriculumNodeFormComponent {
   @Input() errorMap: Map<string, string | undefined> = new Map();
@@ -58,6 +64,7 @@ export class CurriculumNodeFormComponent {
   public selectedStudyAreas: string[] = [];
 
   public DURATION_UNIT: object[] = [];
+  public WORKLOAD_UNIT: object[] = [];
   public COURSE_TYPE: object[] = [];
   public LECTURE_ISPRACTICAL: any[] = [];
 
@@ -100,7 +107,22 @@ export class CurriculumNodeFormComponent {
     }
   }
 
+  setWorkloadUnit(value: WorkloadUnit) {
+    this.curriculumNode.workloadUnit = value;
+  }
+
   private buildSelectFields() {
+    this.WORKLOAD_UNIT = [
+      {
+        label: this.translate.instant('workloadUnit.ects'),
+        value: WorkloadUnit.ECTS
+      },
+      {
+        label: this.translate.instant('workloadUnit.hours'),
+        value: WorkloadUnit.Hours
+      }
+    ];
+
     this.DURATION_UNIT= [
       {
         label: this.translate.instant('durationUnit.years'),

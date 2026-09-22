@@ -4,6 +4,7 @@ import { Duration } from "../coreModel/duration";
 import { ESCOSkill } from "../coreModel/escoSkill";
 import { ISCEDFArea } from "../coreModel/iscedfArea";
 import { TrainingMaterial } from "../coreModel/trainingMaterial";
+import { WorkloadUnit } from "../workloadUnit";
 
 export abstract class CurriculumNodeDB {
   public id: string;
@@ -14,6 +15,7 @@ export abstract class CurriculumNodeDB {
   public prerequisites: string[];
   public eqf: number;
   public ects: number;
+  public workloadUnit: WorkloadUnit;
   public timeRequired: Duration;
   public studyAreas: ISCEDFArea[];
   public transversalSkills: ESCOSkill[];
@@ -33,6 +35,7 @@ export abstract class CurriculumNodeDB {
     this.prerequisites = [...currentNode?.prerequisites || []];
     this.eqf = currentNode?.eqf || 0;
     this.ects = currentNode?.ects || 0;
+    this.workloadUnit = currentNode?.workloadUnit || WorkloadUnit.ECTS;
     this.timeRequired = new Duration(currentNode?.timeRequired);
     this.studyAreas = currentNode?.studyAreas?.map(area => new ISCEDFArea(area)) || [];
     this.transversalSkills = currentNode?.transversalSkills?.map(skill => new ESCOSkill(skill)) || [];
@@ -53,6 +56,7 @@ export abstract class CurriculumNodeDB {
       prerequisites: this.prerequisites,
       eqf: this.eqf,
       ects: this.ects,
+      workloadUnit: this.workloadUnit,
       timeRequired: this.timeRequired.toPlainObject(),
       studyAreas: this.studyAreas.map(area => area.toPlainObject()),
       transversalSkills: this.transversalSkills.map(skill => skill.toPlainObject()),
