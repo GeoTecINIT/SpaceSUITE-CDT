@@ -120,13 +120,13 @@ export class OfferIndexComponent {
   }
 
   private getKnowledgeAreaDistribution(node: CurriculumNode): Observable<MeterItem[]> {
-    const conceptsAreas = node.bokConcepts.map((concept) => {
-      if (concept === 'GIST') return concept;
+    const filteredConcepts = node.bokConcepts.filter(concept => concept != 'GIST');
+    const conceptsAreas = filteredConcepts.map((concept) => {
       return concept.substring(0, 2).toUpperCase();
     });
 
     const counts = new Map<string, number>();
-    const total = node.bokConcepts.length;
+    const total = filteredConcepts.length;
 
     conceptsAreas.forEach((area) => {
       counts.set(area, (counts.get(area) || 0) + 1);
