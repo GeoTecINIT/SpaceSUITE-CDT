@@ -69,7 +69,8 @@
     },
     "stepList": {
       "step1": "General Information",
-      "step2": "Skills & Resources"
+      "step2": "Resources & Skills",
+      "step3": "Prerequisites & Learning Outcomes"
     },
     "fields": {
       "name": {
