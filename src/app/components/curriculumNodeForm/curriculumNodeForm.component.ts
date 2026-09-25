@@ -1,7 +1,7 @@
-import { Component, EventEmitter, inject, Input, Output, SimpleChanges } from "@angular/core";
+import { Component, EventEmitter, inject, Input, Output, signal, SimpleChanges, WritableSignal } from "@angular/core";
 import { ToastModule } from "primeng/toast";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { Subscription, take } from "rxjs";
+import { defaultIfEmpty, forkJoin, Subscription, switchMap, take, tap } from "rxjs";
 import { TreeNode } from "primeng/api";
 import { InputTextModule } from "primeng/inputtext";
 import { FormsModule } from "@angular/forms";
@@ -41,6 +41,8 @@ import { InputGroupAddonModule } from "primeng/inputgroupaddon";
 import { MenuModule } from "primeng/menu";
 import { WorkloadUnit } from "../../model/workloadUnit";
 import { CommonModule } from "@angular/common";
+import { BokInformationService } from "@eo4geo/ngx-bok-visualization";
+import { MultiselectLearningOutcomesComponent } from "../multiselectLearningOutcomes/multiselectLearningOutcomes.component";
 
 @Component({
   standalone: true,
@@ -48,9 +50,9 @@ import { CommonModule } from "@angular/common";
   templateUrl: './curriculumNodeForm.component.html',
   styleUrls: ['./curriculumNodeForm.component.css'],
   imports: [ToastModule, ConfirmDialogModule, InputTextModule, FloatLabelModule, FormsModule, InputIconModule, IconFieldModule, PanelModule, InputNumberModule,
-            StepperModule, SelectModule, TooltipModule, ButtonModule, DialogModule, TextareaModule, BokModalComponent, TextChipsComponent, TranslateModule,
-            CustomSelectComponent, MultiselectChipsComponent, TreeselectChipsComponent, DividerModule, SelectButtonModule, InputGroupModule, InputGroupAddonModule,
-            MenuModule, CommonModule],
+    StepperModule, SelectModule, TooltipModule, ButtonModule, DialogModule, TextareaModule, BokModalComponent, TextChipsComponent, TranslateModule,
+    CustomSelectComponent, MultiselectChipsComponent, TreeselectChipsComponent, DividerModule, SelectButtonModule, InputGroupModule, InputGroupAddonModule,
+    MenuModule, CommonModule, MultiselectLearningOutcomesComponent],
 })
 export class CurriculumNodeFormComponent {
   @Input() errorMap: Map<string, string | undefined> = new Map();
@@ -63,6 +65,8 @@ export class CurriculumNodeFormComponent {
   public selectedTransversalSkills: TreeNode[] = [];
   public selectedStudyAreas: string[] = [];
 
+  public learningOutcomesSuggestions: WritableSignal<any[]> = signal([]);
+
   public DURATION_UNIT: object[] = [];
   public WORKLOAD_UNIT: object[] = [];
   public COURSE_TYPE: object[] = [];
@@ -74,6 +78,7 @@ export class CurriculumNodeFormComponent {
   private iscedfAreaService: IscedfAreaService = inject(IscedfAreaService);
   private escoService: ESCOService = inject(ESCOService);
   private utilsService: UtilsService = inject(UtilsService);
+  private bokService: BokInformationService = inject(BokInformationService);
 
   constructor() {
     this.langChangeSub = this.translate.onLangChange.subscribe(() => this.buildSelectFields());
@@ -104,11 +109,53 @@ export class CurriculumNodeFormComponent {
         this.selectedStudyAreas = newNode.studyAreas.map(area => area.name);
         this.showCustomTransversalSkills = newNode.customTransversalSkills.length > 0;
       }
+      this.addLearningOutcomesSuggestions(newNode.bokConcepts);
     }
   }
 
   setWorkloadUnit(value: WorkloadUnit) {
     this.curriculumNode.workloadUnit = value;
+  }
+
+  addLearningOutcomesSuggestions(bokConcepts: string[]) {
+    const skillAreaMap: Map<string, string> = new Map()
+    const newSkills: Map<string, string[]> = new Map();
+    const observables = bokConcepts.map(concept => {
+      const conceptSkills: Set<string> = new Set();
+      return this.bokService.getConceptSkills(concept).pipe(
+        take(1),
+        tap(values => {
+          values.forEach(value => conceptSkills.add(value));
+          newSkills.set(concept, [...conceptSkills])
+        }),
+        switchMap(() => this.bokService.getConceptName(concept)),
+        take(1),
+        tap(value => {
+          newSkills.set(value, newSkills.get(concept) || []);
+          newSkills.delete(concept);
+          skillAreaMap.set(value, concept == 'GIST' ? concept : concept.slice(0,2));
+        })
+      );
+    });
+    forkJoin([...observables]).pipe(defaultIfEmpty(null)).subscribe(() => {
+      const newSkillsArray: any[] = [];
+      for (let concept of newSkills.keys()) {
+        newSkillsArray.push({
+          label: concept,
+          value: concept,
+          area: skillAreaMap.get(concept),
+          items: newSkills.get(concept)?.map(value => {
+            return {
+              id: value,
+              value: value
+            }
+          })
+          
+        })
+      }
+      this.learningOutcomesSuggestions.set(newSkillsArray);
+      this.curriculumNodeChanged.emit()
+    })
   }
 
   private buildSelectFields() {

@@ -1,0 +1,54 @@
+<div [ngClass]="chips.length >0 ? 'p-2 custom-border' : ''" [class.custom-border-error]="error">
+    <p-floatlabel variant="on" class="custom-floatlabel" [class.invalid-floatlabel]="error">
+        <p-multiselect #pmulti [options]="multiselectOptions" [ngModel]="chips" inputId="{{fieldName}}"
+            class="w-full custom-multiselect" [maxSelectedLabels]="0" (ngModelChange)="multiselectChange($event)"
+            [class.invalid-multiselect]="error" showToggleAll="false" [filter]="filter" resetFilterOnHide="true" 
+            (onFilter)="currentText = pmulti.filterValue || ''"
+            [filterPlaceHolder]="(!customValues ? 'multiSelectLearningOutcomes.filterPlaceholder' : 'multiSelectLearningOutcomes.filterPlaceholderCustomValues') | translate: {fieldName: getSingularFieldName()}" 
+            [showClear]="true" (onClear)="this.chipsChange.emit([])"
+            optionValue="value" optionLabel="id" (onPanelShow)="onDropdownOpen()" (onClear)="pmulti.hide()" 
+            appendTo="body" panelStyleClass="custom-multiselect"
+            [group]="group"
+            [optionGroupLabel]="'id'"
+            [optionGroupChildren]="'items'">
+            <ng-template let-group #group>
+                <div class="flex items-center gap-2">
+                    <p-badge [style]="{color: '#ffffff' }" 
+                        [style.background]="getGroupedOptionColor(group.area) | async" 
+                        [pTooltip]="(getKnowledgeAreaName(group.area) | async) ?? ''"
+                        tooltipPosition="bottom"
+                        [value]="group.area"></p-badge>
+                    <span>{{ group.label }}</span>
+                </div>
+            </ng-template>
+            <ng-template let-option #item>
+                <div class="flex align-items-center gap-2">
+                    <div style="white-space: normal;">{{ option.value }}</div>
+                </div>
+            </ng-template>
+            <ng-template *ngIf="customValues" #footer> 
+                <div class="flex" *ngIf="pmulti.filterValue != '' && pmulti.filterValue != undefined && !pmulti.isEmpty()">
+                    <p-button icon="pi pi-plus" label="Add custom {{getSingularFieldName()}}" size="small" class="custom-button p-3"
+                        (onClick)="clickButton()"></p-button>
+                </div>
+            </ng-template>
+            <ng-template *ngIf="customValues" #emptyfilter>
+                    <p-button icon="pi pi-plus" label="Add custom {{getSingularFieldName()}}" size="small" class="custom-button"
+                        (onClick)="clickButton()" *ngIf="pmulti.filterValue != '' && pmulti.filterValue != undefined"></p-button>
+            </ng-template>
+            <ng-template #filtericon>
+                <i class="pi pi-bookmark"></i>
+            </ng-template>
+            <ng-template #selecteditems>
+                {{'multiSelectLearningOutcomes.itemsSelected' | translate: {number: chips.length} }}
+            </ng-template>
+        </p-multiselect>
+        <label for="{{fieldName}}">{{fieldName}}</label>
+    </p-floatlabel>
+    <div class="mt-3 flex-wrap gap-2 align-items-center" [style.display]="chips.length == 0 ? 'none' : 'flex'">
+        <ng-content *ngFor="let chip of chips">
+            <p-chip [label]="chip" [removable]="true" (onRemove)="deleteElement(chip)" class="custom-chip" 
+                    [ngClass]="chipAnimations[chip] ? 'chip-animation' : ''" [style.background]="selectedConceptsColor.get(chip)"/>
+        </ng-content>
+    </div>
+</div>

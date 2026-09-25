@@ -251,7 +251,7 @@
                         <div class="custom-border p-2" style="color: #64748b;" [pTooltip]="'curriculumNodeForm.fields.bok.tooltip' | translate: {nodeType: getNodeType()}" 
                             tooltipPosition="right" showDelay="200" hideDelay="200" 
                             [style.border-color]="errorMap.get(curriculumNode.id + '.bokConcepts') != undefined ? 'var(--danger-color)' : '' ">
-                            <bokModal [(selectedConcepts)]="curriculumNode.bokConcepts" (selectedConceptsChange)="curriculumNodeChanged.emit()" [label]="('curriculumNodeForm.fields.bok.label' | translate)"
+                            <bokModal [(selectedConcepts)]="curriculumNode.bokConcepts" (selectedConceptsChange)="addLearningOutcomesSuggestions($event)" [label]="('curriculumNodeForm.fields.bok.label' | translate)"
                                 [style.color]="errorMap.get(curriculumNode.id + '.bokConcepts') != undefined ? 'var(--danger-color)' : '' "></bokModal>
                         </div>
                         @if(errorMap.get(curriculumNode.id + '.bokConcepts')) {
@@ -277,8 +277,9 @@
                         </div>
                     }
                 </div>
-                <div class="flex justify-content-start mt-3">
+                <div class="flex justify-content-between mt-3">
                     <p-button class="custom-secondary-button" [label]="'curriculumNodeForm.buttons.previous' | translate" severity="secondary" icon="pi pi-arrow-left" (onClick)="goToNextStep(activateCallback, 1)" />
+                    <p-button class="custom-button" [label]="'curriculumNodeForm.buttons.next' | translate" icon="pi pi-arrow-right" iconPos="right" (onClick)="goToNextStep(activateCallback, 3)" />
                 </div>
             </ng-template>
         </p-step-panel>
@@ -295,14 +296,20 @@
                         }
                     </div>
                     <div>
-                        <text-chips [fieldName]="('curriculumNodeForm.fields.learningOutcomes.label' | translate)" [icon]="'pi pi-graduation-cap'" [(chips)]="curriculumNode.learningObjectives"
-                                [error]="errorMap.get(curriculumNode.id + '.learningObjectives') != undefined" 
-                                [pTooltip]="'curriculumNodeForm.fields.learningOutcomes.tooltip' | translate: {nodeType: getNodeType()}"
-                                tooltipPosition="right" showDelay="200" hideDelay="200"></text-chips>
+                        <multiselect-learning-outcomes fieldName="{{'curriculumNodeForm.fields.learningOutcomes.label' | translate}}" 
+                            [(chips)]="curriculumNode.learningObjectives"  icon="pi pi-graduation-cap"
+                            [pTooltip]="'curriculumNodeForm.fields.learningOutcomes.tooltip' | translate: {nodeType: getNodeType()}"
+                            tooltipPosition="right" showDelay="200" hideDelay="200" [customValues]="true"
+                            [error]="errorMap.get(curriculumNode.id + '.learningObjectives') != undefined" 
+                            [customOptions]="learningOutcomesSuggestions()" [group]="true">
+                        </multiselect-learning-outcomes>
                         @if(errorMap.get(curriculumNode.id + '.learningObjectives')) {
                             <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.learningObjectives')}}</p>
                         }
                     </div>
+                </div>
+                <div class="flex justify-content-start mt-3">
+                    <p-button class="custom-secondary-button" [label]="'curriculumNodeForm.buttons.previous' | translate" severity="secondary" icon="pi pi-arrow-left" (onClick)="goToNextStep(activateCallback, 2)" />
                 </div>
             </ng-template>
         </p-step-panel>

@@ -228,7 +228,13 @@
   },
   "multiSelectChips": {
     "itemsSelected": "{{number}} items selected",
-    "filterPlaceholder": "Choose a {{fieldName}}"
+    "filterPlaceholder": "Choose a {{fieldName}}",
+    "filterPlaceholderCustomValues": "Choose a {{fieldName}} or specify a custom value"
+  },
+  "multiSelectLearningOutcomes": {
+    "itemsSelected": "{{number}} items annotated",
+    "filterPlaceholder": "Choose a suggested {{fieldName}}",
+    "filterPlaceholderCustomValues": "Choose a suggested {{fieldName}} or specify a custom value"
   },
   "nodeTypes": {
     "studyProgram": "Study Program",
