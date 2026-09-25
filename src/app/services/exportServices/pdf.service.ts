@@ -19,7 +19,7 @@ export class PdfService {
   private resourcesLoaded: BehaviorSubject<boolean> = new BehaviorSubject(false);
   private scaleFactor: number = 1.5;
 
-  private userManualPdf = '/assets/CDT_User_Guide.pdf';
+  private userManualPdf = '/assets/EOT_User_Guide.pdf';
 
   constructor(private http: HttpClient, private bokUtils: BokInformationService) {
     const poppinsRegular$ = this.loadFont('assets/fonts/poppins/Poppins-Regular.ttf').pipe(

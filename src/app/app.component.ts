@@ -51,7 +51,7 @@ export class AppComponent {
             target: '_blank'
           },
           {
-            label: 'Curriculum Design Tool',
+            label: 'Educational Offer Tool',
             icon: 'pi pi-sitemap',
             style: {'--p-tieredmenu-item-color': 'var(--hover-color)'},
             iconStyle: {'color': 'var(--hover-color)'}

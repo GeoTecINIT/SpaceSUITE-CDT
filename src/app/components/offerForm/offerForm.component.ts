@@ -116,7 +116,7 @@ export class OfferFormComponent {
       if (this.inputOffer) {
         this.offer.set(new EducationalOffer(this.inputOffer.root, this.inputOffer));
         this.organizationDBService.getOrganizationDivisions(this.offer().orgId).pipe(take(1)).subscribe(divisions => this.divisions = divisions);
-        this.permissionService.organizationHasPermission(this.offer().orgId, 'cdt').pipe(take(1)).subscribe(hasPermission => this.selectedOrgCanPublish.set(hasPermission));
+        this.permissionService.organizationHasPermission(this.offer().orgId, 'eot').pipe(take(1)).subscribe(hasPermission => this.selectedOrgCanPublish.set(hasPermission));
       } else if (duplicatedOffer) {
         this.offer.set(new EducationalOffer(duplicatedOffer.root));
       }
@@ -436,7 +436,7 @@ export class OfferFormComponent {
       return newValue;
     })
     this.organizationDBService.getOrganizationDivisions(this.offer().orgId).pipe(take(1)).subscribe(divisions => this.divisions = divisions);
-    this.permissionService.organizationHasPermission(this.offer().orgId, 'cdt').pipe(take(1)).subscribe(hasPermission => {
+    this.permissionService.organizationHasPermission(this.offer().orgId, 'eot').pipe(take(1)).subscribe(hasPermission => {
       this.selectedOrgCanPublish.set(hasPermission);
       if (!hasPermission) {
         this.offer.update(oldOffer => {
