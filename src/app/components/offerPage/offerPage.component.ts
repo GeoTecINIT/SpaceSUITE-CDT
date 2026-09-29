@@ -28,7 +28,6 @@ import { PdfService } from "../../services/exportServices/pdf.service";
 import { RdfService } from "../../services/exportServices/rdf.service";
 import { JsonService } from "../../services/exportServices/json.service";
 import { Grouping } from "../../model/coreModel/grouping";
-import { TrainingActionDBService } from "../../services/databaseServices/trainingActionDB.service";
 import { DialogModule } from "primeng/dialog";
 import { FloatLabelModule } from "primeng/floatlabel";
 import { SelectModule } from "primeng/select";
@@ -36,6 +35,7 @@ import { TooltipModule } from "primeng/tooltip";
 import { FormsModule } from "@angular/forms";
 import { SplitterModule } from 'primeng/splitter';
 import { SplitButton } from 'primeng/splitbutton';
+import { TrainingActionService } from "../../services/trainingAction.service";
 
 @Component({
   standalone: true,
@@ -100,7 +100,7 @@ export class OfferPageComponent {
   private pdfService = inject(PdfService);
   private rdfService = inject(RdfService);
   private jsonService = inject(JsonService);
-  private actionService = inject(TrainingActionDBService);
+  private actionService = inject(TrainingActionService);
 
   ngOnInit() {
     let nodeId: string = '';
@@ -394,9 +394,9 @@ export class OfferPageComponent {
         });
         return EMPTY;
       })
-    ).subscribe( actionId => {
+    ).subscribe( () => {
       this.exportActionModalVisible = false;
-      window.open('https://spacesuite-project-tct.web.app/action/edit/' + actionId, '_blank');
+      window.open('https://spacesuite-project-tct.web.app/action/new?curriculum=true', '_blank');
     });
   }
 

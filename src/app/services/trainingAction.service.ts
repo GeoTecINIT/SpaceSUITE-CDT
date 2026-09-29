@@ -1,38 +1,26 @@
 import { inject, Injectable } from "@angular/core";
-import { collection, CollectionReference, doc, Firestore, serverTimestamp, setDoc } from "@angular/fire/firestore";
 import { forkJoin, map, Observable, of, switchMap, take, tap } from "rxjs";
-import { TrainingAction } from "../../model/trainingActionModel/trainingAction";
-import { EducationalOffer } from "../../model/coreModel/educationalOffer";
-import { WorkloadUnit } from "../../model/trainingActionModel/trainingItem";
+import { TrainingAction } from "../model/trainingActionModel/trainingAction";
+import { EducationalOffer } from "../model/coreModel/educationalOffer";
+import { WorkloadUnit } from "../model/trainingActionModel/trainingItem";
 import { BokInformationService } from "@eo4geo/ngx-bok-visualization";
 import { AuthService } from "@eo4geo/ngx-bok-utils";
 
 @Injectable({
     providedIn: 'root',
 })
-export class TrainingActionDBService {
+export class TrainingActionService {
   private bokInformationService: BokInformationService = inject(BokInformationService);
   private authService: AuthService = inject(AuthService);
-  private db: Firestore = inject(Firestore);
-  private actionCollection: CollectionReference;
 
-  constructor() { 
-    this.actionCollection = collection(this.db, 'TrainingActions');
-  }
-
-  public createActionFromOffer(offer: EducationalOffer, orgId: string, orgName: string, division?: string): Observable<string> {
+  public createActionFromOffer(offer: EducationalOffer, orgId: string, orgName: string, division?: string): Observable<void> {
     return this.OfferToActionAdapter(offer, orgId, orgName, division).pipe(
-      switchMap(newAction => this.setTrainingAction(newAction))
-    );  
+      map(newAction => this.setTrainingAction(newAction))
+    );
   }
 
-  private setTrainingAction(newAction: TrainingAction): Observable<string> {
-    const newDocRef = doc(this.actionCollection);
-    const timestamp = serverTimestamp();
-    newAction.created = timestamp;
-    newAction.updatedAt = timestamp;
-    newAction._id = newDocRef.id;
-    return of(setDoc(newDocRef, newAction.toPlain())).pipe(map(() => newAction._id));
+  private setTrainingAction(newAction: TrainingAction): void {
+    localStorage.setItem('curriculum-to-action', JSON.stringify(newAction));
   }
 
   private OfferToActionAdapter(offer: EducationalOffer, orgId: string, orgName: string, division?: string): Observable<TrainingAction> {
