@@ -396,7 +396,7 @@ export class OfferPageComponent {
       })
     ).subscribe( () => {
       this.exportActionModalVisible = false;
-      window.open('https://spacesuite-project-tct.web.app/action/new?curriculum=true', '_blank');
+      window.open('https://spacesuite-project-tct.web.app/action/new', '_blank');
     });
   }
 
