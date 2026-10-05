@@ -104,7 +104,7 @@ export class CardComponent implements OnInit {
   }
 
   ngAfterViewChecked() {
-    if (this.conceptsLoaded && this.limitTagsHeight) {
+    if (this.conceptsLoaded && this.limitTagsHeight()) {
       const currentWidth = this.cardComponent.nativeElement.clientWidth;
       this.maxOverflowWidth.set(currentWidth * 1.4);
       this.minOverflowWidth.set(currentWidth * 0.6);
