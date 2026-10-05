@@ -14,10 +14,10 @@ export class TrainingActionDBService {
   private bokInformationService: BokInformationService = inject(BokInformationService);
   private authService: AuthService = inject(AuthService);
   private db: Firestore = inject(Firestore);
-  private actionCollection: CollectionReference;
+  private offerToActionCollection: CollectionReference;
 
   constructor() { 
-    this.actionCollection = collection(this.db, 'TrainingActions');
+    this.offerToActionCollection = collection(this.db, 'OfferToAction');
   }
 
   public createActionFromOffer(offer: EducationalOffer, orgId: string, orgName: string, division?: string): Observable<string> {
@@ -27,7 +27,7 @@ export class TrainingActionDBService {
   }
 
   private setTrainingAction(newAction: TrainingAction): Observable<string> {
-    const newDocRef = doc(this.actionCollection);
+    const newDocRef = doc(this.offerToActionCollection);
     const timestamp = serverTimestamp();
     newAction.created = timestamp;
     newAction.updatedAt = timestamp;
