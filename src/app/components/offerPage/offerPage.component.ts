@@ -396,7 +396,7 @@ export class OfferPageComponent {
       })
     ).subscribe( actionId => {
       this.exportActionModalVisible = false;
-      window.open('https://spacesuite-project-tct.web.app/action/edit/' + actionId, '_blank');
+      window.open('https://spacesuite-project-tct.web.app/action/new?offerId=' + actionId, '_blank');
     });
   }
 
