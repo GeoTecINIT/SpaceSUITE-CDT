@@ -22,12 +22,12 @@ export class TrainingActionDBService {
 
   public createActionFromOffer(offer: EducationalOffer, orgId: string, orgName: string, division?: string): Observable<string> {
     return this.OfferToActionAdapter(offer, orgId, orgName, division).pipe(
-      switchMap(newAction => this.setTrainingAction(newAction))
+      switchMap(newAction => this.setTrainingAction(newAction, offer.id))
     );  
   }
 
-  private setTrainingAction(newAction: TrainingAction): Observable<string> {
-    const newDocRef = doc(this.offerToActionCollection);
+  private setTrainingAction(newAction: TrainingAction, id: string): Observable<string> {
+    const newDocRef = doc(this.offerToActionCollection, id);
     const timestamp = serverTimestamp();
     newAction.created = timestamp;
     newAction.updatedAt = timestamp;
