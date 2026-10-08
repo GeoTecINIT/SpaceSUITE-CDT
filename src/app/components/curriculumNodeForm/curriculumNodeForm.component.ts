@@ -140,21 +140,22 @@ export class CurriculumNodeFormComponent {
     forkJoin([...observables]).pipe(defaultIfEmpty(null)).subscribe(() => {
       const newSkillsArray: any[] = [];
       for (let concept of newSkills.keys()) {
-        newSkillsArray.push({
-          label: concept,
-          value: concept,
-          area: skillAreaMap.get(concept),
-          items: newSkills.get(concept)?.map(value => {
-            return {
-              id: value,
-              value: value
-            }
+        const conceptNewSkills = newSkills.get(concept);
+        if (conceptNewSkills && conceptNewSkills.length > 0) {
+          newSkillsArray.push({
+            label: concept,
+            value: concept,
+            area: skillAreaMap.get(concept),
+            items: conceptNewSkills.map(value => {
+              return {
+                id: value,
+                value: value
+              }
+            })
           })
-          
-        })
+        }
       }
       this.learningOutcomesSuggestions.set(newSkillsArray);
-      this.curriculumNodeChanged.emit()
     })
   }
 
