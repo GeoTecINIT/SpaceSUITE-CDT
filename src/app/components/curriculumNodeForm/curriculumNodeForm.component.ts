@@ -58,6 +58,7 @@ export class CurriculumNodeFormComponent {
   @Input() errorMap: Map<string, string | undefined> = new Map();
   @Input() curriculumNode!: CurriculumNode;
   @Output() curriculumNodeChanged: EventEmitter<undefined> = new EventEmitter();
+  @Output() saveDraft: EventEmitter<undefined> = new EventEmitter();
 
   public showCustomTransversalSkills: boolean = false;
   public transversalSkills: TreeNode<any>[] = [];
@@ -115,6 +116,7 @@ export class CurriculumNodeFormComponent {
 
   setWorkloadUnit(value: WorkloadUnit) {
     this.curriculumNode.workloadUnit = value;
+    this.saveDraft.emit();
   }
 
   addLearningOutcomesSuggestions(bokConcepts: string[]) {
@@ -157,6 +159,7 @@ export class CurriculumNodeFormComponent {
       }
       this.learningOutcomesSuggestions.set(newSkillsArray);
     })
+    this.saveDraft.emit();
   }
 
   private buildSelectFields() {
@@ -240,11 +243,13 @@ export class CurriculumNodeFormComponent {
   onNameChange(newName: string) {
     this.curriculumNode.name = newName;
     this.curriculumNodeChanged.emit();
+    this.saveDraft.emit();
   }
 
   onGroupingNameChange(newName: string) {
     (this.curriculumNode as Grouping).groupingName = newName;
     this.curriculumNodeChanged.emit();
+    this.saveDraft.emit();
   }
 
   selectedNodeEqf(): string | undefined {
@@ -255,6 +260,7 @@ export class CurriculumNodeFormComponent {
   onEqfChange(value: string) {
     const cleanedValue = value.replace('EQF', '').trim();
     this.curriculumNode.eqf = Number(cleanedValue);
+    this.saveDraft.emit();
   }
 
   onStudyAreasChange() {
@@ -269,6 +275,7 @@ export class CurriculumNodeFormComponent {
       newEscoSkill.preferredLabel = value.label!;
       return newEscoSkill;
     });
+    this.saveDraft.emit();
   }
 
   addTrainingMaterial() {
@@ -278,6 +285,7 @@ export class CurriculumNodeFormComponent {
 
   deleteTrainingMaterial(index: number) {
     this.curriculumNode.trainingMaterials.splice(index, 1);
+    this.saveDraft.emit();
   }
 
   addAffiliation() {
@@ -287,6 +295,7 @@ export class CurriculumNodeFormComponent {
 
   deleteAffiliation(index: number) {
     this.curriculumNode.affiliations.splice(index, 1);
+    this.saveDraft.emit();
   }
 
   goToNextStep(callback: (nextStepValue: number) => void, index: number) {

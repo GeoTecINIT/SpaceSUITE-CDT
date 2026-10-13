@@ -28,7 +28,8 @@ import { UtilsService } from "../../services/utils.service";
 import { MessageModule } from 'primeng/message';
 import { Grouping, GroupingType } from "../../model/coreModel/grouping";
 import { SplitterModule } from 'primeng/splitter';
-import { CommonModule } from "@angular/common";
+import { CommonModule, Location } from "@angular/common";
+import { DraftStorageService } from "../../services/draftStorage.service";
 
 @Component({
   standalone: true,
@@ -85,6 +86,8 @@ export class OfferFormComponent {
 
   private previousNavigationUrl?: UrlTree;
 
+  private isLoading: boolean = true;
+
   private sessionSubscription?: Subscription;
   private userOrgsSubscription?: Subscription;
   private langChangeSub: Subscription;
@@ -101,6 +104,8 @@ export class OfferFormComponent {
   private translate: TranslateService = inject(TranslateService);
   private utilsService: UtilsService = inject(UtilsService);
   private permissionService: PermissionService = inject(PermissionService);
+  private draftService: DraftStorageService = inject(DraftStorageService);
+  private location = inject(Location);
 
   constructor() {
     this.langChangeSub = this.translate.onLangChange.subscribe(() => this.buildSelectOptions());
@@ -108,28 +113,42 @@ export class OfferFormComponent {
   }
 
   ngOnInit() {
+    // Load form data
     this.route.paramMap.pipe(switchMap(paramMap => {
       const offerId = paramMap.get('offerId');
-      if (!offerId) return of(undefined)
+      if (!offerId || this.inputOffer) return of(undefined)
       else return this.educationalOfferService.getEducationalOffer(offerId).pipe(take(1));
     })).subscribe((duplicatedOffer: EducationalOffer | undefined) => {
-      if (this.inputOffer) {
+      // Fill form
+      const formDraft: EducationalOffer | null = this.draftService.loadDraft();
+      if (formDraft && (!this.inputOffer || formDraft.id == this.inputOffer.id) && !duplicatedOffer) {
+        this.offer.set(new EducationalOffer(formDraft.root, formDraft));
+      }
+      else if (this.inputOffer) {
         this.offer.set(new EducationalOffer(this.inputOffer.root, this.inputOffer));
-        this.organizationDBService.getOrganizationDivisions(this.offer().orgId).pipe(take(1)).subscribe(divisions => this.divisions = divisions);
-        this.permissionService.organizationHasPermission(this.offer().orgId, 'eot').pipe(take(1)).subscribe(hasPermission => this.selectedOrgCanPublish.set(hasPermission));
       } else if (duplicatedOffer) {
         this.offer.set(new EducationalOffer(duplicatedOffer.root));
+        this.location.replaceState('new');
       }
       else {
         this.rootNodeModalVisible = true;
       }
 
+      // Load org info
+      if ((this.inputOffer || (formDraft && formDraft.orgId.trim() != '')) && !duplicatedOffer) {
+        this.organizationDBService.getOrganizationDivisions(this.offer().orgId).pipe(take(1)).subscribe(divisions => this.divisions = divisions);
+        this.permissionService.organizationHasPermission(this.offer().orgId, 'eot').pipe(take(1)).subscribe(hasPermission => this.selectedOrgCanPublish.set(hasPermission));
+      }
+      
+      // Load selected node
       if (this.inputSelectedNodeId) {
         const selectedNode = this.offer().getNodeById(this.inputSelectedNodeId);
         this.selectedNode.set(selectedNode || this.offer().root);
       }
       else this.selectedNode.set(this.offer().root);
       this.autoSelectNewNodeType(this.selectedNode());
+
+      this.isLoading = false;
     });
 
     this.sessionSubscription = this.authService.getUserState().subscribe ( state => {
@@ -178,7 +197,10 @@ export class OfferFormComponent {
         label: this.translate.instant('offerForm.modal.exit.accept'),
         severity: 'danger',
       },
-      accept: () => this.exitWithoutSavingService.exitSubject.next(true),
+      accept: () => {
+        this.draftService.clearDraft();
+        this.exitWithoutSavingService.exitSubject.next(true);
+      },
       reject: () => this.exitWithoutSavingService.exitSubject.next(false),
     });
   }
@@ -293,6 +315,7 @@ export class OfferFormComponent {
         offer
       );
     });
+    this.saveDraft();
   }
 
   addRootNode() {
@@ -330,6 +353,7 @@ export class OfferFormComponent {
         offer
       );
     });
+    this.saveDraft();
     this.selectedNode.set(this.offer().root);
     this.autoSelectNewNodeType(this.selectedNode());
     this.rootNodeModalVisible = false;
@@ -404,6 +428,7 @@ export class OfferFormComponent {
           return EMPTY;
         })
       ).subscribe(eduOfferId => {
+        this.draftService.clearDraft();
         this.router.navigate(
           ['offer/' + eduOfferId], 
           { 
@@ -435,6 +460,7 @@ export class OfferFormComponent {
       newValue.division = undefined;
       return newValue;
     })
+    this.saveDraft();
     this.organizationDBService.getOrganizationDivisions(this.offer().orgId).pipe(take(1)).subscribe(divisions => this.divisions = divisions);
     this.permissionService.organizationHasPermission(this.offer().orgId, 'eot').pipe(take(1)).subscribe(hasPermission => {
       this.selectedOrgCanPublish.set(hasPermission);
@@ -444,6 +470,7 @@ export class OfferFormComponent {
           newOffer.isPublic = false;
           return newOffer;
         });
+        this.saveDraft();
       }
     });
   }
@@ -456,6 +483,7 @@ export class OfferFormComponent {
         offer
       );
     });
+    this.saveDraft();
     this.selectedNode.set(this.offer().root);
     this.messageService.add({ 
       severity: 'info', 
@@ -633,5 +661,9 @@ export class OfferFormComponent {
         closable: true 
       });
     }
+  }
+
+  saveDraft() {
+    if (!this.isLoading) this.draftService.saveDraft(this.offer());
   }
 }

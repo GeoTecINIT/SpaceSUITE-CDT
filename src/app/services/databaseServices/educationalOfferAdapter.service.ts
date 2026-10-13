@@ -9,7 +9,7 @@ import { Course } from "../../model/coreModel/course";
 import { LectureDB } from "../../model/databaseModel/lectureDB";
 import { Lecture } from "../../model/coreModel/lecture";
 import { CurriculumNodeDB } from "../../model/databaseModel/curriculumNodeDB";
-import { CurriculumNode } from "../../model/coreModel/curriculumNode";
+import { CurriculumNode, NodeType } from "../../model/coreModel/curriculumNode";
 import { EducationalOffer } from "../../model/coreModel/educationalOffer";
 import { EducationalOfferDB } from "../../model/databaseModel/educationalOfferDB";
 import { concatMap, forkJoin, map, Observable, of, take } from "rxjs";
@@ -28,6 +28,20 @@ import { Affiliation } from "../../model/coreModel/affiliation";
 export class EducationalOfferAdapterService {
   private educationalOfferDBService = inject(EducationalOfferDBService);
   private bokInformationService = inject(BokInformationService);
+
+  public toStorage(educationalOffer: EducationalOffer): Observable<{educationalOffer: EducationalOfferDB, curriculumNodes: CurriculumNodeDB[]}> {
+    const educationalOfferDB = this.parseEducationalOffer(educationalOffer);
+    const curriculumNodesDBObservables = educationalOffer.getAllNodes().map(node => this.parseCurriculumNode(node));
+    return forkJoin(curriculumNodesDBObservables).pipe(
+      map(curriculumNodesDB => {
+        return { educationalOffer: educationalOfferDB, curriculumNodes: curriculumNodesDB }
+      })
+    );
+  }
+
+  public fromStorage(educationalOffer: EducationalOfferDB, nodes: CurriculumNodeDB[]): EducationalOffer {
+    return this.parseEducationalOfferDB(educationalOffer, nodes);
+  }
 
   public createEducationalOffer(educationalOffer: EducationalOffer): Observable<string> {
     const educationalOfferDB = this.parseEducationalOffer(educationalOffer);
@@ -242,7 +256,7 @@ export class EducationalOfferAdapterService {
 
   private parseCurriculumNodeDB(nodeDB: CurriculumNodeDB): CurriculumNode {
     switch (true) {
-      case nodeDB instanceof LectureDB:
+      case nodeDB.nodeType == NodeType.Lecture:
         const lectureDB = nodeDB as LectureDB;
         return new Lecture(
           {
@@ -265,7 +279,7 @@ export class EducationalOfferAdapterService {
             isPractical: lectureDB.isPractical
           }
         );
-      case nodeDB instanceof CourseDB:
+      case nodeDB.nodeType == NodeType.Course:
         const courseDB = nodeDB as CourseDB;
         return new Course(
           {
@@ -289,7 +303,7 @@ export class EducationalOfferAdapterService {
             courseType: courseDB.courseType
           }
         );
-      case nodeDB instanceof GroupingDB:
+      case nodeDB.nodeType == NodeType.Grouping:
         const groupingDB = nodeDB as GroupingDB;
         return new Grouping(
           {
@@ -313,7 +327,7 @@ export class EducationalOfferAdapterService {
             groupingName: groupingDB.groupingName
           }
         );
-      case nodeDB instanceof StudyProgramDB:
+      case nodeDB.nodeType == NodeType.StudyProgram:
         const studyProgramDB = nodeDB as StudyProgramDB;
         return new StudyProgram(
           {

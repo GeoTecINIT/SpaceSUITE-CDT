@@ -57,7 +57,7 @@
             {{selectedNode().name == '' ? ('offerForm.headers.newNodeName' | translate: {nodeType: getSelectedNodeType()}) : selectedNode().name}}
         </h3>
         <curriuclum-node-form class="flex mt-3 w-full" [curriculumNode]="this.selectedNode()" (curriculumNodeChanged)="updateSelectedNode()" 
-            [errorMap]="this.errorMap()"></curriuclum-node-form>
+            [errorMap]="this.errorMap()" (saveDraft)="saveDraft()"></curriuclum-node-form>
     </div>
 </ng-template>
 
@@ -119,7 +119,7 @@
                 </p-floatlabel>
                 <p-floatlabel variant="on" class="custom-floatlabel w-full">
                     <p-select [options]="divisions" [(ngModel)]="this.offer().division" class="w-full custom-select" 
-                        [disabled]="divisions.length == 0" [checkmark]="true" inputId="division"
+                        [disabled]="divisions.length == 0" [checkmark]="true" inputId="division" (ngModelChange)="saveDraft()"
                         [pTooltip]="'offerForm.fields.division.tooltip' | translate" 
                         tooltipPosition="bottom" showDelay="200" hideDelay="200"/>
                     <label for="division">{{'offerForm.fields.division.label' | translate}}</label>
