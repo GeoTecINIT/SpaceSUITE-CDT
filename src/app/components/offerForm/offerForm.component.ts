@@ -201,7 +201,10 @@ export class OfferFormComponent {
         this.draftService.clearDraft();
         this.exitWithoutSavingService.exitSubject.next(true);
       },
-      reject: () => this.exitWithoutSavingService.exitSubject.next(false),
+      reject: () => {
+        this.exitWithoutSavingService.exitSubject.next(false);
+        this.location.replaceState('new');
+      }
     });
   }
 
