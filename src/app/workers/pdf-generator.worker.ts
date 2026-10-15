@@ -58,8 +58,8 @@ function applyMetadata(doc: jsPDF, offer: EducationalOffer) {
     title: `${offer.root.name} - ${offer.root.nodeType} `,
     subject: getSubjectMetadata(offer),
     author: 'SpaceSuite',
-    creator: 'SpaceSuite Educational Offer Tool',
-    keywords: 'spacesuite, educational offer tool, study program, course, lecture',
+    creator: 'SpaceSuite Educational Design Tool',
+    keywords: 'spacesuite, educational design tool, study program, course, lecture',
   });
 }
 
