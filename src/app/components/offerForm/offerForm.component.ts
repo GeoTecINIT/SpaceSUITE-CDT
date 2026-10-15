@@ -38,6 +38,7 @@ import { DraftStorageService } from "../../services/draftStorage.service";
   styleUrls: ['./offerForm.component.css'],
   imports: [ToastModule, ConfirmDialogModule, FloatLabelModule, FormsModule, PanelModule, OfferIndexComponent, SelectModule, TooltipModule, 
             ButtonModule, DialogModule, CurriculumNodeFormComponent, SelectButtonModule, TranslateModule, MessageModule, SplitterModule, CommonModule],
+  providers: [DraftStorageService]
 })
 export class OfferFormComponent {
   @Input() inputPageName?: string;

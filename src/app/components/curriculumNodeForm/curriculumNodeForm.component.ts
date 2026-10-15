@@ -160,6 +160,7 @@ export class CurriculumNodeFormComponent {
       this.learningOutcomesSuggestions.set(newSkillsArray);
     })
     this.saveDraft.emit();
+    this.curriculumNodeChanged.emit()
   }
 
   private buildSelectFields() {

@@ -11,9 +11,7 @@ import { Timestamp } from '@angular/fire/firestore';
 import { interval, Subscription } from 'rxjs';
 
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class DraftStorageService {
   private educationalOfferAdapter = inject(EducationalOfferAdapterService)
 
@@ -28,8 +26,9 @@ export class DraftStorageService {
   private readonly courseKey = 'course-draft';
   private readonly groupingKey = 'grouping-draft';
 
-  ngOnInit() {
-    this.timerSubscirption = interval(150000).subscribe(() => {
+  constructor() {
+    this.timerSubscirption = interval(15000).subscribe(() => {
+      console.log(this.draftChanged)
       if (this.draftChanged) {
         this.writeDraft();
         this.draftChanged = false;
@@ -37,12 +36,14 @@ export class DraftStorageService {
     })
   }
 
+  // This hook is linked to the component that invoked this service
   ngOnDestroy() {
     this.timerSubscirption.unsubscribe();
   }
 
   saveDraft(offer: EducationalOffer, write: boolean = false): void {
     if (write) {
+      this.draftOffer = offer;
       this.writeDraft();
       this.draftChanged = false;
     }
