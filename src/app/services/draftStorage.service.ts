@@ -8,6 +8,7 @@ import { LectureDB } from '../model/databaseModel/lectureDB';
 import { GroupingDB } from '../model/databaseModel/groupingDB';
 import { DomainError } from '../model/domainError';
 import { Timestamp } from '@angular/fire/firestore';
+import { interval, Subscription } from 'rxjs';
 
 
 @Injectable({
@@ -15,14 +16,45 @@ import { Timestamp } from '@angular/fire/firestore';
 })
 export class DraftStorageService {
   private educationalOfferAdapter = inject(EducationalOfferAdapterService)
+
+  private draftOffer?: EducationalOffer;
+  private draftChanged: boolean = false;
+
+  private timerSubscirption!: Subscription;
+
   private readonly offerKey = 'educational-offer-draft';
   private readonly studyProgramKey = 'study-program-draft';
   private readonly lectureKey = 'lecture-draft';
   private readonly courseKey = 'course-draft';
   private readonly groupingKey = 'grouping-draft';
 
-  saveDraft(offer: EducationalOffer): void {
-    this.educationalOfferAdapter.toStorage(offer).subscribe(({educationalOffer, curriculumNodes}) => {
+  ngOnInit() {
+    this.timerSubscirption = interval(150000).subscribe(() => {
+      if (this.draftChanged) {
+        this.writeDraft();
+        this.draftChanged = false;
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.timerSubscirption.unsubscribe();
+  }
+
+  saveDraft(offer: EducationalOffer, write: boolean = false): void {
+    if (write) {
+      this.writeDraft();
+      this.draftChanged = false;
+    }
+    else {
+      this.draftOffer = offer;
+      this.draftChanged = true;
+    }
+  }
+
+  private writeDraft() {
+    if (!this.draftOffer) return;
+    this.educationalOfferAdapter.toStorage(this.draftOffer).subscribe(({educationalOffer, curriculumNodes}) => {
       this.setDraft(this.offerKey, educationalOffer);
       const studyPrograms: StudyProgramDB[] = [];
       const courses: CourseDB[] = [];
@@ -65,7 +97,9 @@ export class DraftStorageService {
     if (plain) {
       plain.createdAt = new Timestamp(plain.createdAt.seconds, plain.createdAt.nanoseconds);
       plain.updatedAt = plain.updatedAt ? new Timestamp(plain.updatedAt.seconds, plain.updatedAt.nanoseconds) : undefined;
-      return this.educationalOfferAdapter.fromStorage(plain, [...plainStudyPrograms, ...plainCourses, ...plainLectures, ...plainGroupings])
+      const loadedOffer = this.educationalOfferAdapter.fromStorage(plain, [...plainStudyPrograms, ...plainCourses, ...plainLectures, ...plainGroupings])
+      this.draftOffer = loadedOffer;
+      return loadedOffer;
     }
     return null;
   }

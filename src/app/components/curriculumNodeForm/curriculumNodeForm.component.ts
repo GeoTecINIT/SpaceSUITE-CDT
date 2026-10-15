@@ -109,8 +109,8 @@ export class CurriculumNodeFormComponent {
           .map(skill => this.findTransversalSkill(skill.preferredLabel, this.transversalSkills)).filter(value => value != undefined);
         this.selectedStudyAreas = newNode.studyAreas.map(area => area.name);
         this.showCustomTransversalSkills = newNode.customTransversalSkills.length > 0;
+        this.addLearningOutcomesSuggestions(newNode.bokConcepts);
       }
-      this.addLearningOutcomesSuggestions(newNode.bokConcepts);
     }
   }
 
