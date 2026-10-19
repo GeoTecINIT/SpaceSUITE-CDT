@@ -57,7 +57,7 @@ export class AppComponent {
             iconStyle: {'color': 'var(--hover-color)'}
           },
           {
-            label: 'Training Catalogue Tool',
+            label: 'Training Catalogue',
             icon: 'pi pi-graduation-cap',
             url: 'https://spacesuite-training-catalogue.web.app/',
             target: '_blank'
