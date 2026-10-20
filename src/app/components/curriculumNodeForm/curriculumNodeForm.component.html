@@ -138,6 +138,7 @@
                                 <p-floatlabel variant="on" class="w-full custom-floatlabel">
                                     <p-iconfield>
                                         <p-inputnumber id="durationValue" [min]="0" [useGrouping]="false" (ngModelChange)="saveDraft.emit()"
+                                            mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="1"
                                             [class.ng-invalid]="errorMap.get(curriculumNode.id + '.timeRequired') != undefined" 
                                             [class.ng-dirty]="errorMap.get(curriculumNode.id + '.timeRequired') != undefined" 
                                             class="custom-input" [(ngModel)]="curriculumNode.timeRequired.value" fluid/>
