@@ -41,6 +41,8 @@ export class OfferIndexComponent {
 
   scale: WritableSignal<number> = signal(0.5);
   updateScale = (newValue: number) => this.scale.set(newValue);
+  increaseScale = (step: number) => this.scale.update((value) => Math.min(value + step, 1.5));
+  decreaseScale = (step: number) => this.scale.update((value) => Math.max(value - step, 0.25));
 
   knowledgeDistributions: WritableSignal<Map<string, MeterItem[]>> = signal(new Map());
   knowledgeNames: WritableSignal<Map<string, string>> = signal(new Map())

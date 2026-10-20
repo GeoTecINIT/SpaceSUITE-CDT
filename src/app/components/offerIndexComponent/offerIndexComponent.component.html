@@ -44,9 +44,9 @@
                 <br>
                 <div class="flex">
                     <div class="flex flex-column justify-content-start align-items-center gap-3 p-2">
-                        <i class="pi pi-search-plus align-content-center" style="font-size: 1rem"></i>
+                        <i class="pi pi-search-plus align-content-center cursor-pointer" style="font-size: 1rem" (click)="increaseScale(0.15)"></i>
                         <p-slider [ngModel]="scale()" (ngModelChange)="updateScale($event)" orientation="vertical" min="0.25" max="1.5" step="0.05" class="flex justify-content-center custom-slider"/>
-                        <i class="pi pi-search-minus" style="font-size: 1rem"></i>
+                        <i class="pi pi-search-minus cursor-pointer" style="font-size: 1rem" (click)="decreaseScale(0.15)"></i>
                     </div>
                     <div class="zoom-wrapper">
                         <div class="zoom-content" [style.zoom]="scale()">
