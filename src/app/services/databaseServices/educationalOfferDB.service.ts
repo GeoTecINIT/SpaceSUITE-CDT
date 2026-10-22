@@ -60,11 +60,11 @@ export class EducationalOfferDBService {
       if (!child) {
         throw new DomainError('CHILD_NODE_NOT_FOUND', `Child node with id ${childId} was not found.`);
       }
-      return this.AddNodesToBatch(child, nodeMap, eduOfferDocRef, batch);
+      return this.AddNodesToBatch(child, nodeMap, eduOfferDocRef, batch, createSet);
     });
 
     let newDocRef: DocumentReference;
-    if (createSet && createSet.has(currentNode.id)) {
+    if (createSet == undefined || createSet.has(currentNode.id)) {
       newDocRef = this.getSubCollectionDocRef(currentNode, eduOfferDocRef);
     }
     else {
