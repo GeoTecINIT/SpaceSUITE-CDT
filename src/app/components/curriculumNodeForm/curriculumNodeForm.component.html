@@ -34,10 +34,11 @@
                         <div>
                             <p-floatlabel variant="on" class="custom-floatlabel">
                                 <p-iconfield>
-                                    <input pInputText id="groupingName" autocomplete="off" class="w-full custom-input" 
+                                    <p-autocomplete [inputId]="'groupingName'" autocomplete="off" fluid class="w-full custom-input custom-autocomplete" 
                                         [ngModel]="selectedGrouping.groupingName" (ngModelChange)="onGroupingNameChange($event)" 
                                         tooltipPosition="right" showDelay="200" hideDelay="200" maxlength="200"
-                                        [pTooltip]="'curriculumNodeForm.fields.groupingName.tooltip' | translate"/>
+                                        [pTooltip]="'curriculumNodeForm.fields.groupingName.tooltip' | translate"
+                                        [suggestions]="groupingNameOrderedSuggestions" (completeMethod)="orderGroupingNameSuggestions($event.query)"/>
                                     <p-inputicon class="pi pi-box"/>
                                 </p-iconfield>
                                 <label for="groupingName">{{ 'curriculumNodeForm.fields.groupingName.label' | translate }}</label>

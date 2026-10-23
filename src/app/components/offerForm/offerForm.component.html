@@ -57,7 +57,7 @@
             {{selectedNode().name == '' ? ('offerForm.headers.newNodeName' | translate: {nodeType: getSelectedNodeType()}) : selectedNode().name}}
         </h3>
         <curriuclum-node-form class="flex mt-3 w-full" [curriculumNode]="this.selectedNode()" (curriculumNodeChanged)="updateSelectedNode()" 
-            [errorMap]="this.errorMap()" (saveDraft)="saveDraft()"></curriuclum-node-form>
+            [errorMap]="this.errorMap()" (saveDraft)="saveDraft()" [groupingNameSuggestions]="groupingNameSuggestions()"></curriuclum-node-form>
     </div>
 </ng-template>
 

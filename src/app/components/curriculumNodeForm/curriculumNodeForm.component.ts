@@ -41,6 +41,7 @@ import { InputGroupAddonModule } from "primeng/inputgroupaddon";
 import { MenuModule } from "primeng/menu";
 import { WorkloadUnit } from "../../model/workloadUnit";
 import { CommonModule } from "@angular/common";
+import { AutoCompleteModule } from 'primeng/autocomplete';
 import { BokInformationService } from "@eo4geo/ngx-bok-visualization";
 import { MultiselectLearningOutcomesComponent } from "../multiselectLearningOutcomes/multiselectLearningOutcomes.component";
 
@@ -52,11 +53,12 @@ import { MultiselectLearningOutcomesComponent } from "../multiselectLearningOutc
   imports: [ToastModule, ConfirmDialogModule, InputTextModule, FloatLabelModule, FormsModule, InputIconModule, IconFieldModule, PanelModule, InputNumberModule,
     StepperModule, SelectModule, TooltipModule, ButtonModule, DialogModule, TextareaModule, BokModalComponent, TextChipsComponent, TranslateModule,
     CustomSelectComponent, MultiselectChipsComponent, TreeselectChipsComponent, DividerModule, SelectButtonModule, InputGroupModule, InputGroupAddonModule,
-    MenuModule, CommonModule, MultiselectLearningOutcomesComponent],
+    MenuModule, CommonModule, MultiselectLearningOutcomesComponent, AutoCompleteModule],
 })
 export class CurriculumNodeFormComponent {
   @Input() errorMap: Map<string, string | undefined> = new Map();
   @Input() curriculumNode!: CurriculumNode;
+  @Input() groupingNameSuggestions: string[] = [];
   @Output() curriculumNodeChanged: EventEmitter<undefined> = new EventEmitter();
   @Output() saveDraft: EventEmitter<undefined> = new EventEmitter();
 
@@ -67,6 +69,8 @@ export class CurriculumNodeFormComponent {
   public selectedStudyAreas: string[] = [];
 
   public learningOutcomesSuggestions: WritableSignal<any[]> = signal([]);
+
+  public groupingNameOrderedSuggestions: string[] = []
 
   public DURATION_UNIT: object[] = [];
   public WORKLOAD_UNIT: object[] = [];
@@ -239,6 +243,14 @@ export class CurriculumNodeFormComponent {
       if (match) return match;
     }
     return undefined;
+  }
+
+  orderGroupingNameSuggestions(value: string) {
+    this.groupingNameOrderedSuggestions =
+      this.groupingNameSuggestions.sort((a, b) => {
+        if (a === value) return -1;
+        return a.localeCompare(b);
+      });
   }
 
   onNameChange(newName: string) {

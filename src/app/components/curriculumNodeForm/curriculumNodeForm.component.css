@@ -58,3 +58,10 @@
     margin-left: auto;
     margin-right: auto;
 }
+
+.custom-autocomplete {
+    --p-autocomplete-option-selected-focus-background: color-mix(in srgb, var(--secondary-color) 20%, rgba(0, 0, 0, 0) 90%);
+    --p-autocomplete-option-selected-focus-color: var(--p-autocomplete-option-focus-color);
+    --p-autocomplete-option-selected-background: color-mix(in srgb, var(--secondary-color) 20%, rgba(0, 0, 0, 0) 80%);
+    --p-autocomplete-option-selected-color: var(--p-autocomplete-option-color);
+}

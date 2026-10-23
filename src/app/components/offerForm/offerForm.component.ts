@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output, signal, WritableSignal } from "@angular/core";
+import { Component, computed, EventEmitter, inject, Input, Output, signal, WritableSignal } from "@angular/core";
 import { EducationalOffer } from "../../model/coreModel/educationalOffer";
 import { StudyProgram } from "../../model/coreModel/studyProgram";
 import { ToastModule } from "primeng/toast";
@@ -208,6 +208,24 @@ export class OfferFormComponent {
       }
     });
   }
+
+  groupingNameSuggestions = computed(() => {
+    const selected = this.selectedNode();
+    if (selected.nodeType !== NodeType.Grouping) {
+      return [];
+    }
+    const groupingType = (selected as Grouping).groupingType;
+    return [
+      ...new Set(
+        this.offer().getAllNodes().filter(
+          node => 
+            node.nodeType === NodeType.Grouping && 
+            (node as Grouping).groupingType === groupingType &&
+            (node as Grouping).groupingName != ''
+        ).map(node => (node as Grouping).groupingName)
+      )
+    ];
+  });
 
   getValidChildTypes(): Object[] {
     const node = this.selectedNode();
