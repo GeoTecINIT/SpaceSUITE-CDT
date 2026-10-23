@@ -249,6 +249,7 @@ export class CurriculumNodeFormComponent {
     this.groupingNameOrderedSuggestions =
       this.groupingNameSuggestions.sort((a, b) => {
         if (a === value) return -1;
+        if (b == value) return 1;
         return a.localeCompare(b);
       });
   }
