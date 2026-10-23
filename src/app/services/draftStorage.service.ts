@@ -28,7 +28,6 @@ export class DraftStorageService {
 
   constructor() {
     this.timerSubscirption = interval(15000).subscribe(() => {
-      console.log(this.draftChanged)
       if (this.draftChanged) {
         this.writeDraft();
         this.draftChanged = false;
