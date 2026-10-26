@@ -28,6 +28,10 @@ export class TreeselectChipsComponent {
   @Input() fieldName: string = 'Field Name';
 
   @Input() error: boolean = false;
+  
+  public get virtualScrollHeight() {
+    return this.treeselectOptions.some(node => node.expanded) ? '336px' : '252px';
+  };
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['treeSelection']) {

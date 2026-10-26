@@ -6,7 +6,7 @@
             [virtualScrollItemSize]="40" [filterPlaceholder]="'treeselectChips.placeholder' | translate:{fieldName: fieldName}" [showClear]="true"
             [metaKeySelection]="true" selectionMode="checkbox" filter showClear fluid [propagateSelectionDown]="false"
             appendTo="body" panelStyleClass="custom-treeselect" [propagateSelectionUp]="false"
-            [virtualScrollOptions]="{ scrollHeight: '252px' }" [loading]="treeselectOptions.length == 0">
+            [virtualScrollOptions]="{ scrollHeight: virtualScrollHeight }" [loading]="treeselectOptions.length == 0">
             <ng-template #filtericon>
                 <i class="pi pi-bookmark"></i>
             </ng-template>
