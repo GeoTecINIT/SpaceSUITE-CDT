@@ -355,7 +355,7 @@
         "summary": "Error"
       },
       "mandatoryFieldsError": {
-        "detail": "There are incomplete mandatory fields. Please review the form and try to submit again.",
+        "detail": "Some required fields are missing. Review the nodes and complete all required fields before submitting.",
         "summary": "Error"
       },
       "nodeDeleted": {
