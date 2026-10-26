@@ -143,12 +143,12 @@
                     <div class="mb-2 text-justify">
                         <div class="mb-4">
                             <strong>{{'offerPage.description' | translate}}:</strong>
-                            <div class="text-justify mt-2">{{selectedNode()?.description}}</div>
+                            <div class="text-justify mt-2" style="white-space: pre-wrap;">{{selectedNode()?.description}}</div>
                         </div>
 
                         <div *ngIf="selectedNodeType() === 'Course'" class="mb-4">
                             <strong>{{'offerPage.assessment' | translate}}:</strong>
-                            <div class="text-justify mt-2">{{getAssessment()}}</div>
+                            <div class="text-justify mt-2" style="white-space: pre-wrap;">{{getAssessment()}}</div>
                         </div>
 
                         <div class="mb-2">
