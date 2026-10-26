@@ -13,11 +13,11 @@
     "toast": {
       "info": {
         "summary": "Info",
-        "detail": "Concept {{concept}} annotated!"
+        "detail": "Concept {{concept}} {{verb}}!"
       },
       "error": {
         "summary": "Error",
-        "detail": "Concept {{concept}} is already annotated!"
+        "detail": "Concept {{concept}} is already {{verb}}!"
       }
     }
   },
@@ -183,7 +183,8 @@
       "placeholder": "Search"
     },
     "bok": {
-      "label": "Filter by Knowledge / BoK Concept"
+      "label": "Filter by Knowledge / BoK Concept",
+      "actionLabel": "added to the filter"
     },
     "eqf": {
       "label": "EQF Level",

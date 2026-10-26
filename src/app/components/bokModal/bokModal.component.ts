@@ -22,6 +22,7 @@ export class BokModalComponent {
   visible = false;
   
   @Input() label: string = 'BoK Concepts';
+  @Input() actionLabel: string = 'annotated';
   @Input() disabled: boolean = false;
 
   currentConcept = signal('');
@@ -103,7 +104,7 @@ export class BokModalComponent {
       this.messageService.add({ 
         severity: 'info', 
         summary: this.translate.instant('bokModal.toast.info.summary'), 
-        detail: this.translate.instant('bokModal.toast.info.detail', {concept: concept}), 
+        detail: this.translate.instant('bokModal.toast.info.detail', {concept: concept, verb: this.actionLabel}), 
         life: 3000, 
         closable: true 
       });
@@ -112,7 +113,7 @@ export class BokModalComponent {
       this.messageService.add({ 
         severity: 'error', 
         summary: this.translate.instant('bokModal.toast.error.summary'), 
-        detail: this.translate.instant('bokModal.toast.error.detail', {concept: concept}), 
+        detail: this.translate.instant('bokModal.toast.error.detail', {concept: concept, verb: this.actionLabel}), 
         life: 3000, 
         closable: true 
       });

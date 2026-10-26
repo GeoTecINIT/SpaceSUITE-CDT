@@ -56,7 +56,8 @@
                 </div>
             </ng-container>
             <div class="my-4 max-w-20rem">
-                <bokModal [selectedConcepts]="bokConcepts" (selectedConceptsChange)="bokConceptsChange.emit($event)" [label]="'filters.bok.label' | translate"></bokModal>
+                <bokModal [selectedConcepts]="bokConcepts" (selectedConceptsChange)="bokConceptsChange.emit($event)" 
+                            [label]="'filters.bok.label' | translate" [actionLabel]="'filters.bok.actionLabel' | translate"></bokModal>
             </div>
         </ng-content>
     </div>
