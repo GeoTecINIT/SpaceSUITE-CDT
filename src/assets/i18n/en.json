@@ -122,7 +122,7 @@
         "tooltip": "Specifies whether this lecture is theoretical or practical. Practical lectures involve hands-on activities, labs, or exercises."
       },
       "affiliations": {
-        "tooltip": "Institutions or organizations associated with this {{nodeType}}.",
+        "tooltip": "The institution or organization providing or otherwise associated with this {{nodeType}}.",
         "label": "Affiliations",
         "affiliationName": "Name",
         "affiliationUrl": "URL"
