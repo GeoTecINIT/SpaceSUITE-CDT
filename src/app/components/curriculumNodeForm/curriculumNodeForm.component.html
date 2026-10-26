@@ -1,4 +1,4 @@
-<p-stepper [value]="1" class="custom-stepper">
+<p-stepper [value]="stepperIndex()" (valueChange)="stepperIndex.set($event || 1)" class="custom-stepper">
     <p-step-list class="step-list-margin">
         <p-step [value]="1">{{'curriculumNodeForm.stepList.step1' | translate}}</p-step>
         <p-step [value]="2">{{'curriculumNodeForm.stepList.step2' | translate}}</p-step>

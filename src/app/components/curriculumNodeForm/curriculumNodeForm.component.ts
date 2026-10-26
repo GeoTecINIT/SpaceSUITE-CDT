@@ -72,6 +72,8 @@ export class CurriculumNodeFormComponent {
 
   public groupingNameOrderedSuggestions: string[] = []
 
+  public stepperIndex: WritableSignal<number> = signal(1);
+
   public DURATION_UNIT: object[] = [];
   public WORKLOAD_UNIT: object[] = [];
   public COURSE_TYPE: object[] = [];
@@ -114,6 +116,7 @@ export class CurriculumNodeFormComponent {
         this.selectedStudyAreas = newNode.studyAreas.map(area => area.name);
         this.showCustomTransversalSkills = newNode.customTransversalSkills.length > 0;
         this.addLearningOutcomesSuggestions(newNode.bokConcepts);
+        this.stepperIndex.set(1);
       }
     }
   }
