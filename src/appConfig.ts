@@ -18,16 +18,17 @@ import { OfferFormComponent } from './app/components/offerForm/offerForm.compone
 import { EditPageComponent } from './app/components/editPage/editPage.component';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { provideTranslateService } from '@ngx-translate/core';
+import { UserOrgsGuard } from './app/guards/userOrgs.guard';
 
 const routes: Routes = [
     { path: '', component: ItemExplorerComponent },
     { path: 'profile', component: UserPageComponent, canMatch: [AuthGuard]},
     { path: 'organizations', component: OrganizationPageComponent, canMatch: [AuthGuard]},
-    { path: 'new', canMatch: [AuthGuard], canDeactivate: [exitWithoutSavingGuard], children: [
+    { path: 'new', canMatch: [AuthGuard, UserOrgsGuard], canDeactivate: [exitWithoutSavingGuard], children: [
         {path: '', component: OfferFormComponent},
         {path: ':offerId', component: OfferFormComponent}
     ]},
-    { path: 'edit/:offerId', canMatch: [AuthGuard], canDeactivate: [exitWithoutSavingGuard], children: [
+    { path: 'edit/:offerId', canMatch: [AuthGuard, UserOrgsGuard], canDeactivate: [exitWithoutSavingGuard], children: [
         { path: '', component: EditPageComponent},
         { path: ':nodeId', component: EditPageComponent}
     ]},

@@ -165,10 +165,16 @@ export class OfferFormComponent {
     });
 
     this.userOrgsSubscription = this.organizationDBService.getUserOrganizations().subscribe(organizations => {
-      this.organizations = [];
-      organizations.forEach(organization =>
-        this.organizations.push({label: organization.name, value: organization._id})
-      )
+      if (organizations.length == 0) {
+        this.exitWithoutSavingService.bypassGuard.next(true);
+        this.router.navigate(['']);
+      }
+      else {
+        this.organizations = [];
+        organizations.forEach(organization =>
+          this.organizations.push({label: organization.name, value: organization._id})
+        )
+      }
     });
 
     const initial = this.router.lastSuccessfulNavigation?.previousNavigation?.initialUrl?.toString();

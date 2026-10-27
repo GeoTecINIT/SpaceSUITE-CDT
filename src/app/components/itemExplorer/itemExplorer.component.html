@@ -28,7 +28,9 @@
 
 @if(isLogged.asObservable()| async) {
     <div class="floating-container flex flex-column gap-2 align-items-end" [ngStyle]="{ bottom: buttonBottom + 'px' }">
-        <p-button (click)="createTrainingItem()" icon="pi pi-plus" [label]="'itemExplorer.addOffer' | translate" class="custom-button floating-button"/>
+        <p-button (click)="createTrainingItem()" icon="pi pi-plus" [label]="'itemExplorer.addOffer' | translate" 
+            class="custom-button floating-button" [disabled]="disableAddButton" [pTooltip]="disableAddButton ? ('itemExplorer.joinOrgTooltip' | translate) : ''"
+            tooltipPosition="top"/>
     </div>
 }
 

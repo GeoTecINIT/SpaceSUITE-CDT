@@ -156,7 +156,7 @@
         variant="text"
         [pTooltip]="duplicateTooltip"
         tooltipPosition="top"
-        [disabled]="!logged"
+        [disabled]="!logged || disableDuplicateButton"
         (onClick)="duplicateOffer()"
       />
 

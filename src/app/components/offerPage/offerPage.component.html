@@ -239,7 +239,7 @@
                 [tooltipOptions]="{'tooltipPosition': 'bottom'}" 
                 text
                 [buttonDisabled]="!(checkUser() || checkOrganizations())"
-                [menuButtonDisabled]="!checkLoggin()"
+                [menuButtonDisabled]="!checkLoggin() || disableDuplicateButton"
                 (onDropdownClick)="this.cogItems.set(this.buildCogMenu())"
                 (onClick)="editOffer()"
             />

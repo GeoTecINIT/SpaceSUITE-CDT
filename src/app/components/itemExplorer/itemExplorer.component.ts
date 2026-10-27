@@ -24,13 +24,14 @@ import { AuthService } from "@eo4geo/ngx-bok-utils";
 import { DividerModule } from 'primeng/divider';
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TooltipModule } from "primeng/tooltip";
 
 @Component({
   standalone: true,
   selector: 'item-explorer',
   templateUrl: './itemExplorer.component.html',
   styleUrls: ['./itemExplorer.component.css'],
-  imports: [CardComponent, FiltersComponent, SkeletonModule, CommonModule, 
+  imports: [CardComponent, FiltersComponent, SkeletonModule, CommonModule, TooltipModule,
             PaginatorModule, ToastModule, ButtonModule, MenuModule, ButtonGroupModule, 
             DividerModule, TabsModule, ConfirmDialogModule, TranslateModule],
 })
@@ -342,6 +343,10 @@ export class ItemExplorerComponent {
       { label: this.translate.instant('itemExplorer.filterUserItemOptions.myOffers'), value: true, icon: 'pi pi-user' },
       { label: this.translate.instant('itemExplorer.filterUserItemOptions.allOffers'), value: false, icon: 'pi pi-globe' }
     ]
+  }
+
+  public get disableAddButton() {
+    return this.userOrgIds.length == 0;
   }
 
 }

@@ -278,7 +278,8 @@ export class CardComponent implements OnInit {
 
   get duplicateTooltip(): string {
     const action = this.translate.instant('card.tooltips.duplicate');
-    return this.logged ? action : this.translate.instant('card.tooltips.loginRequired', { action: action.toLowerCase() });
+    const orgRequired = this.translate.instant('card.tooltips.joinOrg')
+    return this.logged ? (this.disableDuplicateButton ? orgRequired : action) : this.translate.instant('card.tooltips.loginRequired', { action: action.toLowerCase() });
   }
 
   get editTooltip(): string {
@@ -293,5 +294,9 @@ export class CardComponent implements OnInit {
     const access = this.translate.instant('card.tooltips.accessRequired', { action: action.toLowerCase() });
     const login = this.translate.instant('card.tooltips.loginRequired', { action: action.toLowerCase() });
     return this.logged ? (this.checkUser() ? action : access) : login;
+  }
+
+  public get disableDuplicateButton() {
+    return this.organizations.length == 0;
   }
 }

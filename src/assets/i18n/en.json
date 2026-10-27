@@ -59,7 +59,8 @@
       "edit": "Edit",
       "delete": "Delete",
       "loginRequired": "Login to be able to {{action}}.",
-      "accessRequired": "You can only {{action}} offers from your organization."
+      "accessRequired": "You can only {{action}} offers from your organization.",
+      "joinOrg": "You must be part of an organization to create an offer"
     }
   },
   "curriculumNodeForm": {
@@ -225,7 +226,8 @@
     },
     "orderBy": "Order By {{option}}",
     "noOfferMessage": "No offer found",
-    "addOffer": "Add Offer"
+    "addOffer": "Add Offer",
+    "joinOrgTooltip": "You must be part of an organization to create an offer"
   },
   "multiSelectChips": {
     "itemsSelected": "{{number}} items selected",

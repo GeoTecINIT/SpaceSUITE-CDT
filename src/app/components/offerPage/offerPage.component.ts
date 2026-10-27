@@ -526,4 +526,8 @@ export class OfferPageComponent {
     if (!timeRequired) return '';
     return this.utilsService.getTranslatedDurationUnit(timeRequired.unit);
   }
+
+  public get disableDuplicateButton() {
+    return this.userOrgIds.length == 0;
+  }
 }
