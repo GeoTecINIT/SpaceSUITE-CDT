@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { collection, collectionData, CollectionReference, doc, docData, Firestore, query, where } from "@angular/fire/firestore";
 import { Organization } from "../../model/userModel/organization";
-import { combineLatest, map, Observable, switchMap } from "rxjs";
+import { combineLatest, map, Observable, of, shareReplay, switchMap } from "rxjs";
 import { AuthService } from "@eo4geo/ngx-bok-utils";
 
 @Injectable({
@@ -11,6 +11,9 @@ export class OrganizationDBService {
   private db: Firestore = inject(Firestore);
   private organizationCollection: CollectionReference;
 
+  private organizations$?: Observable<Organization[]>;
+  private userOrganizations$?: Observable<Organization[]>;
+
   private authService: AuthService = inject(AuthService);
 
   constructor() { 
@@ -18,7 +21,12 @@ export class OrganizationDBService {
   }
 
   getOrganizations(): Observable<Organization[]> {
-    return collectionData(this.organizationCollection) as Observable<Organization[]>;
+    if (!this.organizations$) {
+      this.organizations$ = (collectionData(this.organizationCollection) as Observable<Organization[]>).pipe(
+        shareReplay({ bufferSize: 1, refCount: true })
+      );
+    }
+    return this.organizations$;
   }
 
   getOrganizationDivisions(orgId: string): Observable<string[]> {
@@ -33,33 +41,37 @@ export class OrganizationDBService {
   }
 
   getUserOrganizations(): Observable<Organization[]> {
-    return this.authService.getUserState().pipe(
-      switchMap(userState => {
-        if (userState == undefined) return [];
+    if (!this.userOrganizations$) {
+      this.userOrganizations$ = this.authService.getUserState().pipe(
+        switchMap(userState => {
+          if (userState == undefined) return of([]);
 
-        const regularQuery = query(
-          this.organizationCollection,
-          where('regular', 'array-contains', userState.uid)
-        );
-        const adminQuery = query(
-          this.organizationCollection,
-          where('admin', 'array-contains', userState.uid)
-        );
+          const regularQuery = query(
+            this.organizationCollection,
+            where('regular', 'array-contains', userState.uid)
+          );
+          const adminQuery = query(
+            this.organizationCollection,
+            where('admin', 'array-contains', userState.uid)
+          );
 
-        return combineLatest([
-          collectionData(regularQuery) as Observable<Organization[]>,
-          collectionData(adminQuery) as Observable<Organization[]>
-        ]).pipe(
-          map(([regular, admin]) => {
-            const seen = new Set<string>();
-            return [...regular, ...admin].filter(org => {
-              if (seen.has(org._id)) return false;
-              seen.add(org._id);
-              return true;
+          return combineLatest([
+            collectionData(regularQuery) as Observable<Organization[]>,
+            collectionData(adminQuery) as Observable<Organization[]>
+          ]).pipe(
+            map(([regular, admin]) => {
+              const seen = new Set<string>();
+              return [...regular, ...admin].filter(org => {
+                if (seen.has(org._id)) return false;
+                seen.add(org._id);
+                return true;
+              })
             })
-          })
-        );
-      })
-    )
+          );
+        }),
+        shareReplay({ bufferSize: 1, refCount: true })
+      )
+    }
+    return this.userOrganizations$;
   }
 }
