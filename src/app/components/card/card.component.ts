@@ -90,7 +90,7 @@ export class CardComponent implements OnInit {
 
   ngOnInit() {
     this.orgService.getUserOrganizations().subscribe((orgs) => {
-      orgs.forEach((org) => this.organizations.push(org._id));
+      this.organizations = orgs.map((org) => org._id);
     });
 
     this.utilsService
