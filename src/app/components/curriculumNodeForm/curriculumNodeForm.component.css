@@ -65,3 +65,22 @@
     --p-autocomplete-option-selected-background: color-mix(in srgb, var(--secondary-color) 20%, rgba(0, 0, 0, 0) 80%);
     --p-autocomplete-option-selected-color: var(--p-autocomplete-option-color);
 }
+
+.popover-responsive {
+  max-width: 20rem;
+  width: calc(100vw - 2rem);
+}
+
+@media screen and (min-width: 576px) {
+  .popover-responsive {
+    max-width: 30rem;
+    width: max-content;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .popover-responsive {
+    max-width: 50rem;
+    width: max-content;
+  }
+}

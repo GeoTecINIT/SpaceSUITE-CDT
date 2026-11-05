@@ -28,6 +28,7 @@ export class CustomSelectComponent {
   @Input() icon: string = 'pi pi-users';
   @Input() error: boolean = false;
   @Input() filter: boolean = true;
+  @Input() addonGroupElement: boolean = false;
 
   @ViewChild('pselect', { read: Select }) multiSelectEl!: Select;
 

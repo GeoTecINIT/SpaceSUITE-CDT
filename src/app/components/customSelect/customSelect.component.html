@@ -2,7 +2,7 @@
     <p-select #pselect [options]="selectOptions" [ngModel]="selection" inputId="{{fieldName}}" [optionValue]="'value'" [optionLabel]="'id'"
         class="w-full custom-select" (ngModelChange)="selectionChange.emit($event)" [filterPlaceholder]="'customSelect.filterPlaceholder' | translate: {fieldName: fieldName}"
         [class.invalid-select]="error" [filter]="filter" resetFilterOnHide="true" (onFilter)="currentText = pselect.filterValue || ''" 
-        (onShow)="onDropdownOpen()" [checkmark]="true">
+        (onShow)="onDropdownOpen()" [checkmark]="true" [class.addongroup-element]="addonGroupElement">
         <ng-template #footer>
             <div class="flex" *ngIf="pselect.filterValue != '' && pselect.filterValue != undefined && !pselect.isEmpty()">
                 <p-button icon="pi pi-plus" label="Add Custom {{fieldName}}" size="small" class="custom-button p-3"

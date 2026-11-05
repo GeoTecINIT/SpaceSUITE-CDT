@@ -50,3 +50,22 @@
     --p-multiselect-border-color: var(--danger-color);
     --p-multiselect-dropdown-color: var(--danger-color);
 }
+
+.popover-responsive {
+  max-width: 20rem;
+  width: calc(100vw - 2rem);
+}
+
+@media screen and (min-width: 576px) {
+  .popover-responsive {
+    max-width: 30rem;
+    width: max-content;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .popover-responsive {
+    max-width: 50rem;
+    width: max-content;
+  }
+}

@@ -23,3 +23,27 @@
     --p-chip-remove-icon-color:var(--primary-color);
     --p-chip-remove-icon-focus-ring-color: var(--primary-color);
 }
+
+.popover-responsive {
+  max-width: 20rem;
+  width: calc(100vw - 2rem);
+}
+
+@media screen and (min-width: 576px) {
+  .popover-responsive {
+    max-width: 30rem;
+    width: max-content;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .popover-responsive {
+    max-width: 50rem;
+    width: max-content;
+  }
+}
+
+:host ::ng-deep .addongroup-element .p-treeselect {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}

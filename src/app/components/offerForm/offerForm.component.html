@@ -2,12 +2,23 @@
 <p-confirmdialog />
 <div>
     @if(!isBelowLg) {
-        <p-splitter [panelSizes]="[60, 40]" [minSizes]="[20, 20]" gutterSize="2" styleClass="m-0 p-0 h-full border-none" [panelStyle]="{'color': 'var(--primary-color)'}">
+        <p-splitter [panelSizes]="[60, 40]" [minSizes]="[20, 20]" gutterSize="2" styleClass="m-0 p-0 h-full border-none" 
+            [panelStyle]="{'color': 'var(--primary-color)'}" (onResizeStart)="resizing.set(true)" (onResizeEnd)="resizing.set(false)">
             <ng-template #panel>
-                <ng-container *ngTemplateOutlet="leftPanel"></ng-container>
+                <div class="w-full min-w-0 flex relative mb-2">
+                    <ng-container *ngTemplateOutlet="leftPanel"></ng-container>
+                     @if(!resizing()) {
+                        <i class="text-sm pi pi-chevron-left hide lg:block absolute top-50 right-0 splitter-icon"></i>
+                    }
+                </div>
             </ng-template>
             <ng-template #panel>
-                <ng-container *ngTemplateOutlet="rightPanel"></ng-container>
+                <div class="w-full min-w-0 flex relative mb-2">
+                    @if(!resizing()) {
+                        <i class="text-sm pi pi-chevron-right hide lg:block absolute top-50 splitter-icon"></i>
+                    }
+                    <ng-container *ngTemplateOutlet="rightPanel"></ng-container>
+                </div>
             </ng-template>
         </p-splitter>
     }
@@ -20,7 +31,7 @@
 </div>
 
 <p-dialog [header]="'offerForm.headers.rootNodeModal' | translate" [modal]="true" [(visible)]="rootNodeModalVisible" 
-            [style]="{ width: '30rem', color: 'var(--primary-color)' }" [draggable]="false" [closable]="rootNodeModalResetMode">
+            [style]="{ width: '40rem', color: 'var(--primary-color)' }" [draggable]="false" [closable]="rootNodeModalResetMode">
     @if(rootNodeModalResetMode) {
         <div class="px-3">
             <span [style.color]="'var(--danger-color)'">{{'offerForm.modal.offerType.warning' | translate}}</span>
@@ -28,18 +39,59 @@
         </div>
     }
     <div class="flex flex-column sm:flex-row gap-3 p-3">
-        <p-floatlabel variant="on" class="custom-floatlabel w-full">
-            <p-select [inputId]="'newNodeType'" [options]="getRootNodeTypes()" [(ngModel)]="rootNodeType" class="w-full custom-select" [checkmark]="true"
-                [pTooltip]="'offerForm.fields.rootNodeType.tooltip' | translate" tooltipPosition="bottom" showDelay="200" hideDelay="200" appendTo="body"/>
-            <label [for]="'newNodeType'">{{'offerForm.fields.rootNodeType.label' | translate}}</label>
-        </p-floatlabel>
-        @if(rootNodeType == groupingNodeType) {
+        <p-inputgroup>
             <p-floatlabel variant="on" class="custom-floatlabel w-full">
-                <p-select [inputId]="'newNodeGroupingType'" [options]="getRootGroupingTypes()" [(ngModel)]="rootNodeGroupingType"  class="w-full custom-select" 
-                    [checkmark]="true" [pTooltip]="'offerForm.fields.rootNodeGroupingType.tooltip' | translate" tooltipPosition="bottom" 
-                    showDelay="200" hideDelay="200" optionLabel="label" optionValue="value" appendTo="body"/>
-                <label [for]="'newNodeGroupingType'">{{'offerForm.fields.rootNodeGroupingType.label' | translate}}</label>
+                <p-select [inputId]="'newNodeType'" [options]="getRootNodeTypes()" [(ngModel)]="rootNodeType" class="w-full custom-select" [checkmark]="true"
+                    [pTooltip]="'offerForm.fields.rootNodeType.tooltip' | translate" tooltipPosition="bottom" showDelay="200" hideDelay="200" appendTo="body"/>
+                <label [for]="'newNodeType'">{{'offerForm.fields.rootNodeType.label' | translate}}</label>
             </p-floatlabel>
+            <p-inputgroup-addon>
+                <p-button
+                    icon="pi pi-info-circle"
+                    severity="secondary"
+                    variant="text"
+                    (click)="nodeTypeInfo.toggle($event)"
+                />
+            </p-inputgroup-addon>
+        </p-inputgroup>
+        <p-popover #nodeTypeInfo>
+            <div class="popover-responsive w-max" [style.color]="'var(--primary-color)'">
+                {{'offerForm.nodeTypePopover.nodeType' | translate}}
+                <ul>
+                    @for(type of getRootNodeTypes(); track type) {
+                        <li><p class="m-0 p-0" [innerHTML]="'offerForm.nodeTypePopover.' + $any(type)['label'] | translate"></p></li>
+                    }
+                </ul>
+            </div>
+        </p-popover>
+        @if(rootNodeType == groupingNodeType) {
+            <p-inputgroup>
+                <p-floatlabel variant="on" class="custom-floatlabel w-full">
+                    <p-select [inputId]="'newNodeGroupingType'" [options]="getRootGroupingTypes()" [(ngModel)]="rootNodeGroupingType"  class="w-full custom-select" 
+                        [checkmark]="true" [pTooltip]="'offerForm.fields.rootNodeGroupingType.tooltip' | translate" tooltipPosition="bottom" 
+                        showDelay="200" hideDelay="200" optionLabel="label" optionValue="value" appendTo="body"/>
+                    <label [for]="'newNodeGroupingType'">{{'offerForm.fields.rootNodeGroupingType.label' | translate}}</label>
+                </p-floatlabel>
+                <p-inputgroup-addon>
+                    <p-button
+                        icon="pi pi-info-circle"
+                        severity="secondary"
+                        variant="text"
+                        (click)="nodeTypeInfo.toggle($event)"
+                    />
+                </p-inputgroup-addon>
+            </p-inputgroup>
+            <p-popover #nodeTypeInfo>
+                <div class="popover-responsive w-max" [style.color]="'var(--primary-color)'">
+                    {{'offerForm.nodeTypePopover.groupingType' | translate}}
+                    <ul>
+                        @for(type of getRootGroupingTypes(); track type) {
+                            <li><p class="m-0 p-0" [innerHTML]="'offerForm.nodeTypePopover.' + $any(type)['label'] | translate"></p></li>
+                        }
+                    </ul>
+                    
+                </div>
+            </p-popover>
         }
         <p-button [icon]="rootNodeModalResetMode ? 'pi pi-refresh' : 'pi pi-plus'" rounded [disabled]="rootNodeType == undefined || (rootNodeType == groupingNodeType && rootNodeGroupingType == undefined)" 
             class="custom-button" (onClick)="addRootNode()"></p-button>
@@ -68,18 +120,64 @@
         <p-panel class="custom-panel">
             <div class="font-bold mb-3">{{'offerForm.headers.addNode' | translate}}</div>
             <div class="flex flex-column sm:flex-row gap-3 mb-4">
-                <p-floatlabel variant="on" class="custom-floatlabel w-full">
-                    <p-select [inputId]="'newNodeType'" [options]="getValidChildTypes()" [ngModel]="newNodeType" (ngModelChange)="loadGroupingNodeType($event)" class="w-full custom-select" [checkmark]="true"
-                        [pTooltip]="'offerForm.fields.newNodeType.tooltip' | translate" tooltipPosition="bottom" showDelay="200" hideDelay="200" [disabled]="getValidChildTypes().length <= 0"/>
-                    <label [for]="'newNodeType'">{{'offerForm.fields.newNodeType.label' | translate}}</label>
-                </p-floatlabel>
-                @if(newNodeType == groupingNodeType) {
+                <p-inputgroup>
                     <p-floatlabel variant="on" class="custom-floatlabel w-full">
-                        <p-select [inputId]="'newNodeGroupingType'" [options]="getValidGroupingTypes()" [(ngModel)]="newNodeGroupingType"  class="w-full custom-select" 
-                            [checkmark]="true" [pTooltip]="'offerForm.fields.newNodeGroupingType.tooltip' | translate" tooltipPosition="bottom" showDelay="200" hideDelay="200" 
-                            optionLabel="label" optionValue="value"/>
-                        <label [for]="'newNodeGroupingType'">{{'offerForm.fields.newNodeGroupingType.label' | translate}}</label>
+                        <p-select [inputId]="'newNodeType'" [options]="getValidChildTypes()" [ngModel]="newNodeType" (ngModelChange)="loadGroupingNodeType($event)" class="w-full custom-select" [checkmark]="true"
+                            [pTooltip]="'offerForm.fields.newNodeType.tooltip' | translate" tooltipPosition="bottom" showDelay="200" hideDelay="200" [disabled]="getValidChildTypes().length <= 0"/>
+                        <label [for]="'newNodeType'">{{'offerForm.fields.newNodeType.label' | translate}}</label>
                     </p-floatlabel>
+                    <p-inputgroup-addon>
+                        <p-button
+                            icon="pi pi-info-circle"
+                            severity="secondary"
+                            variant="text"
+                            (click)="nodeTypeInfo.toggle($event)"
+                        />
+                    </p-inputgroup-addon>
+                </p-inputgroup>
+                <p-popover #nodeTypeInfo>
+                    <div class="popover-responsive w-max" [style.color]="'var(--primary-color)'">
+                        @if (getValidChildTypes().length == 0) {
+                            <p class="m-0 p-0" [innerHTML]="'offerForm.nodeTypePopover.noOptions' | translate: {nodeType: getSelectedNodeType()}"></p>
+                        }
+                        @else {
+                            {{'offerForm.nodeTypePopover.nodeType' | translate}}
+                            <ul>
+                                @for(type of getValidChildTypes(); track type) {
+                                    <li><p class="m-0 p-0" [innerHTML]="'offerForm.nodeTypePopover.' + $any(type)['label'] | translate"></p></li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                </p-popover>
+                @if(newNodeType == groupingNodeType) {
+                    <p-inputgroup>
+                        <p-floatlabel variant="on" class="custom-floatlabel w-full">
+                            <p-select [inputId]="'newNodeGroupingType'" [options]="getValidGroupingTypes()" [(ngModel)]="newNodeGroupingType"  class="w-full custom-select" 
+                                [checkmark]="true" [pTooltip]="'offerForm.fields.newNodeGroupingType.tooltip' | translate" tooltipPosition="bottom" showDelay="200" hideDelay="200" 
+                                optionLabel="label" optionValue="value"/>
+                            <label [for]="'newNodeGroupingType'">{{'offerForm.fields.newNodeGroupingType.label' | translate}}</label>
+                        </p-floatlabel>
+                        <p-inputgroup-addon>
+                            <p-button
+                                icon="pi pi-info-circle"
+                                severity="secondary"
+                                variant="text"
+                                (click)="nodeTypeInfo.toggle($event)"
+                            />
+                        </p-inputgroup-addon>
+                    </p-inputgroup>
+                    <p-popover #nodeTypeInfo>
+                        <div class="popover-responsive w-max" [style.color]="'var(--primary-color)'">
+                            {{'offerForm.nodeTypePopover.groupingType' | translate}}
+                            <ul>
+                                @for(type of getValidGroupingTypes(); track type) {
+                                    <li><p class="m-0 p-0" [innerHTML]="'offerForm.nodeTypePopover.' + $any(type)['label'] | translate"></p></li>
+                                }
+                            </ul>
+                            
+                        </div>
+                    </p-popover>
                 }
             </div>
             <div class="flex justify-content-between gap-3">

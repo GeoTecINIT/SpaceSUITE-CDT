@@ -2,16 +2,27 @@
 <p-confirmdialog />
 <div *ngIf="offer(); else spinner">
     @if(!isBelowLg) {
-        <p-splitter [panelSizes]="[60, 40]" [minSizes]="[20, 20]" gutterSize="2" styleClass="m-0 p-0 h-full border-none" [panelStyle]="{'color': 'var(--primary-color)'}">
+        <p-splitter [panelSizes]="[60, 40]" [minSizes]="[20, 20]" gutterSize="2" styleClass="m-0 p-0 h-full border-none" 
+            [panelStyle]="{'color': 'var(--primary-color)'}" (onResizeStart)="resizing.set(true)" (onResizeEnd)="resizing.set(false)">
             <ng-template #panel>
-                <div class="mb-2 w-full min-w-0 lg:mr-4 flex flex-column gap-2">
-                    <ng-container *ngTemplateOutlet="leftPanel"></ng-container>
-                    <p-button label="{{'offerPage.buttons.return' | translate}}" severity="secondary" icon="pi pi-arrow-left" class="custom-secondary-button flex mt-auto" (onClick)="goToMainPage()"></p-button>
+                <div class="w-full min-w-0 flex relative mb-2">
+                    <div class="w-full min-w-0 lg:mr-4 flex flex-column gap-2">
+                        <ng-container *ngTemplateOutlet="leftPanel"></ng-container>
+                        <p-button label="{{'offerPage.buttons.return' | translate}}" severity="secondary" icon="pi pi-arrow-left" class="custom-secondary-button flex mt-auto" (onClick)="goToMainPage()"></p-button>
+                    </div>
+                    @if(!resizing()) {
+                        <i class="text-sm pi pi-chevron-left hide lg:block absolute top-50 right-0 splitter-icon"></i>
+                    }
                 </div>
             </ng-template>
             <ng-template #panel>
-                <div class="w-full min-w-0 mb-2 lg:ml-4">
-                    <ng-container *ngTemplateOutlet="rightPanel"></ng-container>
+                <div class="w-full min-w-0 flex relative mb-2">
+                    @if(!resizing()) {
+                        <i class="text-sm pi pi-chevron-right hide lg:block absolute top-50 splitter-icon"></i>
+                    }
+                    <div class="w-full min-w-0 lg:ml-4">
+                        <ng-container *ngTemplateOutlet="rightPanel"></ng-container>
+                    </div>
                 </div>
             </ng-template>
         </p-splitter>
@@ -35,7 +46,8 @@
 
 <p-dialog [header]="'offerPage.modal.createAction.header' | translate" [modal]="true" [(visible)]="exportActionModalVisible" 
             [style]="{ width: '40rem', color: 'var(--primary-color)' }" [draggable]="false" [closable]="true">
-    <div class="flex flex-column sm:flex-row gap-3 mb-4 mt-2">
+    <span>{{'offerPage.modal.createAction.message' | translate}}</span>
+    <div class="flex flex-column sm:flex-row gap-3 mb-4 mt-4">
         <p-floatlabel variant="on" class="custom-floatlabel w-full">
             <p-select inputId="orgId" [options]="organizations" (ngModelChange)="loadDivisions($event)"
                 [ngModel]="this.actionOrgId == '' ? undefined : {value: this.actionOrgId, label: this.actionOrgName}"
@@ -226,7 +238,7 @@
 
 <ng-template #rightPanel>
     <div class="flex flex-column w-full min-w-0">
-        <div class="absolute right-0 xl:mr-7" style="margin-right: 2.5rem; margin-top: 1.75rem;">
+        <div class="absolute right-0 xl:mr-2" style="margin-right: 0.5rem; margin-top: 1.8rem;">
             <p-splitbutton
                 class="custom-text-splitbutton"
                 [label]="'offerPage.buttons.edit' | translate"

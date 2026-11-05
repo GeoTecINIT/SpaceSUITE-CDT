@@ -44,6 +44,7 @@ import { CommonModule } from "@angular/common";
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { BokInformationService } from "@eo4geo/ngx-bok-visualization";
 import { MultiselectLearningOutcomesComponent } from "../multiselectLearningOutcomes/multiselectLearningOutcomes.component";
+import { PopoverModule } from "primeng/popover";
 
 @Component({
   standalone: true,
@@ -53,7 +54,7 @@ import { MultiselectLearningOutcomesComponent } from "../multiselectLearningOutc
   imports: [ToastModule, ConfirmDialogModule, InputTextModule, FloatLabelModule, FormsModule, InputIconModule, IconFieldModule, PanelModule, InputNumberModule,
     StepperModule, SelectModule, TooltipModule, ButtonModule, DialogModule, TextareaModule, BokModalComponent, TextChipsComponent, TranslateModule,
     CustomSelectComponent, MultiselectChipsComponent, TreeselectChipsComponent, DividerModule, SelectButtonModule, InputGroupModule, InputGroupAddonModule,
-    MenuModule, CommonModule, MultiselectLearningOutcomesComponent, AutoCompleteModule],
+    MenuModule, CommonModule, MultiselectLearningOutcomesComponent, AutoCompleteModule, PopoverModule],
 })
 export class CurriculumNodeFormComponent {
   @Input() errorMap: Map<string, string | undefined> = new Map();

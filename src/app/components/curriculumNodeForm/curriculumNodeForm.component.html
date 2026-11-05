@@ -47,12 +47,35 @@
                     }
                     @if(selectedCourse) {
                         <div>
-                            <p-floatlabel variant="on" class="custom-floatlabel w-full">
-                                <p-select [inputId]="'courseType'" [options]="COURSE_TYPE" [(ngModel)]="selectedCourse.courseType"  class="w-full custom-select" 
-                                    [checkmark]="true" optionLabel="label" optionValue="value" tooltipPosition="right" showDelay="200" hideDelay="200"
-                                    [pTooltip]="'curriculumNodeForm.fields.courseType.tooltip' | translate" (ngModelChange)="saveDraft.emit()" />
-                                <label [for]="'courseType'">{{'curriculumNodeForm.fields.courseType.label' | translate}}</label>
-                            </p-floatlabel>
+                            <p-inputgroup>
+                                
+                                <p-floatlabel variant="on" class="custom-floatlabel w-full">
+                                    <p-select [inputId]="'courseType'" [options]="COURSE_TYPE" [(ngModel)]="selectedCourse.courseType"  class="w-full custom-select" 
+                                        [checkmark]="true" optionLabel="label" optionValue="value" tooltipPosition="right" showDelay="200" hideDelay="200"
+                                        [pTooltip]="'curriculumNodeForm.fields.courseType.tooltip' | translate" (ngModelChange)="saveDraft.emit()" />
+                                    <label [for]="'courseType'">
+                                        {{'curriculumNodeForm.fields.courseType.label' | translate}}
+                                    </label>
+                                </p-floatlabel>
+                                <p-inputgroup-addon>
+                                    <p-button
+                                        icon="pi pi-info-circle"
+                                        severity="secondary"
+                                        variant="text"
+                                        (click)="courseTypeInfo.toggle($event)"
+                                    />
+                                </p-inputgroup-addon>
+                            </p-inputgroup>
+                            <p-popover #courseTypeInfo>
+                                <div class="popover-responsive w-max" [style.color]="'var(--primary-color)'">
+                                    {{'curriculumNodeForm.fields.courseType.description.general' | translate}}
+                                    <ul>
+                                        <li><p class="m-0 p-0" [innerHTML]="'curriculumNodeForm.fields.courseType.description.common' | translate"></p></li>
+                                        <li><p class="m-0 p-0" [innerHTML]="'curriculumNodeForm.fields.courseType.description.elective' | translate"></p></li>
+                                        <li><p class="m-0 p-0" [innerHTML]="'curriculumNodeForm.fields.courseType.description.specialization' | translate"></p></li>
+                                    </ul>
+                                </div>
+                            </p-popover>
                         </div>
                     }
                     <div>
@@ -91,9 +114,35 @@
                         </div>
                     }
                     <div>
-                        <custom-select [fieldName]="('curriculumNodeForm.fields.eqf.label' | translate)" [selection]="selectedNodeEqf()" (selectionChange)="onEqfChange($event)"
+                        <p-inputgroup>
+                            <custom-select class="w-full" [fieldName]="('curriculumNodeForm.fields.eqf.label' | translate)" [selection]="selectedNodeEqf()" (selectionChange)="onEqfChange($event)"
                                 [error]="errorMap.get(curriculumNode.id + '.eqf') != undefined" [optionsName]="'EQF Level'" [filter]="false" showDelay="200" hideDelay="200"
-                                [pTooltip]="'curriculumNodeForm.fields.eqf.tooltip' | translate" tooltipPosition="right"></custom-select>
+                                [pTooltip]="'curriculumNodeForm.fields.eqf.tooltip' | translate" tooltipPosition="right" [addonGroupElement]="true"></custom-select>
+                            <p-inputgroup-addon>
+                                <p-button
+                                    icon="pi pi-info-circle"
+                                    severity="secondary"
+                                    variant="text"
+                                    (click)="eqfInfo.toggle($event)"
+                                />
+                            </p-inputgroup-addon>
+                        </p-inputgroup>
+                        <p-popover #eqfInfo>
+                            <div class="popover-responsive w-max" [style.color]="'var(--primary-color)'">
+                                {{'curriculumNodeForm.fields.eqf.description.general' | translate}}
+                                <ul>
+                                    <li><p class="m-0 p-0" [innerHTML]="'curriculumNodeForm.fields.eqf.description.eqf1' | translate"></p></li>
+                                    <li><p class="m-0 p-0" [innerHTML]="'curriculumNodeForm.fields.eqf.description.eqf2' | translate"></p></li>
+                                    <li><p class="m-0 p-0" [innerHTML]="'curriculumNodeForm.fields.eqf.description.eqf3' | translate"></p></li>
+                                    <li><p class="m-0 p-0" [innerHTML]="'curriculumNodeForm.fields.eqf.description.eqf4' | translate"></p></li>
+                                    <li><p class="m-0 p-0" [innerHTML]="'curriculumNodeForm.fields.eqf.description.eqf5' | translate"></p></li>
+                                    <li><p class="m-0 p-0" [innerHTML]="'curriculumNodeForm.fields.eqf.description.eqf6' | translate"></p></li>
+                                    <li><p class="m-0 p-0" [innerHTML]="'curriculumNodeForm.fields.eqf.description.eqf7' | translate"></p></li>
+                                    <li><p class="m-0 p-0" [innerHTML]="'curriculumNodeForm.fields.eqf.description.eqf8' | translate"></p></li>
+                                </ul>
+                                <a class="custom-link no-underline text-sm inline-flex align-items-center gap-2" target="blank" href="https://europass.europa.eu/en/european-qualifications-framework-eqf">European Qualification Framework <i class="pi pi-question-circle"></i></a>
+                            </div>
+                        </p-popover>
                         @if(errorMap.get(curriculumNode.id + '.eqf')) {
                             <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.eqf')}}</p>
                         }
@@ -109,7 +158,6 @@
                             </p-floatlabel>
                             <p-inputgroup-addon>
                                 <p-button
-                                    class="input-button"
                                     [label]="curriculumNode.workloadUnit"
                                     icon="pi pi-chevron-down"
                                     severity="secondary"
@@ -242,8 +290,12 @@
                     </div>
                     <div>
                         <multiselect-chips optionsName="Study Areas" fieldName="{{'curriculumNodeForm.fields.studyAreas.label' | translate}}" [(chips)]="selectedStudyAreas"  icon="pi pi-bookmark"
-                            [pTooltip]="'curriculumNodeForm.fields.studyAreas.tooltip' | translate: {nodeType: getNodeType()}" (chipsChange)="saveDraft.emit()"
-                            tooltipPosition="top" showDelay="200" hideDelay="200" (chipsChange)="onStudyAreasChange()" [error]="errorMap.get(curriculumNode.id + '.studyAreas') != undefined">
+                            [pTooltip]="'curriculumNodeForm.fields.studyAreas.tooltip' | translate: {nodeType: getNodeType()}" (chipsChange)="saveDraft.emit()" [popoverUsingAddonGroup]="true"
+                            tooltipPosition="right" showDelay="200" hideDelay="200" (chipsChange)="onStudyAreasChange()" [error]="errorMap.get(curriculumNode.id + '.studyAreas') != undefined">
+                            <div class="popover-responsive w-max" [style.color]="'var(--primary-color)'">
+                                <div class="mb-2">{{'curriculumNodeForm.fields.studyAreas.description' | translate}}</div>
+                                <a class="custom-link no-underline text-sm inline-flex align-items-center gap-2" href="https://www.uis.unesco.org/en/methods-and-tools/isced" target="blank">International Standard Classification of Education - ISCED <i class="pi pi-question-circle"></i></a>
+                            </div>
                         </multiselect-chips>
                         @if(errorMap.get(curriculumNode.id + '.studyAreas')) {
                             <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.studyAreas')}}</p>
@@ -264,8 +316,13 @@
                         <treeselect-chips
                             [(treeSelection)]="selectedTransversalSkills" (treeSelectionChange)="onTransversalSkillChange()" [treeselectOptions]="transversalSkills"
                             [pTooltip]="'curriculumNodeForm.fields.transversalSkills.tooltip' | translate" [fieldName]="'curriculumNodeForm.fields.transversalSkills.label' | translate"
-                            tooltipPosition="top" showDelay="200" hideDelay="200"
-                        ></treeselect-chips>
+                            tooltipPosition="top" showDelay="200" hideDelay="200" [popoverUsingAddonGroup]="true"
+                        >
+                            <div class="popover-responsive w-max" [style.color]="'var(--primary-color)'">
+                                <div class="mb-2">{{'curriculumNodeForm.fields.transversalSkills.description' | translate}}</div>
+                                <a class="custom-link no-underline text-sm inline-flex align-items-center gap-2" href="https://esco.ec.europa.eu/en/classification/skill_main" target="blank">ESCO Skills & Competences <i class="pi pi-question-circle"></i></a>
+                            </div>
+                        </treeselect-chips>
                         @if(!showCustomTransversalSkills) {
                             <p-button [rounded]="true" [text]="true" size="small" (onClick)="showCustomTransversalSkills = true"
                                 class="text-button ml-auto mt-1 p-0 text-xs font-italic">{{'curriculumNodeForm.fields.transversalSkills.addCustom' | translate}}</p-button>

@@ -42,3 +42,8 @@
     --p-select-border-color: var(--danger-color);
     --p-select-dropdown-color: var(--danger-color);
 }
+
+.addongroup-element {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}

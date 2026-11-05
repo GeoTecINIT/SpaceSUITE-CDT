@@ -8,13 +8,17 @@ import { CommonModule } from "@angular/common";
 import { TreeSelectModule } from "primeng/treeselect";
 import { TreeNode } from "primeng/api";
 import { TranslateModule } from "@ngx-translate/core";
+import { InputGroupModule } from "primeng/inputgroup";
+import { InputGroupAddonModule } from "primeng/inputgroupaddon";
+import { PopoverModule } from "primeng/popover";
 
 @Component({
   standalone: true,
   selector: 'treeselect-chips',
   templateUrl: './treeselectChips.component.html',
   styleUrls: ['./treeselectChips.component.css'],
-  imports: [FloatLabelModule, FormsModule, IconFieldModule, ButtonModule, ChipModule, CommonModule, TreeSelectModule, TranslateModule],
+  imports: [FloatLabelModule, FormsModule, IconFieldModule, ButtonModule, ChipModule, CommonModule, TreeSelectModule, TranslateModule, 
+            InputGroupModule, InputGroupAddonModule, PopoverModule],
 })
 export class TreeselectChipsComponent {
 
@@ -28,6 +32,7 @@ export class TreeselectChipsComponent {
   @Input() fieldName: string = 'Field Name';
 
   @Input() error: boolean = false;
+  @Input() popoverUsingAddonGroup: boolean = false;
   
   public get virtualScrollHeight() {
     return this.treeselectOptions.some(node => node.expanded) ? '336px' : '252px';

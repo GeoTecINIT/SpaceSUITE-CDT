@@ -11,13 +11,17 @@ import { UtilsService } from "../../services/utils.service";
 import { CardFilterService } from "../../services/cardFilter.service";
 import { IscedfAreaService } from "../../services/iscedfArea.service";
 import { TranslateModule } from "@ngx-translate/core";
+import { InputGroupModule } from "primeng/inputgroup";
+import { InputGroupAddonModule } from "primeng/inputgroupaddon";
+import { PopoverModule } from "primeng/popover";
 
 @Component({
   standalone: true,
   selector: 'multiselect-chips',
   templateUrl: './multiselectChips.component.html',
   styleUrls: ['./multiselectChips.component.css'],
-  imports: [FloatLabelModule, FormsModule, IconFieldModule, ButtonModule, ChipModule, CommonModule, MultiSelectModule, TranslateModule],
+  imports: [FloatLabelModule, FormsModule, IconFieldModule, ButtonModule, ChipModule, CommonModule, MultiSelectModule, TranslateModule, 
+            InputGroupModule, InputGroupAddonModule, PopoverModule],
 })
 export class MultiselectChipsComponent {
 
@@ -33,6 +37,7 @@ export class MultiselectChipsComponent {
   @Input() icon: string = 'pi pi-users';
   @Input() error: boolean = false;
   @Input() filter: boolean = true;
+  @Input() popoverUsingAddonGroup: boolean = false;
 
   @ViewChild('pmulti', { read: MultiSelect }) multiSelectEl!: MultiSelect;
   

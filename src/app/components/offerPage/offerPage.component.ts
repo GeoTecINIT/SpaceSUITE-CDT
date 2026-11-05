@@ -59,6 +59,8 @@ export class OfferPageComponent {
   breadcrumbItems: WritableSignal<MenuItem[]> = signal([]);
   cogItems: WritableSignal<MenuItem[]> = signal([]);
 
+  resizing: WritableSignal<boolean> = signal(false);
+
   disablePdfLink: WritableSignal<boolean> = signal(false);
 
   exportActionModalVisible: boolean = false;

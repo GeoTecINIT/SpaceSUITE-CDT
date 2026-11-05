@@ -92,7 +92,18 @@
       },
       "eqf": {
         "tooltip": "The European Qualifications Framework. Indicates level of knowledge, skills and competences, from 1 (basic) to 8 (highly specialized).",
-        "label": "EQF Level"
+        "label": "EQF Level",
+        "description": {
+          "general": "The 8 EQF levels describe the knowledge, skills and autonomy expected at each qualification level.",
+          "eqf1": "<b>EQF 1</b>: Basic knowledge and simple tasks.",
+          "eqf2": "<b>EQF 2</b>: Basic knowledge and routine tasks with some autonomy.",
+          "eqf3": "<b>EQF 3</b>: Basic concepts, problem-solving and task responsibility.",
+          "eqf4": "<b>EQF 4</b>: Theoretical knowledge, problem-solving and independent work.",
+          "eqf5": "<b>EQF 5</b>: Specialised knowledge, complex problem-solving and management.",
+          "eqf6": "<b>EQF 6</b>: Advanced knowledge, complex decisions and project management.",
+          "eqf7": "<b>EQF 7</b>: Highly specialised knowledge, research and innovation.",
+          "eqf8": "<b>EQF 8</b>: Expert knowledge, research leadership and innovation."
+        }
       },
       "workload": {
         "tooltips": {
@@ -109,11 +120,18 @@
       },
       "studyAreas": {
         "tooltip": "Specific area(s) of study of the {{nodeType}}. Maintained by the UNESCO Institute for Statistics.",
-        "label": "Study Areas"
+        "label": "Study Areas",
+        "description": "The International Standard Classification of Education (ISCED) provides a globally agreed framework for categorising education programmes and qualifications, enabling cross- national comparison of education systems."
       },
       "courseType": {
         "tooltip": "Select the type of course. This classification determines how the course fits within the curriculum structure.",
-        "label": "Course Type"
+        "label": "Course Type",
+        "description": {
+          "general": "Defines the role of the course within the curriculum.",
+          "common": "Select <b>Common</b> for courses that are mandatory for all students in a programme.",
+          "elective": "Select <b>Elective</b> for courses students can choose from a set of available options.",
+          "specialization": "Select <b>Specialization</b> for courses focused on a specific subject area or field of study."
+        } 
       },
       "assessment": {
         "tooltip": "Describe how students will be evaluated in this course. Include assessment methods (exams, projects, participation), grading criteria, and any relevant deadlines or requirements.",
@@ -123,7 +141,7 @@
         "tooltip": "Specifies whether this lecture is theoretical or practical. Practical lectures involve hands-on activities, labs, or exercises."
       },
       "affiliations": {
-        "tooltip": "The institution or organization providing or otherwise associated with this {{nodeType}}.",
+        "tooltip": "The institution or organization offering or otherwise associated with this {{nodeType}}.",
         "label": "Affiliations",
         "affiliationName": "Name",
         "affiliationUrl": "URL"
@@ -149,7 +167,8 @@
       "transversalSkills": {
         "tooltip": "Skills considered unrelated to a particular job, task, academic discipline or area of knowledge but that can be used in a wide variety of situations and work settings. Based on the ESCO transversal and cross-sector skills.",
         "label": "Transversal Skills",
-        "addCustom": "Add custom Transversal Skills"
+        "addCustom": "Add custom Transversal Skills",
+        "description": "Our transversal skills input uses the Transversal skills classification from the ESCO skills pillar. ESCO provides preferred terms and alternative terms across 28 languages, along with descriptions and related information for each concept."
       },
       "customTransversalSkills": {
         "tooltip": "Custom transversal skills related to this {{nodeType}}.",
@@ -277,6 +296,15 @@
       "rootNodeModal": "Select Offer Type",
       "newNodeName": "New {{nodeType}}"
     },
+    "nodeTypePopover": {
+      "nodeType": "Defines the type of the new node you are about to create.",
+      "groupingType": "Defines the type of nodes contained in this grouping.",
+      "Study Program": "Select <b>Study Program</b> to create an educational offer that is intended to lead to a degree, diploma or certificate.",
+      "Course": "Select <b>Course</b> to create a plan of study on a particular subject, usually leading to an exam or qualification.",
+      "Grouping": "Select <b>Grouping</b> to create a collection of other node types.",
+      "Lecture": "Select <b>Lecture</b> to create an educational unit intended to display information or teach people about a particular subject.",
+      "noOptions": "Due to its nature <b>{{nodeType}}s</b> cannot contain child nodes."
+    },
     "fields":{
       "newNodeType": {
         "label": "Node Type",
@@ -328,7 +356,7 @@
       },
       "offerType": {
         "warning": "Warning!",
-        "message": "You are going to reset the whole educational offer. This action will delete all the filled content."
+        "message": "You are going to reset the whole educational offer. This action will delete all the filled content and replace the root node with a new one of the selected type."
       },
       "deleteNode": {
         "message": "Do you want to delete the selected curriculum node and all its children?",
@@ -416,7 +444,8 @@
           "tooltip": "The division under which the action is to be registered."
         },
         "createButton": "Export as Action",
-        "warningMessage": "Please make sure you are logged in to the Training Catalogue. Otherwise, the target form may not open correctly."
+        "message": "Indicate the organization and division this new Training Action will belong to. Once you click the export button you will be sent to the Training Catalogue to complete the new Training Action creation.",
+        "warningMessage": "Please make sure you are logged in to the Training Catalogue. Otherwise, the target page may not open correctly."
       }
     },
     "buttons": {

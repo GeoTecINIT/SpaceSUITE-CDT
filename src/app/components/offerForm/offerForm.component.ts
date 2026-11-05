@@ -30,6 +30,9 @@ import { Grouping, GroupingType } from "../../model/coreModel/grouping";
 import { SplitterModule } from 'primeng/splitter';
 import { CommonModule, Location } from "@angular/common";
 import { DraftStorageService } from "../../services/draftStorage.service";
+import { InputGroupModule } from "primeng/inputgroup";
+import { InputGroupAddonModule } from "primeng/inputgroupaddon";
+import { PopoverModule } from "primeng/popover";
 
 @Component({
   standalone: true,
@@ -37,7 +40,8 @@ import { DraftStorageService } from "../../services/draftStorage.service";
   templateUrl: './offerForm.component.html',
   styleUrls: ['./offerForm.component.css'],
   imports: [ToastModule, ConfirmDialogModule, FloatLabelModule, FormsModule, PanelModule, OfferIndexComponent, SelectModule, TooltipModule, 
-            ButtonModule, DialogModule, CurriculumNodeFormComponent, SelectButtonModule, TranslateModule, MessageModule, SplitterModule, CommonModule],
+            ButtonModule, DialogModule, CurriculumNodeFormComponent, SelectButtonModule, TranslateModule, MessageModule, SplitterModule, CommonModule,
+            InputGroupModule, InputGroupAddonModule, PopoverModule],
   providers: [DraftStorageService]
 })
 export class OfferFormComponent {
@@ -49,6 +53,8 @@ export class OfferFormComponent {
   offer: WritableSignal<EducationalOffer> = signal(new EducationalOffer(new StudyProgram(undefined, this.generateTimeBasedID())));
   selectedNode: WritableSignal<CurriculumNode> = signal<CurriculumNode>(this.offer().root);
   errorMap: WritableSignal<Map<string, string>> = signal(new Map());
+
+  resizing: WritableSignal<boolean> = signal(false);
 
   rootNodeModalVisible: boolean = false;
   rootNodeModalResetMode: boolean = false;

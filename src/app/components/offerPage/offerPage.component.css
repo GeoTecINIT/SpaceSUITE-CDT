@@ -74,9 +74,32 @@
     background: color-mix(in srgb, var(--secondary-color) 22%, rgb(243, 243, 243) 78%) !important;
 }
 
+::ng-deep .p-splitter-gutter {
+    position: relative;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: -8px;
+        right: -8px;
+        z-index: 6;
+    }
+}
+
 ::ng-deep .p-splitter-gutter:hover {
     width: 3px !important;
     background: color-mix(in srgb, var(--hover-color) 20%, rgb(243, 243, 243) 80%) !important;
+}
+
+.splitter-icon {
+    color: color-mix(in srgb, var(--secondary-color) 50%, rgb(243, 243, 243) 50%);
+}
+
+::ng-deep .p-splitter > div:has(+ .p-splitter-gutter:hover) div .splitter-icon,
+::ng-deep .p-splitter-gutter:hover + div div .splitter-icon {
+    color: color-mix(in srgb, var(--hover-color) 50%, rgb(243, 243, 243) 50%) !important;
 }
 
 .custom-text-splitbutton {
