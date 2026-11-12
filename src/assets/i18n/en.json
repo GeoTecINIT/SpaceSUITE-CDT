@@ -305,6 +305,12 @@
       "Lecture": "Select <b>Lecture</b> to create an educational unit intended to display information or teach people about a particular subject.",
       "noOptions": "Due to its nature <b>{{nodeType}}s</b> cannot contain child nodes."
     },
+    "nodeTypePopoverExamples": {
+      "Study Program": "(e.g. Bachelor's Degree, Master's Degree, Doctoral Program, etc.)",
+      "Course": "(e.g. Classical Course, Online Course, Multiple Session Workshop, etc.)",
+      "Grouping": "(e.g. Module, Unit, Chapter, Section, Learning Block, etc.)",
+      "Lecture": "(e.g. Classical Lecture, Single Session Workshop, Seminar, Webinar, etc.)"
+    },
     "fields":{
       "newNodeType": {
         "label": "Node Type",

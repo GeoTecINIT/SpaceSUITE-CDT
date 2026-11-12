@@ -59,7 +59,12 @@
                 {{'offerForm.nodeTypePopover.nodeType' | translate}}
                 <ul>
                     @for(type of getRootNodeTypes(); track type) {
-                        <li><p class="m-0 p-0" [innerHTML]="'offerForm.nodeTypePopover.' + $any(type)['label'] | translate"></p></li>
+                        <li>
+                            <p class="m-0 p-0" [innerHTML]="'offerForm.nodeTypePopover.' + $any(type)['label'] | translate"></p>
+                            <div class="text-sm">
+                                {{'offerForm.nodeTypePopoverExamples.' + $any(type)['label'] | translate}}
+                            </div>
+                        </li>
                     }
                 </ul>
             </div>
@@ -86,7 +91,12 @@
                     {{'offerForm.nodeTypePopover.groupingType' | translate}}
                     <ul>
                         @for(type of getRootGroupingTypes(); track type) {
-                            <li><p class="m-0 p-0" [innerHTML]="'offerForm.nodeTypePopover.' + $any(type)['label'] | translate"></p></li>
+                            <li>
+                                <p class="m-0 p-0" [innerHTML]="'offerForm.nodeTypePopover.' + $any(type)['label'] | translate"></p>
+                                <div class="text-sm">
+                                    {{'offerForm.nodeTypePopoverExamples.' + $any(type)['label'] | translate}}
+                                </div>
+                            </li>
                         }
                     </ul>
                     
@@ -144,7 +154,12 @@
                             {{'offerForm.nodeTypePopover.nodeType' | translate}}
                             <ul>
                                 @for(type of getValidChildTypes(); track type) {
-                                    <li><p class="m-0 p-0" [innerHTML]="'offerForm.nodeTypePopover.' + $any(type)['label'] | translate"></p></li>
+                                    <li>
+                                        <p class="m-0 p-0" [innerHTML]="'offerForm.nodeTypePopover.' + $any(type)['label'] | translate"></p>
+                                        <div class="text-sm">
+                                            {{'offerForm.nodeTypePopoverExamples.' + $any(type)['label'] | translate}}
+                                        </div>
+                                    </li>
                                 }
                             </ul>
                         }
@@ -172,7 +187,12 @@
                             {{'offerForm.nodeTypePopover.groupingType' | translate}}
                             <ul>
                                 @for(type of getValidGroupingTypes(); track type) {
-                                    <li><p class="m-0 p-0" [innerHTML]="'offerForm.nodeTypePopover.' + $any(type)['label'] | translate"></p></li>
+                                    <li>
+                                        <p class="m-0 p-0" [innerHTML]="'offerForm.nodeTypePopover.' + $any(type)['label'] | translate"></p>
+                                        <div class="text-sm">
+                                            {{'offerForm.nodeTypePopoverExamples.' + $any(type)['label'] | translate}}
+                                        </div>
+                                    </li>
                                 }
                             </ul>
                             
