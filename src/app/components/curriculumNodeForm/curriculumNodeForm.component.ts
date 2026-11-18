@@ -135,7 +135,7 @@ export class CurriculumNodeFormComponent {
       return this.bokService.getConceptSkills(concept).pipe(
         take(1),
         tap(values => {
-          values.forEach(value => conceptSkills.add(value));
+          values.forEach(value => conceptSkills.add(value.name));
           newSkills.set(concept, [...conceptSkills])
         }),
         switchMap(() => this.bokService.getConceptName(concept)),
