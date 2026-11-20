@@ -4,6 +4,7 @@ import { CurriculumNode, NodeType } from '../../model/coreModel/curriculumNode';
 import { Course } from '../../model/coreModel/course';
 import { Grouping } from '../../model/coreModel/grouping';
 import { Lecture } from '../../model/coreModel/lecture';
+import { BloomSkill } from '../../model/coreModel/bloomSkill';
 
 @Injectable({
   providedIn: 'root'
@@ -100,7 +101,16 @@ export class RdfService {
     }
 
     if (node.learningObjectives) {
-      node.learningObjectives.forEach((outcome: string, index: number) => {
+      node.learningObjectives.forEach((outcome: BloomSkill, index: number) => {
+        ttl += `  elm:learningOutcome _:${nodeRef}_LO${index} ;\n`;
+        additionalObjects += `_:${nodeRef}_LO${index}\n`;
+        additionalObjects += `  rdf:type elm:LearningOutcome ;\n`;
+        additionalObjects += `  dcterms:description "${outcome.label}" .\n\n`
+      });
+    }
+
+    if (node.customLearningObjectives) {
+      node.customLearningObjectives.forEach((outcome: string, index: number) => {
         ttl += `  elm:learningOutcome _:${nodeRef}_LO${index} ;\n`;
         additionalObjects += `_:${nodeRef}_LO${index}\n`;
         additionalObjects += `  rdf:type elm:LearningOutcome ;\n`;
@@ -304,7 +314,16 @@ export class RdfService {
       xml += `${indent(indentLevel + 1)}</elm:entryRequirement>\n`;
     });
 
-    node.learningObjectives?.forEach((outcome: string) => {
+    node.learningObjectives?.forEach((outcome: BloomSkill) => {
+      xml += `${indent(indentLevel + 1)}<elm:learningOutcome>\n`;
+      xml += `${indent(indentLevel + 2)}<rdf:Description>\n`;
+      xml += `${indent(indentLevel + 3)}<rdf:type rdf:resource="${elmNS}LearningOutcome"/>\n`;
+      xml += `${indent(indentLevel + 3)}<dcterms:description>${this.escapeXml(outcome.label)}</dcterms:description>\n`;
+      xml += `${indent(indentLevel + 2)}</rdf:Description>\n`;
+      xml += `${indent(indentLevel + 1)}</elm:learningOutcome>\n`;
+    });
+
+    node.customLearningObjectives?.forEach((outcome: string) => {
       xml += `${indent(indentLevel + 1)}<elm:learningOutcome>\n`;
       xml += `${indent(indentLevel + 2)}<rdf:Description>\n`;
       xml += `${indent(indentLevel + 3)}<rdf:type rdf:resource="${elmNS}LearningOutcome"/>\n`;
@@ -495,7 +514,15 @@ export class RdfService {
 `${indent}</div>\n`;
     });
 
-    node.learningObjectives?.forEach((outcome: string, index: number) => {
+    node.learningObjectives?.forEach((outcome: BloomSkill, index: number) => {
+      const loId = `${nodeId}_LO${index}`;
+      html +=
+`${indent}<div rel="elm:learningOutcome" about="#${loId}" typeof="elm:LearningOutcome">\n` +
+`${childIndent}<span property="description">${this.escapeHtml(outcome.label)}</span><br/>\n` +
+`${indent}</div>\n`;
+    });
+
+    node.customLearningObjectives?.forEach((outcome: string, index: number) => {
       const loId = `${nodeId}_LO${index}`;
       html +=
 `${indent}<div rel="elm:learningOutcome" about="#${loId}" typeof="elm:LearningOutcome">\n` +

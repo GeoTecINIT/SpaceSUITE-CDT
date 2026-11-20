@@ -5,6 +5,7 @@ import { ISCEDFArea } from "./iscedfArea";
 import { TrainingMaterial } from "./trainingMaterial";
 import { Affiliation } from "./affiliation";
 import { WorkloadUnit } from "../workloadUnit";
+import { BloomSkill } from "./bloomSkill";
 
 export enum NodeType {
   StudyProgram = "Study Program",
@@ -27,7 +28,8 @@ export abstract class CurriculumNode {
   public studyAreas: ISCEDFArea[];
   public transversalSkills: ESCOSkill[];
   public customTransversalSkills: string[];
-  public learningObjectives: string[];
+  public learningObjectives: BloomSkill[];
+  public customLearningObjectives: string[];
   public trainingMaterials: TrainingMaterial[];
   public bibliography: string[];
   public affiliations: Affiliation[];
@@ -48,6 +50,7 @@ export abstract class CurriculumNode {
     this.transversalSkills = currentNode?.transversalSkills?.map(skill => new ESCOSkill(skill)) || [];
     this.customTransversalSkills = [...currentNode?.customTransversalSkills || []];
     this.learningObjectives = [...currentNode?.learningObjectives || []];
+    this.customLearningObjectives = [...currentNode?.customLearningObjectives || []];
     this.trainingMaterials = currentNode?.trainingMaterials?.map(material => new TrainingMaterial(material)) || [];
     this.bibliography = [...currentNode?.bibliography || []];
     this.affiliations = currentNode?.affiliations?.map(affiliation => new Affiliation(affiliation)) || [];

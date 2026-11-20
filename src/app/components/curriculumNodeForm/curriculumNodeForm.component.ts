@@ -43,8 +43,9 @@ import { WorkloadUnit } from "../../model/workloadUnit";
 import { CommonModule } from "@angular/common";
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { BokInformationService } from "@eo4geo/ngx-bok-visualization";
-import { MultiselectLearningOutcomesComponent } from "../multiselectLearningOutcomes/multiselectLearningOutcomes.component";
 import { PopoverModule } from "primeng/popover";
+import { LearningOutcomesSelectComponent } from "../learningOutcomesSelect/learningOutcomesSelect.component";
+import { BloomSkill } from "../../model/coreModel/bloomSkill";
 
 @Component({
   standalone: true,
@@ -54,7 +55,7 @@ import { PopoverModule } from "primeng/popover";
   imports: [ToastModule, ConfirmDialogModule, InputTextModule, FloatLabelModule, FormsModule, InputIconModule, IconFieldModule, PanelModule, InputNumberModule,
     StepperModule, SelectModule, TooltipModule, ButtonModule, DialogModule, TextareaModule, BokModalComponent, TextChipsComponent, TranslateModule,
     CustomSelectComponent, MultiselectChipsComponent, TreeselectChipsComponent, DividerModule, SelectButtonModule, InputGroupModule, InputGroupAddonModule,
-    MenuModule, CommonModule, MultiselectLearningOutcomesComponent, AutoCompleteModule, PopoverModule],
+    MenuModule, CommonModule, AutoCompleteModule, PopoverModule, LearningOutcomesSelectComponent],
 })
 export class CurriculumNodeFormComponent {
   @Input() errorMap: Map<string, string | undefined> = new Map();
@@ -65,9 +66,12 @@ export class CurriculumNodeFormComponent {
 
   public showCustomTransversalSkills: boolean = false;
   public transversalSkills: TreeNode<any>[] = [];
+  public showCustomSkills: boolean = false;
+  public skillOptions: WritableSignal<TreeNode[]> = signal([]);
 
   public selectedTransversalSkills: TreeNode[] = [];
   public selectedStudyAreas: string[] = [];
+  public skillSelection: WritableSignal<TreeNode[]> = signal([]);
 
   public learningOutcomesSuggestions: WritableSignal<any[]> = signal([]);
 
@@ -99,6 +103,17 @@ export class CurriculumNodeFormComponent {
         this.transversalSkills = data;
         this.selectedTransversalSkills = this.curriculumNode.transversalSkills
           .map(skill => this.findTransversalSkill(skill.preferredLabel, this.transversalSkills)).filter(value => value != undefined);
+        this.skillSelection.set(this.curriculumNode.learningObjectives.map(skill => {
+          return ({
+            key: `${skill.level}-${skill.concept}-${skill.verb}`,
+            label: skill.label,
+            children: [],
+            leaf: true,
+            expanded: false,
+            type: 'leaf',
+            data: skill
+          })
+        }));
       }
     );
   }
@@ -116,7 +131,7 @@ export class CurriculumNodeFormComponent {
           .map(skill => this.findTransversalSkill(skill.preferredLabel, this.transversalSkills)).filter(value => value != undefined);
         this.selectedStudyAreas = newNode.studyAreas.map(area => area.name);
         this.showCustomTransversalSkills = newNode.customTransversalSkills.length > 0;
-        this.addLearningOutcomesSuggestions(newNode.bokConcepts);
+        this.buildSkillOptions();
         this.stepperIndex.set(1);
       }
     }
@@ -125,50 +140,6 @@ export class CurriculumNodeFormComponent {
   setWorkloadUnit(value: WorkloadUnit) {
     this.curriculumNode.workloadUnit = value;
     this.saveDraft.emit();
-  }
-
-  addLearningOutcomesSuggestions(bokConcepts: string[]) {
-    const skillAreaMap: Map<string, string> = new Map()
-    const newSkills: Map<string, string[]> = new Map();
-    const observables = bokConcepts.map(concept => {
-      const conceptSkills: Set<string> = new Set();
-      return this.bokService.getConceptSkills(concept).pipe(
-        take(1),
-        tap(values => {
-          values.forEach(value => conceptSkills.add(value.name));
-          newSkills.set(concept, [...conceptSkills])
-        }),
-        switchMap(() => this.bokService.getConceptName(concept)),
-        take(1),
-        tap(value => {
-          newSkills.set(value, newSkills.get(concept) || []);
-          newSkills.delete(concept);
-          skillAreaMap.set(value, concept == 'GIST' ? concept : concept.slice(0,2));
-        })
-      );
-    });
-    forkJoin([...observables]).pipe(defaultIfEmpty(null)).subscribe(() => {
-      const newSkillsArray: any[] = [];
-      for (let concept of newSkills.keys()) {
-        const conceptNewSkills = newSkills.get(concept);
-        if (conceptNewSkills && conceptNewSkills.length > 0) {
-          newSkillsArray.push({
-            label: concept,
-            value: concept,
-            area: skillAreaMap.get(concept),
-            items: conceptNewSkills.map(value => {
-              return {
-                id: value,
-                value: value
-              }
-            })
-          })
-        }
-      }
-      this.learningOutcomesSuggestions.set(newSkillsArray);
-    })
-    this.saveDraft.emit();
-    this.curriculumNodeChanged.emit()
   }
 
   private buildSelectFields() {
@@ -344,4 +315,112 @@ export class CurriculumNodeFormComponent {
   getNodeType(): string {
     return this.utilsService.getTranslatedNodeType(this.curriculumNode.nodeType);
   }
+
+  onLearningObjectivesChange(newSkills: TreeNode[]) {
+    this.curriculumNode.learningObjectives = newSkills.filter(skill => skill.data).map(skill => skill.data);
+    this.saveDraft.emit();
+  }
+
+  buildSkillOptions() {
+    const tempTree: TreeNode[] = [];
+    const conceptSet: Set<string> = new Set();
+    this.curriculumNode.learningObjectives.forEach(learningObj => conceptSet.add(learningObj.concept));
+    this.curriculumNode.bokConcepts.forEach(concept => conceptSet.add(concept));
+    conceptSet.forEach(concept => {
+      const conceptTree: TreeNode[] = [
+        {
+          label: "Level 1: Remember",
+          key: concept + '-1',
+          expanded: false,
+          leaf: false
+        },
+        {
+          label: "Level 2: Understand",
+          key: concept + '-2',
+          expanded: false,
+          leaf: false
+        },
+        {
+          label: "Level 3: Apply",
+          key: concept + '-3',
+          expanded: false,
+          leaf: false
+        },
+        {
+          label: "Level 4: Analyze",
+          key: concept + '-4',
+          expanded: false,
+          leaf: false
+        },
+        {
+          label: "Level 5: Evaluate",
+          key: concept + '-5',
+          expanded: false,
+          leaf: false
+        },
+        {
+          label: "Level 6: Create",
+          key: concept + '-6',
+          expanded: false,
+          leaf: false
+        },
+        {
+          label: "Unclassified",
+          key: concept + '-0',
+          expanded: false,
+          leaf: false
+        }
+      ]
+      this.bokService.getConceptSkills(concept).pipe(
+        switchMap(skills => {
+          skills.forEach(skill => {
+            const levelNode: TreeNode | undefined = conceptTree.at(skill.bloomLevel - 1);
+            if (!levelNode) return
+            levelNode.children ??= [];
+            levelNode.children.push({
+              key: `${skill.bloomLevel}-${concept}-${skill.bloomVerb}`,
+              label: skill.name,
+              children: [],
+              leaf: true,
+              expanded: false,
+              type: 'leaf',
+              data: new BloomSkill({ 
+                level: skill.bloomLevel,
+                verb: skill.bloomVerb, 
+                label: skill.name,
+                concept: concept
+              })
+            })
+          })
+          return this.bokService.getConceptName(concept)
+        }),
+        take(1)
+      ).subscribe(conceptName => {
+        tempTree.push({
+          label: `[${concept}] ${conceptName}`,
+          key: concept,
+          expanded: true,
+          leaf: false,
+          children: conceptTree,
+          selectable: false
+        })
+      });
+    })
+    tempTree.forEach(levelNode => {
+      levelNode.children = this.getSortedArray(levelNode.children ?? []);
+    })
+    this.skillOptions.set(tempTree);
+    this.saveDraft.emit();
+    this.curriculumNodeChanged.emit()
+  }
+  
+  private getSortedArray(values: TreeNode[]) {
+    if (values.length > 0) {
+      return [...values].sort((a, b) =>
+        (a.label || '').localeCompare(b.label || '')
+      );
+    }
+    return values;
+  }
+
 }

@@ -1,3 +1,4 @@
+import { BloomSkill } from "../coreModel/bloomSkill";
 import { Affiliation } from "../coreModel/affiliation";
 import { NodeType } from "../coreModel/curriculumNode";
 import { Duration } from "../coreModel/duration";
@@ -20,7 +21,8 @@ export abstract class CurriculumNodeDB {
   public studyAreas: ISCEDFArea[];
   public transversalSkills: ESCOSkill[];
   public customTransversalSkills: string[];
-  public learningObjectives: string[];
+  public learningObjectives: BloomSkill[];
+  public customLearningObjectives: string[];
   public trainingMaterials: TrainingMaterial[];
   public bibliography: string[];
   public affiliations: Affiliation[];
@@ -40,7 +42,8 @@ export abstract class CurriculumNodeDB {
     this.studyAreas = currentNode?.studyAreas?.map(area => new ISCEDFArea(area)) || [];
     this.transversalSkills = currentNode?.transversalSkills?.map(skill => new ESCOSkill(skill)) || [];
     this.customTransversalSkills = [...currentNode?.customTransversalSkills || []];
-    this.learningObjectives = [...currentNode?.learningObjectives || []];
+    this.learningObjectives = currentNode?.learningObjectives?.map(skill => new BloomSkill(skill)) || [];
+    this.customLearningObjectives = [...currentNode?.customLearningObjectives || []];
     this.trainingMaterials = currentNode?.trainingMaterials?.map(material => new TrainingMaterial(material)) || [];
     this.bibliography = [...currentNode?.bibliography || []];
     this.affiliations = currentNode?.affiliations?.map(affiliation => new Affiliation(affiliation)) || [];
@@ -61,7 +64,8 @@ export abstract class CurriculumNodeDB {
       studyAreas: this.studyAreas.map(area => area.toPlainObject()),
       transversalSkills: this.transversalSkills.map(skill => skill.toPlainObject()),
       customTransversalSkills: this.customTransversalSkills,
-      learningObjectives: this.learningObjectives,
+      learningObjectives: this.learningObjectives.map(skill => skill.toPlainObject()),
+      customLearningObjectives: this.customLearningObjectives,
       trainingMaterials: this.trainingMaterials.map(material => material.toPlainObject()),
       bibliography: this.bibliography,
       affiliations: this.affiliations.map(affiliation => affiliation.toPlainObject())

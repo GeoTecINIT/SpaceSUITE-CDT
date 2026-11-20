@@ -260,7 +260,11 @@ export class ItemExplorerComponent {
         break;
       case "Learning Outcomes":
         sortedItems.forEach( offer => {
-          if (offer.root.learningObjectives.join(';').toLowerCase().includes(this.searchValue.toLowerCase())) newSearch.push(offer);
+          if (offer.root.learningObjectives.map(value => value.label).
+              concat(offer.root.customLearningObjectives).join(';').
+              toLowerCase().includes(this.searchValue.toLowerCase())
+            ) 
+            newSearch.push(offer);
         });
         break;
       default:

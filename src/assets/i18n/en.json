@@ -160,6 +160,10 @@
         "tooltip": "Learning outcomes describe the knowledge, skills, qualifications, or experiences that a learner is expected to have after completing this {{nodeType}}.",
         "label": "Learning Outcomes"
       },
+      "customLearningOutcomes": {
+        "tooltip": "Custom learning outcomes related to this {{nodeType}}.",
+        "label": "Custom Learning Outcomes"
+      },
       "bibliography": {
         "tooltip": "Bibliography describe the recommended reading materials, resources, or references related to this {{nodeType}}.",
         "label": "Bibliography"

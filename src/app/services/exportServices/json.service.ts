@@ -39,6 +39,7 @@ export class JsonService {
       transversalSkills: node.transversalSkills.map(value => value.toPlainObject()),
       customTransversalSkills: [...node.customTransversalSkills],
       learningObjetives: [...node.learningObjectives],
+      customLearningObjetives: [...node.customLearningObjectives],
       trainingMaterials: node.trainingMaterials.map(value => value.toPlainObject()),
       bibliography: [...node.bibliography],
       affiliations: node.affiliations.map(value => value.toPlainObject()),

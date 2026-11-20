@@ -50,6 +50,7 @@ export class TrainingActionDBService {
         subject: subjects,
         description: offer.root.description,
         learningOutcomes: [...offer.root.learningObjectives],
+        customLearningOutcomes: [...offer.root.customLearningObjectives],
         educationLevel: [offer.root.eqf.toString()],
         workload: offer.root.ects,
         workloadUnit: WorkloadUnit.ECTS,

@@ -83,7 +83,7 @@ export class OfferValidationService {
       this.addError(errors, `${base}.studyAreas`, 'At least one study area is required.');
     }
 
-    if (node.learningObjectives.length === 0) {
+    if (node.learningObjectives.length === 0 && node.customLearningObjectives.length === 0) {
       this.addError(errors, `${base}.learningObjectives`, 'At least one learning objective is required.');
     }
 

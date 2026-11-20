@@ -305,7 +305,7 @@
                         <div class="custom-border p-2" style="color: #64748b;" [pTooltip]="'curriculumNodeForm.fields.bok.tooltip' | translate: {nodeType: getNodeType()}" 
                             tooltipPosition="right" showDelay="200" hideDelay="200" 
                             [style.border-color]="errorMap.get(curriculumNode.id + '.bokConcepts') != undefined ? 'var(--danger-color)' : '' ">
-                            <bokModal [(selectedConcepts)]="curriculumNode.bokConcepts" (selectedConceptsChange)="addLearningOutcomesSuggestions($event)" [label]="('curriculumNodeForm.fields.bok.label' | translate)"
+                            <bokModal [(selectedConcepts)]="curriculumNode.bokConcepts" (selectedConceptsChange)="buildSkillOptions()" [label]="('curriculumNodeForm.fields.bok.label' | translate)"
                                 [style.color]="errorMap.get(curriculumNode.id + '.bokConcepts') != undefined ? 'var(--danger-color)' : '' "></bokModal>
                         </div>
                         @if(errorMap.get(curriculumNode.id + '.bokConcepts')) {
@@ -354,18 +354,35 @@
                             <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.prerequisites')}}</p>
                         }
                     </div>
-                    <div>
-                        <multiselect-learning-outcomes fieldName="{{'curriculumNodeForm.fields.learningOutcomes.label' | translate}}" 
-                            [(chips)]="curriculumNode.learningObjectives"  icon="pi pi-graduation-cap" (chipsChange)="saveDraft.emit()"
+                    <div class="flex flex-column">
+                        <learningOutcomes-select fieldName="{{'curriculumNodeForm.fields.learningOutcomes.label' | translate}}" 
                             [pTooltip]="'curriculumNodeForm.fields.learningOutcomes.tooltip' | translate: {nodeType: getNodeType()}"
-                            tooltipPosition="right" showDelay="200" hideDelay="200" [customValues]="true"
-                            [error]="errorMap.get(curriculumNode.id + '.learningObjectives') != undefined" 
-                            [customOptions]="learningOutcomesSuggestions()" [group]="true">
-                        </multiselect-learning-outcomes>
-                        @if(errorMap.get(curriculumNode.id + '.learningObjectives')) {
-                            <p style="color: var(--danger-color);" class="m-0 p-0 text-xs font-italic">{{errorMap.get(curriculumNode.id + '.learningObjectives')}}</p>
+                            tooltipPosition="right" showDelay="200" hideDelay="200" [error]="errorMap.get(curriculumNode.id + '.learningObjectives') != undefined" 
+                            [treeSelection]="skillSelection()"
+                            (treeSelectionChange)="skillSelection.set($event)"
+                            (treeSelectionChange)="onLearningObjectivesChange($event)"
+                            [treeSelectOptions]="skillOptions()">
+                        </learningOutcomes-select>
+                        @if (!showCustomSkills) {
+                            <p-button
+                                [rounded]="true"
+                                [text]="true"
+                                size="small"
+                                (onClick)="showCustomSkills = true"
+                                class="text-button ml-auto mt-1 p-0 text-xs font-italic custom-option"
+                            >
+                                Add custom skills
+                            </p-button>
                         }
                     </div>
+                    @if(showCustomSkills) {
+                        <div>
+                            <text-chips [fieldName]="'curriculumNodeForm.fields.customLearningOutcomes.label' | translate" [icon]="'pi pi-book'" [(chips)]="curriculumNode.customLearningObjectives"
+                                (chipsChange)="saveDraft.emit()" tooltipPosition="right" showDelay="200" hideDelay="200"
+                                [pTooltip]="'curriculumNodeForm.fields.customLearningOutcomes.tooltip' | translate: {nodeType: getNodeType()}">
+                            </text-chips>
+                        </div>
+                    }
                 </div>
                 <div class="flex justify-content-start mt-3">
                     <p-button class="custom-secondary-button" [label]="'curriculumNodeForm.buttons.previous' | translate" severity="secondary" icon="pi pi-arrow-left" (onClick)="goToNextStep(activateCallback, 2)" />

@@ -434,6 +434,26 @@ function renderCurriculumNodes(doc: jsPDF, p: CurriculumNode, y: number, assets:
     doc.setFont('Poppins', 'normal')
     y += 4 * 1.35;
     p.learningObjectives.forEach((pre) => {
+      const lines = doc.splitTextToSize(pre.label, 170);
+      for (let i = 0; i < lines.length; i++) {
+        if (i == 0) lines[i] = '• ' + lines[i];
+        else lines[i] = '   ' + lines[i];
+      }
+      const linesSize = lines.length * 4 * 1.35;
+      y = checkEnd(doc, y, linesSize, assets);
+      doc.text(lines, 20, y);
+      y += linesSize;
+    });
+  }
+
+    if (p.customLearningObjectives.length != 0) {
+    y += 4 * 1.35;
+    y = checkEnd(doc, y, 0, assets);
+    doc.setFont('Poppins', 'italic');
+    doc.text('Learning Outcomes:', 20, y);
+    doc.setFont('Poppins', 'normal')
+    y += 4 * 1.35;
+    p.customLearningObjectives.forEach((pre) => {
       const lines = doc.splitTextToSize(pre, 170);
       for (let i = 0; i < lines.length; i++) {
         if (i == 0) lines[i] = '• ' + lines[i];
