@@ -103,19 +103,19 @@ export class CurriculumNodeFormComponent {
         this.transversalSkills = data;
         this.selectedTransversalSkills = this.curriculumNode.transversalSkills
           .map(skill => this.findTransversalSkill(skill.preferredLabel, this.transversalSkills)).filter(value => value != undefined);
-        this.skillSelection.set(this.curriculumNode.learningObjectives.map(skill => {
-          return ({
-            key: `${skill.level}-${skill.concept}-${skill.verb}`,
-            label: skill.label,
-            children: [],
-            leaf: true,
-            expanded: false,
-            type: 'leaf',
-            data: skill
-          })
-        }));
       }
     );
+    this.skillSelection.set(this.curriculumNode.learningObjectives.map(skill => {
+      return ({
+        key: `${skill.level}-${skill.concept}-${skill.verb}`,
+        label: skill.label,
+        children: [],
+        leaf: true,
+        expanded: false,
+        type: 'leaf',
+        data: skill
+      })
+    }));
   }
 
   ngOnDestroy() {
@@ -131,6 +131,7 @@ export class CurriculumNodeFormComponent {
           .map(skill => this.findTransversalSkill(skill.preferredLabel, this.transversalSkills)).filter(value => value != undefined);
         this.selectedStudyAreas = newNode.studyAreas.map(area => area.name);
         this.showCustomTransversalSkills = newNode.customTransversalSkills.length > 0;
+        this.showCustomSkills = newNode.customLearningObjectives.length > 0;
         this.buildSkillOptions();
         this.stepperIndex.set(1);
       }

@@ -194,7 +194,7 @@
 
                         <div class="mb-4">
                             <strong>{{'offerPage.learningOutcomes' | translate}}:</strong>
-                            <ul *ngIf="(selectedNode()?.learningObjectives?.length || 0) || 0 > 0">
+                            <ul *ngIf="(selectedNode()?.learningObjectives?.length || 0) > 0 || (selectedNode()?.customLearningObjectives?.length || 0) > 0">
                                 <li *ngFor="let outcome of selectedNode()?.learningObjectives">
                                     {{outcome.label}}
                                 </li>
