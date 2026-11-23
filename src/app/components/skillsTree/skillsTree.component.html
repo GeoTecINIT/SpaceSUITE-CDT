@@ -1,4 +1,4 @@
-<div *ngIf="array && array.length > 0">
+<div *ngIf="(array && array.length > 0) || (custom && custom.length > 0)">
     <p-tree [value]="formattedTree()" class="w-full custom-tree ml-0" >
         <ng-template let-node pTemplate="leaf">
             @if(node.data != undefined && node.data.bloomVerb != '') {

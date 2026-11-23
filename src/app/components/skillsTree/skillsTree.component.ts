@@ -23,7 +23,7 @@ export class SkillsTreeComponent {
   private bokInfo: BokInformationService = inject(BokInformationService);
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['array']) {
+    if (changes['array'] || changes['custom']) {
       const tempTree: TreeNode[] = [
         {
           key: '1',
@@ -95,7 +95,7 @@ export class SkillsTreeComponent {
       tempTree.push({
           key: '-1',
           label: 'Custom Learning Outcomes',
-          children: this.custom.map(skill => {
+          children: changes['custom'].currentValue.map((skill: string) => {
             return ({
               key: `custom-${skill}`,
               label: skill,
