@@ -107,7 +107,7 @@ export class CurriculumNodeFormComponent {
     );
     this.skillSelection.set(this.curriculumNode.learningObjectives.map(skill => {
       return ({
-        key: `${skill.level}-${skill.concept}-${skill.verb}`,
+        key: `${skill.level}-${skill.concept}-${skill.verb != '' ? skill.verb : this.getUnclassifiedHash(skill.label)}`,
         label: skill.label,
         children: [],
         leaf: true,
@@ -379,7 +379,7 @@ export class CurriculumNodeFormComponent {
             if (!levelNode) return
             levelNode.children ??= [];
             levelNode.children.push({
-              key: `${skill.bloomLevel}-${concept}-${skill.bloomVerb}`,
+              key: `${skill.bloomLevel}-${concept}-${skill.bloomVerb != '' ? skill.bloomVerb : this.getUnclassifiedHash(skill.name)}`,
               label: skill.name,
               children: [],
               leaf: true,
@@ -422,6 +422,15 @@ export class CurriculumNodeFormComponent {
       );
     }
     return values;
+  }
+
+  private getUnclassifiedHash(data: string): string {
+    let hash = 0;
+    for (const char of data) {
+      hash = (hash << 5) - hash + char.charCodeAt(0);
+      hash |= 0;
+    }
+    return hash.toString();
   }
 
 }
