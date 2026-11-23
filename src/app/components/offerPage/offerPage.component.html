@@ -193,15 +193,8 @@
                         </div>
 
                         <div class="mb-4">
-                            <strong>{{'offerPage.learningOutcomes' | translate}}:</strong>
-                            <ul *ngIf="(selectedNode()?.learningObjectives?.length || 0) > 0 || (selectedNode()?.customLearningObjectives?.length || 0) > 0">
-                                <li *ngFor="let outcome of selectedNode()?.learningObjectives">
-                                    {{outcome.label}}
-                                </li>
-                                <li *ngFor="let outcome of selectedNode()?.customLearningObjectives">
-                                    {{outcome}}
-                                </li>
-                            </ul>
+                            <strong class="block mb-2">{{'offerPage.learningOutcomes' | translate}}:</strong>
+                            <skillsTree [array]="selectedNode()?.learningObjectives ?? []" [custom]="selectedNode()?.customLearningObjectives ?? []"></skillsTree>
                         </div>
                     </div>
                 </p-tabpanel>

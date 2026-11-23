@@ -36,6 +36,7 @@ import { TooltipModule } from "primeng/tooltip";
 import { FormsModule } from "@angular/forms";
 import { SplitterModule } from 'primeng/splitter';
 import { SplitButton } from 'primeng/splitbutton';
+import { SkillsTreeComponent } from "../skillsTree/skillsTree.component";
 
 @Component({
   standalone: true,
@@ -43,8 +44,8 @@ import { SplitButton } from 'primeng/splitbutton';
   templateUrl: './offerPage.component.html',
   styleUrls: ['./offerPage.component.css'],
   imports: [CommonModule, ProgressSpinnerModule, ButtonModule, PanelModule, TabsModule, DividerModule, BreadcrumbModule, TranslateModule,
-    ConfirmDialogModule, ToastModule, PopoverModule, SkillTagComponent, SkeletonModule, DividerModule, OfferIndexComponent, DialogModule, 
-    FloatLabelModule, SelectModule, TooltipModule, FormsModule, SplitterModule, SplitButton],
+    ConfirmDialogModule, ToastModule, PopoverModule, SkillTagComponent, SkeletonModule, DividerModule, OfferIndexComponent, DialogModule,
+    FloatLabelModule, SelectModule, TooltipModule, FormsModule, SplitterModule, SplitButton, SkillsTreeComponent],
 })
 export class OfferPageComponent {
   offer: WritableSignal<EducationalOffer | undefined> = signal<EducationalOffer | undefined>(undefined);
