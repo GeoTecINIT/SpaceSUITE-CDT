@@ -1,7 +1,7 @@
 <div *ngIf="(array && array.length > 0) || (custom && custom.length > 0)">
     <p-tree [value]="formattedTree()" class="w-full custom-tree ml-0" >
         <ng-template let-node pTemplate="leaf">
-            @if(node.data != undefined && node.data.bloomVerb != undefined && node.data.bloomVerb != '') {
+            @if(node.data != undefined && node.data.verb != undefined && node.data.verb != '') {
                 @if(divideSkill(node.data) | async; as parts) {
                     <div [style.display]="'list-item'" [style.list-style-type]="'disc'">
                         <b>{{parts[0]}}</b>
