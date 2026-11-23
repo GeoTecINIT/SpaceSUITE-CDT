@@ -126,6 +126,16 @@ export class LearningOutcomesSelectComponent {
         const conceptIndex = value.label
           .toLowerCase()
           .indexOf(conceptName.toLowerCase());
+
+        if (conceptIndex === -1) {
+          return [
+            verb,
+            value.label.substring(verb.length).trim(),
+            '',
+            ''
+          ];
+        }
+        
         const verbIndex = verb.length;
 
         const textBeforeConcept = value.label
