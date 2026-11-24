@@ -157,7 +157,7 @@
         "label": "Prerequisites"
       },
       "learningOutcomes": {
-        "tooltip": "Learning outcomes describe the knowledge, skills, qualifications, or experiences that a learner is expected to have after completing this {{nodeType}}.",
+        "tooltip": "The specified skills, knowledge, or competencies learners are expected to gain from this {{nodeType}}. Items listed are ready-to-use examples. If needed, copy-paste-adjust them in the ‘Custom Learning Outcomes’ field below to use an updated version.",
         "label": "Learning Outcomes",
         "addCustom": "Add custom Learning Outcomes"
       },
