@@ -335,7 +335,7 @@
       },
       "isPublic": {
         "tooltip": "Specifies whether this offer is public or restricted to your account.",
-        "disabledTooltip": "The selected organization do not have permission to save public curriuclums"
+        "disabledTooltip": "The selected organization does not have permission to save public curriuclums"
       },
       "rootNodeType": {
         "label": "Offer Type",
