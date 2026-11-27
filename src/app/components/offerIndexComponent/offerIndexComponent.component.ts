@@ -221,7 +221,7 @@ export class OfferIndexComponent {
 
     try {
       await document.fonts.ready;
-      
+
       const canvas = await html2canvas(element, {
         backgroundColor: '#ffffff',
         scale: 2,
@@ -237,6 +237,36 @@ export class OfferIndexComponent {
           if (!clonedElement) {
             return;
           }
+
+          clonedElement.querySelectorAll<HTMLElement>('.pi').forEach(icon => {
+            if (icon.classList.contains('pi-minus')) {
+              icon.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="16" height="16">
+                  <path d="M5 12 H19"
+                        stroke="#64748b"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        fill="none"/>
+                </svg>
+              `;
+            }
+
+            if (icon.classList.contains('pi-plus')) {
+              icon.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="16" height="16">
+                  <path d="M5 12 H19 M12 5 V19"
+                        stroke="#64748b"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        fill="none"/>
+                </svg>
+              `;
+            }
+          });
 
           clonedElement.style.transform = '';
           clonedElement.style.zoom = '1';
