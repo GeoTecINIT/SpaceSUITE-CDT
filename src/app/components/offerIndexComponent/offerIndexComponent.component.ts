@@ -17,10 +17,11 @@ import { Tooltip } from "primeng/tooltip";
 import { MeterGroup, MeterItem } from 'primeng/metergroup';
 import { Divider } from "primeng/divider";
 import { BokInformationService } from "@eo4geo/ngx-bok-visualization";
-import { forkJoin, map, Observable, of, take } from "rxjs";
+import { forkJoin, map, Observable, take } from "rxjs";
 import { BadgeModule } from 'primeng/badge';
 import { Grouping } from "../../model/coreModel/grouping";
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
+import html2canvas from "html2canvas-pro";
 
 @Component({
   standalone: true,
@@ -35,6 +36,9 @@ export class OfferIndexComponent {
   @Input() selectedNode: string = "";
   @Input() errorMap: Map<string, string> = new Map();
   @Output() selectedNodeChanged: EventEmitter<string> = new EventEmitter();
+
+  @ViewChild('zoomContent', { static: false })
+  zoomContent!: ElementRef<HTMLElement>;
 
   treeNodeRoot: WritableSignal<TreeNode[]> = signal<TreeNode[]>([]);
   selectedTreeNode: WritableSignal<TreeNode | undefined> = signal<TreeNode | undefined>(undefined);
@@ -202,5 +206,55 @@ export class OfferIndexComponent {
     const isSelectedNodeTypeGrouping = selectedNode instanceof Grouping;
     if (selectedNode != undefined && isSelectedNodeTypeGrouping) return selectedNode.groupingName;
     return '';
+  }
+
+  async downloadAsImage(): Promise<void> {
+    const element = this.zoomContent?.nativeElement;
+
+    if (!element) {
+      console.error('No se encontró el elemento para exportar.');
+      return;
+    }
+
+    const previousCursor = document.body.style.cursor;
+    document.body.style.cursor = 'wait';
+
+    try {
+      await document.fonts.ready;
+      
+      const canvas = await html2canvas(element, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        foreignObjectRendering: true,
+
+        onclone: (clonedDocument) => {
+          const clonedElement = clonedDocument.querySelector(
+            '.zoom-content'
+          ) as HTMLElement;
+
+          if (!clonedElement) {
+            return;
+          }
+
+          clonedElement.style.transform = '';
+          clonedElement.style.zoom = '1';
+          clonedElement.style.width = `${element.scrollWidth}px`;
+          clonedElement.style.height = `${element.scrollHeight}px`;
+          clonedElement.style.overflow = 'visible';
+        }
+      });
+
+      const link = document.createElement('a');
+      link.download = this.offer.root.name.toLowerCase().replaceAll(' ', '_') + '_tree.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+
+    } catch (error) {
+      console.error('Organization chart export failed:', error);
+    } finally {
+      document.body.style.cursor = previousCursor;
+    }
   }
 }
